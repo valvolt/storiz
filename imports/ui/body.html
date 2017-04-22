@@ -1,0 +1,72 @@
+<body>
+{{#if loaded}}
+  {{#each tiles}}
+    {{> title}}
+    {{> picture}}
+    {{> story}}
+  {{/each}}
+  {{> stuff}}
+  <a href="http://www.photo-libre.fr">Photos Libres</a>
+{{else}}
+  <h1>LOADING, PLEASE WAIT...</h1>
+{{/if}}
+</body>
+
+<template name="title">
+  <header>
+    <h1 align="center">{{title}}</h1>
+  </header>
+</template>
+
+<template name="picture">
+  <div align="center" style="border:3px solid black">
+<!--     If we have a video available, we play it. If not, we display a picture instead. -->
+  {{#if video}}
+    <video height="300px" controls autoplay>
+      <source src={{video}} type="video/webm"/>
+    </video>
+  {{else}}
+    <img src="{{picture}}" height="300px"/>
+  {{/if}}
+  </div>
+</template>
+
+<template name="story">
+  <div style="border:3px solid black">
+  {{> text}}
+  
+  <ul>
+  {{#each choices}}
+    {{> choice}}
+  {{/each}}
+  </ul>
+
+  </div>
+</template>
+
+<template name="text">
+<p><b>{{text}}</b></p>
+</template>
+
+<template name="choice">
+  {{#if enabled}}
+    <li><button value="{{to_tile}}" name="{{item}}">{{text}}</button></li>
+  {{else}}
+    <li><button disabled>{{text}}</button></li>
+  {{/if}}
+</template>
+
+<template name="stuff">
+  <div style="border:3px solid black">
+  <h3>My Stuff</h3>
+  <ul>
+  {{#each stuff}}
+    {{> item}}
+  {{/each}}
+  </ul>
+  </div>
+</template>
+
+<template name="item">
+    <li>{{name}} ({{description}})</li>
+</template>
