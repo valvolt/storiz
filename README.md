@@ -4,16 +4,22 @@ A simple engine for creating HTML5 choice-based games. Think super-simple Visual
 ## HOW-TO RUN
 
 cd storiz
+
 meteor npm install
+
 meteor
 
+## CHANGES
+
+[NEW] - add heatmaps (pictures with coordinates, each associated to a transition just like a choice)
+
+[FIXED] - Greyed-out options should be ungreyed from the start when player has the correct item in stock, not only upon choosing the item
+
+[FIXED] - 'required' objects only work on page 1, for some reason method 'enabled()' only works for tile 1
+
+[FIXED] - The current version uses 'name' for storing required object and 'value' for storing the target tile when clicking on a <button>. This <button> should be replaced by something more free-form with dedicated tags (using name and value for this is ugly).
+
 ## KNOWN BUGS & LIMITATIONS
-
-- Greyed-out options should be ungreyed from the start when player has the correct item in stock, not only upon choosing the item
-
-- 'required' objects only work on page 1, for some reason method 'enabled()' only works for tile 1
-
-- The current version uses 'name' for storing required object and 'value' for storing the target tile when clicking on a <button>. This <button> should be replaced by something more free-form with dedicated tags (using name and value for this is ugly).
 
 - only one 'required' item at the moment, should be replaced by an array
 
@@ -27,8 +33,6 @@ meteor
 ## ON THE TODO LIST...
 
 - create user accounts, persist progression in DB (for scoring, storing history of visited tiles etc.)
-
-- add heatmaps (pictures with coordinates, each associated to a transition just like a choice)
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 

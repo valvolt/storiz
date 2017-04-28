@@ -26,9 +26,27 @@
       <source src={{video}} type="video/webm"/>
     </video>
   {{else}}
-    <img src="{{picture}}" height="300px"/>
+    {{#if map}}
+      <!--     If we have a picture map, we add it here -->
+      <img src="{{picture}}" height="300px" usemap="#{{id}}"/>
+      {{> maps}}
+    {{else}}
+      <img src="{{picture}}" height="300px"/>
+    {{/if}}
   {{/if}}
   </div>
+</template>
+
+<template name="maps">
+  <map name={{id}}>
+    {{#each map}}
+      {{> map}}
+    {{/each}}
+  </map>
+</template>
+
+<template name="map">
+  <area shape="{{shape}}" coords="{{coords}}" tile={{to_tile}} item={{item}} />
 </template>
 
 <template name="story">
@@ -50,7 +68,7 @@
 
 <template name="choice">
   {{#if enabled}}
-    <li><button value="{{to_tile}}" name="{{item}}">{{text}}</button></li>
+    <li><button tile="{{to_tile}}" item="{{item}}">{{text}}</button></li>
   {{else}}
     <li><button disabled>{{text}}</button></li>
   {{/if}}
