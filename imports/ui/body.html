@@ -46,7 +46,7 @@
 </template>
 
 <template name="map">
-  <area shape="{{shape}}" coords="{{coords}}" tile={{to_tile}} item={{item}} />
+  <area shape="{{shape}}" coords="{{coords}}" tile={{to_tile}} item={{item}} uses={{uses}} />
 </template>
 
 <template name="story">
@@ -68,7 +68,7 @@
 
 <template name="choice">
   {{#if enabled}}
-    <li><button tile="{{to_tile}}" item="{{item}}">{{text}}</button></li>
+    <li><button tile="{{to_tile}}" item="{{item}}" uses="{{uses}}">{{text}}</button></li>
   {{else}}
     <li><button disabled>{{text}}</button></li>
   {{/if}}

@@ -20,7 +20,7 @@ Template.body.helpers({
 
 Template.map.events({
   'click area'(event, instance) {
-    manageClick(event.target.getAttribute('tile'),event.target.getAttribute('item'));
+    manageClick(event.target.getAttribute('tile'),event.target.getAttribute('item'),event.target.getAttribute('uses'));
   }
 });
 
@@ -34,12 +34,29 @@ Template.story.onCreated(function helloOnCreated() {
 
 Template.story.events({
   'click button'(event, instance) {
-    manageClick(event.target.getAttribute('tile'),event.target.getAttribute('item'));
+    manageClick(event.target.getAttribute('tile'),event.target.getAttribute('item'),event.target.getAttribute('uses'));
   }
 });
 
-function manageClick(to_tile, itemName) {
-    // adds the item to the My Stuff list
+function manageClick(to_tile, itemName, usedItemName) {
+    // removes the "used" item from the My Stuff list (if exists)
+    if(usedItemName != "" && usedItemName != null){
+      // there is an item to be removed from our Stuff list.
+      if(isInMyStuff(usedItemName)) {
+        // remove the item from the list
+        var newArray = Session.get("items");
+        for (var i = Session.get("items").length - 1; i >= 0; i--) {
+          if(usedItemName == Session.get("items")[i].key) {
+            // found it. Let's remove it
+            newArray.splice(i,1);
+            // store back the new item list
+            Session.set("items",newArray);
+          }
+        }
+      }
+    }
+
+    // adds the "item" item to the My Stuff list (if there is one "item" option set)
     if(itemName != "" && itemName != null){
       // there is an item to be picked-up.
       // Let's fetch it from the DB
@@ -94,7 +111,6 @@ Template.choice.helpers({
 		for(var i=0; i < choices.length; i++) {
 			if(choices[i].text == currentText) {
 				// found it. Fetching the possible 'required' item
-				// TODO: allow multiple items to be required instead of just one (make this an array)
 				var requires = choices[i].requires;
 				if(!requires) {
 					// nothing is required, we can proceed
