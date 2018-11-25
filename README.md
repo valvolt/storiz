@@ -11,6 +11,8 @@ meteor
 
 ## CHANGES
 
+[DONE] - uninstall 'insecure' package of Meteor (and debug the subscriptions)
+
 [NEW] - add heatmaps (pictures with coordinates, each associated to a transition just like a choice)
 
 [FIXED] - Greyed-out options should be ungreyed from the start when player has the correct item in stock, not only upon choosing the item
@@ -35,7 +37,5 @@ meteor
 - create user accounts, persist progression in DB (for scoring, storing history of visited tiles etc.)
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
-
-- uninstall 'insecure' package of Meteor (and debug the subscriptions)
 
 - make cheating more complex: replace IDs with UUIDs, possibly dynamically generated for avoiding replay, namely by sniffing the to_tile of all three options and playing them one after the other, or for saving the key name of an item for a subsequent re-play in another game
