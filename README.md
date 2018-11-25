@@ -1,6 +1,8 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. Built with Meteor.
 
+[![Sample story](https://img.youtube.com/vi/oj8K6Maq3HA/0.jpg)](https://www.youtube.com/watch?v=oj8K6Maq3HA)
+
 ## HOW-TO RUN
 
 cd storiz
