@@ -1,7 +1,6 @@
 import { Tiles } from '../api/tiles.js';
 import { Stuff } from '../api/tiles.js';
 
-
 import './body.html';
 
 Template.body.helpers({
@@ -43,16 +42,24 @@ Template.story.events({
 function manageClick(to_tile, itemName, usedItemName) {
     // removes the "used" item from the My Stuff list (if exists)
     if(usedItemName != "" && usedItemName != null){
-      // there is an item to be removed from our Stuff list.
+      // there is one or more items to be removed from our Stuff list.
+      itemArray = usedItemName.split(",");
       myItems = Session.get("items");
-      myItems.pop(usedItemName);
+      // loop over used items, remove them one by one
+      for (var used in itemArray) {
+        var index = myItems.indexOf(itemArray[used]);
+        if (index > -1) {
+          myItems.splice(index, 1);
+        }
+      }
       Session.set("items",myItems);
     }
 
-    // adds the "item" item to the My Stuff list (if there is one "item" option set)
+    // adds the "item" item or items to the My Stuff list (if there is one "item" option set)
     if(itemName != "" && itemName != null){
+      itemArray = itemName.split(",");
       myItems = Session.get("items");
-      myItems.push(itemName);
+      myItems = myItems.concat(itemArray);
       Session.set("items",myItems);
     }
 
@@ -77,19 +84,27 @@ Template.choice.helpers({
 		// iterate over choices to find the current one
 		for(var i=0; i < choices.length; i++) {
 			if(choices[i].text == currentText) {
-				// found it. Fetching the possible 'required' item
+				// found it. Fetching the possible 'required' item(s)
 				var requires = choices[i].requires;
 				if(!requires) {
 					// nothing is required, we can proceed
 					return true;
 				} else {
 					// we need some specific item(s) to proceed
-					if(Session.get("items").includes(requires)) {
-						// we have the item we need
-						return true;
-					}
-					// we don't have the necessary item(s)
-					return false;
+                                        if (Array.isArray(requires) == false) {
+                                          // we just have one item required
+                                          if(Session.get("items").includes(requires))
+                                            return true;
+                                          else
+                                            return false;
+                                        }
+                                        for (var i in requires) {
+                                          if(Session.get("items").includes(requires[i]) == false)
+                                            // we miss at least one item
+                                            return false;
+                                        }
+					// we have all we need !
+					return true;
 				}
 			}
 		};

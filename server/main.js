@@ -219,9 +219,10 @@ if(!insert_already_done) {
       "to_tile": "1"
     },
     {
-      "text": "This option should be grayed-out unless you have the Rubik's Cube",
+      "text": "This option should be grayed-out unless you have the Rubik's Cube and one euro",
       "to_tile": "1",
-      "requires": "rubiksCube"
+      "requires": ["rubiksCube","oneEuro"],
+      "uses": "oneEuro"
     }
   ]
 }),
