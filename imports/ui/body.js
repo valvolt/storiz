@@ -8,6 +8,12 @@ Template.body.helpers({
     return Tiles.find({ id: Session.get("to_tile") });
   },
   loaded() {
+
+        var title = 'storiz';
+        Meteor.call('getStoryTitle', function(error,result) {
+          document.title = result;
+        })
+
         Session.set("items",[]);
 	if(Tiles.find({ id: "1"}) != null){
   	  Session.set("to_tile","1");
@@ -15,7 +21,7 @@ Template.body.helpers({
   	} else {
   		return false;
   	}
-  }
+  },
 },
 );
 
