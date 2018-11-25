@@ -13,6 +13,8 @@ meteor
 
 ## CHANGES
 
+[DONE] - only one 'required' item at the moment, should be replaced by an array => you can now specify an array for 'requires', 'item' and/or 'uses' elements.
+
 [DONE] - uninstall 'insecure' package of Meteor (and debug the subscriptions)
 
 [NEW] - add heatmaps (pictures with coordinates, each associated to a transition just like a choice)
@@ -24,8 +26,6 @@ meteor
 [FIXED] - The current version uses 'name' for storing required object and 'value' for storing the target tile when clicking on a <button>. This <button> should be replaced by something more free-form with dedicated tags (using name and value for this is ugly).
 
 ## KNOWN BUGS & LIMITATIONS
-
-- only one 'required' item at the moment, should be replaced by an array
 
 - There is no error message in case a non-implemented tile is being chosen
 
