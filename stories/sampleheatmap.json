@@ -1,0 +1,66 @@
+{
+  "Name": "Sample Heatmap",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "Tile 1",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "map": [
+        {
+          "shape": "poly",
+          "coords": "373,253,163,134,71,62,179,99,375,213",
+          "to_tile": "1",
+          "item": "carKey"
+        },
+        {
+          "shape": "poly",
+          "coords": "18,299,151,233,111,158,3,207,3,297",
+          "to_tile": "2"
+        }
+      ],
+      "choices": [
+        {
+          "text": "To tile 2",
+          "to_tile": "2"
+        },
+        {
+          "text": "Rubiks",
+          "to_tile": "1",
+          "item": "rubiksCube"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Tile 2",
+      "text": "all right",
+      "video": "",
+      "picture": "receptionist.jpg",
+      "choices": [
+        {
+          "text": "Let's go back now",
+          "to_tile": "1"
+        }
+      ]
+    }
+  ],
+  "Stuff": [
+    {
+      "key": "carKey",
+      "name": "Car key",
+      "description": "The key of your Tesla car. Tied to a 'Super Mario' keychain."
+    },
+    {
+      "key": "rubiksCube",
+      "name": "Rubik's Cube",
+      "description": "Always useful when getting bored"
+    },
+    {
+      "key": "oneEuro",
+      "name": "1 Euro",
+      "description": "Found on your way to the building"
+    }
+  ]
+}
