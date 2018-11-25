@@ -3,6 +3,17 @@ import { Meteor } from 'meteor/meteor';
 import {Tiles} from '../imports/api/tiles.js';
 import {Stuff} from '../imports/api/tiles.js';
 
+// Method to retrieve the data of the current Tile
+Meteor.publish('currentTileContent', function (tileID) {
+  return Tiles.find({ id: tileID});
+});
+
+// Method to retrieve the stuff the player collects
+Meteor.publish('currentStuffContent', function (items) {
+  if(items == null)
+    items = [];
+  return Stuff.find( { key: { $in: items } } )
+});
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -12,6 +23,7 @@ Meteor.startup(() => {
   var insert_already_done = false
 
 if(!insert_already_done) {
+
   Tiles.rawCollection().drop(),
 
 // SIMPLE PATH
