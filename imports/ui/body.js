@@ -79,6 +79,13 @@ Template.stuff.helpers({
   },
 });
 
+Template.text.helpers({
+  text() {
+    // we shall replace the carriage returns with actual HTML carriage returns :)
+    return this.text.replace(/\n/g, '<br/>');
+  }
+});
+
 Template.choice.helpers({
 	enabled() {
 		// if no specific item is required, the choice is enabled
