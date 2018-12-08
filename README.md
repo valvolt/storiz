@@ -13,7 +13,7 @@ meteor
 
 ## CHANGES
 
-[DONE] - make cheating more complex: IDs are now replaced by UUIDs at server start, should make replay attacks impossible. Item management is now server-side only, making impossible to see which choice gives/uses which item or how to enable greyed-out choices.
+[DONE] - make cheating more complex: IDs are now replaced by UUIDs generated at server start, making difficult to predict where each choice will lead (especially if two choices lead to the same page). Item management is now server-side only, making impossible to see which choice gives/uses which item or how to enable greyed-out choices.
 
 [DONE] - only one 'required' item at the moment, should be replaced by an array => you can now specify an array for 'requires', 'item' and/or 'uses' elements.
 
@@ -35,6 +35,7 @@ meteor
 
 - An editor should be developed, for that I need to add user support, create an admin account, and let it edit / create tiles
 
+- UUIDs are generated at server start, not game start, making replay attacks somewhat possible. A better solution would be to generate UUIDs at each click.
 
 ## ON THE TODO LIST...
 
