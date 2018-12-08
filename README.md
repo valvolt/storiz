@@ -13,6 +13,8 @@ meteor
 
 ## CHANGES
 
+[DONE] - make cheating more complex: IDs are now replaced by UUIDs at server start, should make replay attacks impossible. Item management is now server-side only, making impossible to see which choice gives/uses which item or how to enable greyed-out choices.
+
 [DONE] - only one 'required' item at the moment, should be replaced by an array => you can now specify an array for 'requires', 'item' and/or 'uses' elements.
 
 [DONE] - uninstall 'insecure' package of Meteor (and debug the subscriptions)
@@ -40,4 +42,3 @@ meteor
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 
-- make cheating more complex: replace IDs with UUIDs, possibly dynamically generated for avoiding replay, namely by sniffing the to_tile of all three options and playing them one after the other, or for saving the key name of an item for a subsequent re-play in another game
