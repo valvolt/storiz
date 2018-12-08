@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+export const ScrambledTiles = new Mongo.Collection('scrambledtiles');
 export const Tiles = new Mongo.Collection('tiles');
 export const Stuff = new Mongo.Collection('stuff');
 
