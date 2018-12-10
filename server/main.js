@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 // Change this to your story file
-var story = require('../stories/samplestory.json');
+var story = require('../stories/features.json');
 
 import {Tiles} from '../imports/api/tiles.js';
 import {ScrambledTiles} from '../imports/api/tiles.js';
