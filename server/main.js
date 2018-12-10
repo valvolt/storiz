@@ -145,15 +145,18 @@ Meteor.publish('currentTileContent', function (tileID) {
           enabled = checkRequiredItem(oneTile.map[j].requires);
         }          
       }
-      if(enabled == false)
-        delete oneTile.map[j].to_tile;
       // we remove any mention of items being required
       delete oneTile.map[j].requires;
+
+      if(enabled == false) {
+        // we completely remove the option
+        delete oneTile.map[j];
+      }
     }
   }
 
-//console.log("RENDERING...");
-//console.log(oneTile);
+console.log("RENDERING...");
+console.log(oneTile);
 
   ScrambledTiles.insert(oneTile);
   return ScrambledTiles.find();
