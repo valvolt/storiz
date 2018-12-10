@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import uuid from 'uuid';
 
 // Change this to your story file
 var story = require('../stories/features.json');
@@ -7,7 +8,6 @@ import {Tiles} from '../imports/api/tiles.js';
 import {ScrambledTiles} from '../imports/api/tiles.js';
 import {Stuff} from '../imports/api/tiles.js';
 
-// TODO: make picture / video optional (so that we can write text only)
 // TODO: create UUIDs upon *click* instead of at start for making guessing / replay impossible
 
 // The status of collected items
@@ -259,17 +259,17 @@ if(!insert_already_done) {
   for (i in theTiles) {
     oneTile = theTiles[i];
     // scramble the tile id
-    oneTile.scrambled_id = Meteor.uuid();
+    oneTile.scrambled_id = uuid();
     // add a scrambled to_tile element to each choice (if choices are present)
     if(oneTile.choices != undefined) {
       for (var j = 0; j < oneTile.choices.length; j++) { 
-        oneTile.choices[j].scrambled_to_tile = Meteor.uuid();
+        oneTile.choices[j].scrambled_to_tile = uuid();
       }
     }
     // add a scrambled to_tile element to each map element (if map is present)
     if(oneTile.map != undefined) {
       for (var j = 0; j < oneTile.map.length; j++) { 
-        oneTile.map[j].scrambled_to_tile = Meteor.uuid();
+        oneTile.map[j].scrambled_to_tile = uuid();
       }
     }
     // we store this complete item in the main collection
