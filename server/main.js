@@ -78,7 +78,14 @@ Meteor.publish('currentTileContent', function (tileID) {
   // at this stage, tileID shall contain the original to_tile value
   // we will populate the ScrambledTiles collection with just one tile, generated from the non-scrambled tile having the id tileID
   ScrambledTiles.rawCollection().drop();
-  oneTile = Tiles.findOne({ id: tileID});
+
+  // select one Tile with the specified tileID. In most cases we should have only one. If we have more than one, we select one at random - use this feature with care !
+  candidateTiles = Tiles.find({ id: tileID});
+  // compute a random number between the available tiles
+  rnd = ~~(Math.random() * candidateTiles.count());
+  // select one of the tiles
+  oneTile = candidateTiles.fetch()[rnd];
+
   // replace the id with scrambled_id
   oneTile.id = oneTile.scrambled_id;
   delete oneTile.scrambled_id;
