@@ -91,7 +91,60 @@
     {
       "id": "5",
       "title": "About Tile IDs",
-      "text": "Tile IDs are used for linking pages together. Each Tile shall have a unique ID. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.",
+      "picture": "d1.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the BLACK dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d2.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the WHITE dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d3.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the RED dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d4.png",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the GREEN dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d5.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the ORANGE dice picture. Go back and try again for another picture (5 different).",
       "choices": [
         {
           "text": "Go back",
