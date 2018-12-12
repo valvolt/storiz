@@ -1,7 +1,7 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. Built with Meteor.
 
-[![Sample story](https://img.youtube.com/vi/oj8K6Maq3HA/0.jpg)](https://www.youtube.com/watch?v=oj8K6Maq3HA)
+[![Features tour](https://img.youtube.com/vi/7i0tOzKHSlw/0.jpg)](https://www.youtube.com/watch?v=7i0tOzKHSlw)
 
 ## HOW-TO RUN
 
@@ -11,7 +11,11 @@ meteor npm install
 
 meteor
 
+then from your web browser, go to http://localhost:3000
+
 ## CHANGES
+
+[NEW] - You can now create several tiles with the same ID. One of them will then be picked at random. Use this to add some replay value to your stories !
 
 [DONE] - make cheating more complex: IDs are now replaced by UUIDs generated at server start, making difficult to predict where each choice will lead (especially if two choices lead to the same page). Item management is now server-side only, making impossible to see which choice gives/uses which item or how to enable greyed-out choices.
 
