@@ -15,6 +15,8 @@ then from your web browser, go to http://localhost:3000
 
 ## CHANGES
 
+[NEW] - Choices which require items to activate can now be completely removed ("disable":"invisible") instead of the default behavior which grey them out (same as "disable":"grey").
+
 [NEW] - You can now create several tiles with the same ID. One of them will then be picked at random. Use this to add some replay value to your stories !
 
 [DONE] - make cheating more complex: IDs are now replaced by UUIDs generated at server start, making difficult to predict where each choice will lead (especially if two choices lead to the same page). Item management is now server-side only, making impossible to see which choice gives/uses which item or how to enable greyed-out choices.
