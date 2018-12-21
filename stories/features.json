@@ -15,12 +15,31 @@
         {
           "text": "I'll take my Rubik's Cube",
           "to_tile": "1",
-          "item": "rubiksCube"
+          "item": "rubiksCube",
+          "disable": "grey"
         },
         {
           "text": "Let's go see this receptionist !",
           "to_tile": "2",
           "requires": "carKey"
+        },
+        {
+          "text": "Play with my Rubik's Cube a bit",
+          "to_tile": "1bis",
+          "requires": "rubiksCube",
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "1bis",
+      "title": "Now THAT was cool.",
+      "text": "Some options require some items to be activated. When you miss an item, the option can be greyed-out or completely invisible.",
+      "picture": "cube.jpg",
+      "choices": [
+        {
+          "text": "Ok, back to business !",
+          "to_tile": "1"
         }
       ]
     },
@@ -172,7 +191,7 @@
     {
       "id": "7",
       "title": "About Tile choices",
-      "text": "Choices is the heart of the game. These are used for sending you from Tile to Tile.\nA Choice will send you to the tile ID corresponding to the specified to_tile value. Choices are also used in complement to your inventory, displayed in the Stuff section:\nThese are handled with the keys 'item', 'uses' and 'requires', which can contain either a string or an array.\n'item' specifies which item from the Stuff JSON section will be added to your inventory (if not there already) upon clicking.\n'uses' will remove the specified item(s) from your inventory if they exist, and do nothing special if the item is missing.\n'requires' is used for specifying required item(s). If the user is missing a required item, the option will be greyed-out.",
+      "text": "Choices is the heart of the game. These are used for sending you from Tile to Tile.\nA Choice will send you to the tile ID corresponding to the specified to_tile value. Choices are also used in complement to your inventory, displayed in the Stuff section:\nThese are handled with the keys 'item', 'uses' and 'requires', which can contain either a string or an array.\n'item' specifies which item from the Stuff JSON section will be added to your inventory (if not there already) upon clicking.\n'uses' will remove the specified item(s) from your inventory if they exist, and do nothing special if the item is missing.\n'requires' is used for specifying required item(s).\nIf the user is missing a required item, the option will be disabled according to what you specify with the 'disable' option: if set to 'grey', the option will be visible but greyed-out (players can't click). If set to 'invisible', the button will be completely removed. The default behavior, if nothing is specified, is 'disable':'grey'.",
       "choices": [
         {
           "text": "Go back",

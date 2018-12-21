@@ -117,10 +117,29 @@ Meteor.publish('currentTileContent', function (tileID) {
           enabled = checkRequiredItem(oneTile.choices[j].requires);
         }          
       }
-      if(enabled == false)
+
+      var disable = "grey";
+      if(enabled == true)
+        disable = "no";
+      if(enabled == false) {
+        // shall we grey-out the choice or delete it entirely?
+        if(oneTile.choices[j].disable == null) {
+          // by default we grey-out
+          disable = "grey";
+        } else {
+          disable = oneTile.choices[j].disable;
+        }
+      }
+      // if the choice is supposed to be invisible, remove it entirely
+      if(disable == "invisible") {
+        oneTile.choices.splice(j, 1);
+      } else if(disable == "grey") {
         delete oneTile.choices[j].to_tile;
-      // we remove any mention of items being required
-      delete oneTile.choices[j].requires;
+        delete oneTile.choices[j].requires;
+        delete oneTile.choices[j].disable;
+      } else {
+        delete oneTile.choices[j].disable;
+      }
     }
   }
 
