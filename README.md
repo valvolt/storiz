@@ -15,6 +15,8 @@ then from your web browser, go to http://localhost:3000
 
 ## CHANGES
 
+[NEW] - Added sound support. Looping, continuous music can be played with 'music'. One-time, tile specific sounds can be played with 'sound'.
+
 [NEW] - Choices which require items to activate can now be completely removed ("disable":"invisible") instead of the default behavior which grey them out (same as "disable":"grey").
 
 [NEW] - You can now create several tiles with the same ID. One of them will then be picked at random. Use this to add some replay value to your stories !
