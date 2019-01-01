@@ -15,18 +15,20 @@
     currentAudio.pause();
   }
 </script>
-{{#if loaded}}
-  {{#each tiles}}
-    {{> title}}
-    {{> sound}}
-    {{music}}
-    {{> picture}}
-    {{> story}}
-  {{/each}}
+
+{{init}}
+
+{{#each tiles}}
+  {{> title}}
+  {{> sound}}
+  {{music}}
+  {{> picture}}
+  {{> story}}
   {{> stuff}}
 {{else}}
-  <h1>LOADING, PLEASE WAIT...</h1>
-{{/if}}
+  <h1>UNDER CONSTRUCTION</h1>
+  <p>Looks like this tile has not been implemented. You can reload this page to restart from the beginning</p>
+{{/each}}
 </body>
 
 <template name="title">
