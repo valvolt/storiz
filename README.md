@@ -45,6 +45,8 @@ then from your web browser, go to http://localhost:3000
 
 - UUIDs are generated at server start, not game start, making replay attacks somewhat possible. A better solution would be to generate UUIDs at each click.
 
+- Since all assets are stored in the /public folder, forced browsing is possible if resources have predictable names (e.g. 1.jpg 2.jpg etc.). Not sure much can be done to prevent this.
+
 ## ON THE TODO LIST...
 
 - create user accounts, persist progression in DB (for scoring, storing history of visited tiles etc.)
