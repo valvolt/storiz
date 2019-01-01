@@ -268,10 +268,6 @@ if(!insert_already_done) {
   // Setting the HTML <title>
   Meteor.call('setStoryTitle',story.Name);
 
-  // Setting the background music
-  Meteor.call('setMusic',story.Music);
-console.log("music set to: "+story.Music);
-
   Tiles.rawCollection().drop();
   ScrambledTiles.rawCollection().drop();
   Stuff.rawCollection().drop();

@@ -20,17 +20,3 @@ Meteor.methods(
     }
 });
 
-Meteor.methods(
-{
-    'getMusic': function(){
-       return storyMusic;
-    }
-});
-
-Meteor.methods(
-{
-    'setMusic': function(newsong){
-       storyMusic = newsong;
-    }
-});
-

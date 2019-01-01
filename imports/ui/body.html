@@ -1,8 +1,25 @@
 <body>
+<script>
+  var currentAudio = new Audio();
+  function muteAndPlay(music) {
+    var thisAudio = new Audio(music);
+    thisAudio.load()
+    thisAudio.loop = true;
+    // mute the old music
+    currentAudio.pause();
+    // play the new music
+    thisAudio.play();
+    currentAudio = thisAudio;  
+  }
+  function mute() {
+    currentAudio.pause();
+  }
+</script>
 {{#if loaded}}
   {{#each tiles}}
     {{> title}}
-    {{> music}}
+    {{> sound}}
+    {{music}}
     {{> picture}}
     {{> story}}
   {{/each}}
@@ -89,7 +106,7 @@
     <li>{{name}} ({{description}})</li>
 </template>
 
-<template name="music">
+<template name="sound">
   <div hidden>
   <audio controls autoplay>
     <source src="{{sound}}" type="audio/mpeg">

@@ -18,7 +18,7 @@ Template.body.helpers({
 
         // play story music
         Meteor.call('getMusic', function(error,result) {
-          var audio = new Audio(result);
+          audio = new Audio(result);
           audio.load();
           audio.loop = true;
           audio.play();
@@ -28,6 +28,20 @@ Template.body.helpers({
         Session.set("to_tile","1");
         return true;
   },
+  music() {
+    currentMusic = Session.get("music");
+    // Three options:
+    if(this.music == currentMusic) {
+      // 1- we have to play the same music -> we do nothing
+    } else if(this.music == undefined) {
+      // 2- we do not have any music to play -> we stop the current music
+      mute();
+    } else {
+      // 3- we have a new music to play -> stop the current one and start the new one
+      muteAndPlay(this.music);
+    }
+    Session.set("music",this.music);
+  }
 },
 );
 
@@ -35,11 +49,6 @@ Template.map.events({
   'click area'(event, instance) {
     manageClick(event.target.getAttribute('tile'));
   }
-});
-
-Template.story.onCreated(function helloOnCreated() {
-  // first tile has ID 1
-  currentTile = new ReactiveVar(1);
 });
 
 Template.story.events({
