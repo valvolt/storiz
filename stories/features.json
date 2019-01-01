@@ -1,5 +1,6 @@
 {
   "Name": "Demo Tour",
+  "Music": "birds.mp3",
   "Tiles": [
     {
       "id": "1",
@@ -46,6 +47,7 @@
     {
       "id": "2",
       "title": "Hey, where are my choices ?",
+      "sound": "tram.mp3",
       "text": "In Storiz, you can embed pictures with clickable areas, just as this one. In order to proceed to the receptionist's building, you need to find it first ! Click on the buildings on the picture until you find the right one.",
       "picture": "buildings.jpg",
       "map": [
@@ -105,9 +107,13 @@
           "to_tile": "10"
         },
         {
+          "text": "sound & music",
+          "to_tile": "11"
+        },
+        {
           "text": "Putting it all together",
-          "to_tile": "11",
-          "requires": ["id","text","choice","picture","map","item"]
+          "to_tile": "12",
+          "requires": ["id","text","choice","picture","map","item","sound"]
         }
       ]
     },
@@ -238,6 +244,19 @@
     },
     {
       "id": "11",
+      "title": "About Music",
+      "text": "Sounds and music can be incorporated in several ways. Like for pictures and videos, store your music files in the /public folder.\n\nYou can specify a background music which will play indefinitely via the 'Music' key, at the top of your JSON file.\n\nIndividual sounds, which will play once, can be added to a tile with the 'sound' key. Last, sounds from your videos will be rendered as well.",
+      "sound": "bell.mp3",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "sound",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "12",
       "title": "That's all, folks !",
       "video": "sky.mp4",
       "text": "Now have a look at features.json to see how this story was implemented, create your own and refer to it from /server/main.js\n\nMy intention was to make creating interactive stories as easy as possible. With these features you should be able to realize many cool stories, from pure-text to pure video to mix-and-match. I hope you will like using this engine for your stories. Let me know if you have remarks or requests or if you find bugs. Experiment and see for yourself. I wish you a lot of fun with Storiz !"

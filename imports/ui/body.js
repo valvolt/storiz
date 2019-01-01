@@ -10,11 +10,21 @@ Template.body.helpers({
   },
   loaded() {
 
+        // set story title
         var title = 'storiz';
         Meteor.call('getStoryTitle', function(error,result) {
           document.title = result;
         })
 
+        // play story music
+        Meteor.call('getMusic', function(error,result) {
+          var audio = new Audio(result);
+          audio.load();
+          audio.loop = true;
+          audio.play();
+        })
+
+        // load initial tile
         Session.set("to_tile","1");
         return true;
   },

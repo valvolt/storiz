@@ -2,6 +2,7 @@
 {{#if loaded}}
   {{#each tiles}}
     {{> title}}
+    {{> music}}
     {{> picture}}
     {{> story}}
   {{/each}}
@@ -87,3 +88,12 @@
 <template name="item">
     <li>{{name}} ({{description}})</li>
 </template>
+
+<template name="music">
+  <div hidden>
+  <audio controls autoplay>
+    <source src="{{sound}}" type="audio/mpeg">
+  </audio>
+  </div>
+</template>
+

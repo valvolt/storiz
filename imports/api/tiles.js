@@ -4,6 +4,7 @@ export const Tiles = new Mongo.Collection('tiles');
 export const Stuff = new Mongo.Collection('stuff');
 
 var storyTitle = "storiz";
+var storyMusic = "";
 
 Meteor.methods(
 {
@@ -16,6 +17,20 @@ Meteor.methods(
 {
     'setStoryTitle': function(newtitle){
        storyTitle = newtitle;
+    }
+});
+
+Meteor.methods(
+{
+    'getMusic': function(){
+       return storyMusic;
+    }
+});
+
+Meteor.methods(
+{
+    'setMusic': function(newsong){
+       storyMusic = newsong;
     }
 });
 
