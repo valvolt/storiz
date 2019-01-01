@@ -15,6 +15,8 @@ then from your web browser, go to http://localhost:3000
 
 ## CHANGES
 
+[FIXED] - There is now an 'under construction' error message in case a non-implemented tile is being chosen
+
 [NEW] - Added sound support. Looping, continuous music can be played with 'music'. One-time, tile specific sounds can be played with 'sound'.
 
 [NEW] - Choices which require items to activate can now be completely removed ("disable":"invisible") instead of the default behavior which grey them out (same as "disable":"grey").
@@ -36,8 +38,6 @@ then from your web browser, go to http://localhost:3000
 [FIXED] - The current version uses 'name' for storing required object and 'value' for storing the target tile when clicking on a <button>. This <button> should be replaced by something more free-form with dedicated tags (using name and value for this is ugly).
 
 ## KNOWN BUGS & LIMITATIONS
-
-- There is no error message in case a non-implemented tile is being chosen
 
 - CSS is desesperately needed
 
