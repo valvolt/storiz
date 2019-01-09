@@ -8,8 +8,6 @@ import {Tiles} from '../imports/api/tiles.js';
 import {ScrambledTiles} from '../imports/api/tiles.js';
 import {Stuff} from '../imports/api/tiles.js';
 
-// TODO: create UUIDs upon *click* instead of at start for making guessing / replay impossible
-
 // The status of collected items
 var items = [];
 
@@ -133,6 +131,7 @@ Meteor.publish('currentTileContent', function (tileID) {
       // if the choice is supposed to be invisible, remove it entirely
       if(disable == "invisible") {
         oneTile.choices.splice(j, 1);
+        j--;
       } else if(disable == "grey") {
         delete oneTile.choices[j].to_tile;
         delete oneTile.choices[j].requires;
