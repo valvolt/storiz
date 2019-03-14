@@ -9,6 +9,10 @@ cd storiz
 
 meteor npm install
 
+meteor remove autopublish
+
+meteor remove insecure
+
 meteor
 
 then from your web browser, go to http://localhost:3000
@@ -39,6 +43,8 @@ then from your web browser, go to http://localhost:3000
 
 ## KNOWN BUGS & LIMITATIONS
 
+- Since the engine does not handle users, if several users play concurrently each choice made by each user will affect all the other users
+
 - CSS is desesperately needed
 
 - An editor should be developed, for that I need to add user support, create an admin account, and let it edit / create tiles
@@ -49,7 +55,9 @@ then from your web browser, go to http://localhost:3000
 
 ## ON THE TODO LIST...
 
-- create user accounts, persist progression in DB (for scoring, storing history of visited tiles etc.)
+- create user accounts
+
+- persist progression in DB (for scoring, storing history of visited tiles etc.)
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 
