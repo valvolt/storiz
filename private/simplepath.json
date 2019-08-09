@@ -1,0 +1,92 @@
+{
+  "Name": "Simple Path",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "1",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "choices": [
+        {
+          "text": "To tile 2",
+          "to_tile": "2",
+          "item": "carKey"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "2",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "choices": [
+        {
+          "text": "To tile 3",
+          "to_tile": "3",
+          "item": "carKey"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "3",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "choices": [
+        {
+          "text": "To tile 4",
+          "to_tile": "4",
+          "item": "carKey"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "4",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "choices": [
+        {
+          "text": "To tile 5",
+          "to_tile": "5",
+          "item": "carKey"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "5",
+      "text": "click !",
+      "video": "",
+      "picture": "crosswords.jpg",
+      "choices": [
+        {
+          "text": "To tile 1",
+          "to_tile": "1",
+          "item": "carKey"
+        }
+      ]
+    }
+  ],
+  "Stuff": [
+    {
+      "key": "carKey",
+      "name": "Car key",
+      "description": "The key of your Tesla car. Tied to a 'Super Mario' keychain."
+    },
+    {
+      "key": "rubiksCube",
+      "name": "Rubik's Cube",
+      "description": "Always useful when getting bored"
+    },
+    {
+      "key": "oneEuro",
+      "name": "1 Euro",
+      "description": "Found on your way to the building"
+    }
+  ]
+}

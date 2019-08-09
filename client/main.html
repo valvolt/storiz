@@ -1,6 +1,176 @@
-<head>
-  <title>storiz</title>
-</head>
+<!-- User Management -->
 
-<template name="bug">
+<template name="register">
+    {{#if currentUser}}
+        {{> game}}
+    {{else}}
+    <h2>Create account</h2>
+    <form class="register">
+        <p>Username: <input type="username" name="username"></p>
+        <p>Password: <input type="password" name="password"></p>
+        <p><input type="submit" value="Register"></p>
+    </form>
+    <h3>Already have an account? <a href="{{pathFor route='login'}}">Login</a></h3>
+    {{/if}}
 </template>
+
+<template name="login">
+    {{#if currentUser}}
+        {{> game}}
+    {{else}}
+    <h2>Login</h2>
+    <form class="login">
+        <p>Username: <input type="username" name="username"></p>
+        <p>Password: <input type="password" name="password"></p>
+        <p><input type="submit" value="Login"></p>
+    </form>
+    <h3>Don't have an account? <a href="{{pathFor route='register'}}">Register</a> or use demo/demo to login</h3>
+    {{/if}}
+</template>
+
+<template name="headerfooter">
+  {{#if currentUser}}
+    <div align="left">Connected as: {{currentUser.username}}. <a href="#" class="logout">Logout</a>.</div>
+  {{/if}}
+  {{#each playerData}}
+    <div align="left">Currently playing: {{game}}. <a href="#" class="exit">Exit</a>. <a href="#" class="restart">Restart</a>.</div>
+  {{/each}}
+  {{> yield}}
+  <div align="right">Powered by <a href="https://github.com/valvolt/storiz" target="new">Storiz</a>.</div>
+</template>
+
+<!-- Game Management -->
+<!-- Else render the current game of the current user -->
+
+<template name="game">
+    <script>
+      var currentAudio = new Audio();
+      function muteAndPlay(music) {
+        var thisAudio = new Audio("/"+music); // go to top directory up since media are in / and not in /story/
+        thisAudio.load()
+        thisAudio.loop = true;
+        // mute the old music
+        currentAudio.pause();
+        // play the new music
+        thisAudio.play();
+        currentAudio = thisAudio;  
+      }
+      function mute() {
+        currentAudio.pause();
+      }
+    </script>
+
+    {{#each playerData}}
+      {{> title}}
+      {{> sound}}
+      {{music}}
+      {{> picture}}
+      {{> story}}
+      {{> stuff}}
+    {{else}}
+      <h1>Please refresh the page</h1>
+    {{/each}}
+</template>
+
+<template name="title">
+  <header>
+    <h1 align="center">{{currentScrambledTile.title}}</h1>
+  </header>
+</template>
+
+<template name="sound">
+  {{#if hasSound currentScrambledTile.sound}}
+      <div hidden>
+      <audio controls autoplay>
+        <source src="/{{currentScrambledTile.sound}}" type="audio/mpeg">
+      </audio>
+      </div>
+  {{/if}}
+</template>
+
+<template name="picture">
+  <div align="center" style="border:3px solid black">
+<!--     If we have a video available, we play it. If not, we display a picture instead. If not, we display nothing. -->
+  {{#if currentScrambledTile.video}}
+    <video height="300px" controls autoplay>
+      <source src=/{{currentScrambledTile.video}} type="video/webm"/>
+    </video>
+  {{else}}
+    {{#if currentScrambledTile.map}}
+      <!--     If we have a picture map, we add it here. We take the assumption that map comes with a picture. -->
+      <img src="/{{currentScrambledTile.picture}}" height="300px" usemap="#{{currentScrambledTile.id}}"/>
+      {{> maps}}
+    {{else}}
+      {{#if currentScrambledTile.picture}}
+        <img src="/{{currentScrambledTile.picture}}" height="300px"/>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+  </div>
+</template>
+
+<template name="maps">
+  <map name={{currentScrambledTile.id}}>
+    {{#each currentScrambledTile.map}}
+      {{> map}}
+    {{/each}}
+  </map>
+</template>
+
+<template name="map">
+  <area shape="{{shape}}" coords="{{coords}}" tile={{to_tile}} item={{item}} uses={{uses}} />
+</template>
+
+<template name="story">
+  <div style="border:3px solid black">
+  {{> text}}
+  <ul>
+  {{#each currentScrambledTile.choices}}
+    {{> choice}}
+  {{/each}}
+  </ul>
+
+
+  </div>
+</template>
+
+<template name="text">
+<p>{{{currentScrambledTile.text}}}</p>
+</template>
+
+<template name="choice">
+  {{#if enabled}}
+    <li><button tile="{{to_tile}}" item="{{item}}" uses="{{uses}}">{{text}}</button></li>
+  {{else}}
+    <li><button disabled>{{text}}</button></li>
+  {{/if}}
+</template>
+
+<template name="stuff">
+  <div style="border:3px solid black">
+  <h3>My Stuff</h3>
+  <ul>
+  {{#each currentScrambledTile.Stuff}}
+    {{> item}}
+  {{/each}}
+  </ul>
+  </div>
+</template>
+
+<template name="item">
+    <li>{{name}} ({{description}})</li>
+</template>
+
+
+<template name="stories">
+<!-- If user is not authenticated, reroute to login -->
+{{#if currentUser}}
+  {{#each allContent}}
+    <h2><a href="/story/{{filename}}">{{Name}}</a></h2>
+    <p>{{description}}</p>
+  {{/each}}
+{{else}}
+  {{> login}}
+{{/if}}
+</template>
+

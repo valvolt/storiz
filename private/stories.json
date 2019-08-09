@@ -1,0 +1,16 @@
+{
+  "stories": [
+    {
+      "filename": "features",
+      "description": "A demo of what one can do with Stories"
+    },
+    {
+      "filename": "simplepath",
+      "description": "A reduced version of the demo story aimed at beginners"
+    },
+    {
+      "filename": "sampleheatmap",
+      "description": "A reduced demo version where you can click on the eraser"
+    }
+  ]
+}

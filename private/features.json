@@ -1,0 +1,285 @@
+{
+  "Name": "Demo Tour",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "These are things you can do with Storiz",
+      "sound": "",
+      "music": "wait.mp3",
+      "video": "hello.webm",
+      "text": "Hi from me, I'm the game designer. Storiz let you create interactive stories rather simply, just by creating a JSON file. But before we enter the details, get a feeling of the game. Try to go see the receptionist, but before that you need to find your car keys",
+      "choices": [
+        {
+          "text": "Let me pick-up my car keys",
+          "to_tile": "1",
+          "item": "carKey"
+        },
+        {
+          "text": "I'll take my Rubik's Cube",
+          "to_tile": "1",
+          "item": "rubiksCube",
+          "disable": "grey"
+        },
+        {
+          "text": "Let's go see this receptionist !",
+          "to_tile": "2",
+          "requires": "carKey"
+        },
+        {
+          "text": "Play with my Rubik's Cube a bit",
+          "to_tile": "1bis",
+          "requires": "rubiksCube",
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "1bis",
+      "title": "Now THAT was cool.",
+      "text": "Some options require some items to be activated. When you miss an item, the option can be greyed-out or completely invisible.",
+      "music": "wait.mp3",
+      "picture": "cube.jpg",
+      "choices": [
+        {
+          "text": "Ok, back to business !",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Hey, where are my choices ?",
+      "sound": "tram.mp3",
+      "text": "In Storiz, you can embed pictures with clickable areas, just as this one. In order to proceed to the receptionist's building, you need to find it first ! Click on the buildings on the picture until you find the right one.",
+      "picture": "buildings.jpg",
+      "map": [
+        {
+          "shape": "poly",
+          "coords": "244,198,240,97,228,83,209,87,204,100,201,126,204,199",
+          "to_tile": "3",
+          "item": "oneEuro"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "You've found the receptionist !",
+      "text": "Hi, I'm Marie. Congratulations in finding me ! Now you can restart again or get more info about how storiz works",
+      "picture": "receptionist.jpg",
+      "choices": [
+        {
+          "text": "I want to know more !",
+          "to_tile": "4",
+          "uses": ["carKey","oneEuro","rubiksCube"]
+        },
+        {
+          "text": "I've heard enough. Thanks Marie, I'll go back to the beginning.",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Creating your own story...",
+      "picture": "doors.jpg",
+      "text": "A story is a .json file stored in the /stories folder. Have a look at the sample ones for inspiration. Each page is contained in a 'Tile' element, comprising of an id, a title, some text, some choices, and a video or picture.\n\nClick on the topic you want to learn about:",
+      "choices": [
+        {
+          "text": "ID",
+          "to_tile": "5"
+        },
+        {
+          "text": "text",
+          "to_tile": "6"
+        },
+        {
+          "text": "choices",
+          "to_tile": "7"
+        },
+        {
+          "text": "picture & video",
+          "to_tile": "8"
+        },
+        {
+          "text": "map",
+          "to_tile": "9"
+        },
+        {
+          "text": "items",
+          "to_tile": "10"
+        },
+        {
+          "text": "sound & music",
+          "to_tile": "11"
+        },
+        {
+          "text": "Putting it all together",
+          "to_tile": "12",
+          "requires": ["id","text","choice","picture","map","item","sound"]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d1.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the BLACK dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d2.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the WHITE dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d3.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the RED dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d4.png",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the GREEN dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "About Tile IDs",
+      "picture": "d5.jpg",
+      "text": "Tile IDs are used for linking pages together. Your first tile must have the id '1', other tiles can be named as you like. A choice or map will redirect you to the tile id corresponding to the to_tile specified.\nUpon the loading of your story, the server will replace the IDs with GUIDs, preventing cheaters to see what links where, namely a choice leading back to a Tile already visited.\n\nIf several tiles have the same ID (such as this one), one of them will be chosen at random.\n\nThis tile has the ORANGE dice picture. Go back and try again for another picture (5 different).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "id",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "title": "About Tile text",
+      "text": "Text is what is displayed in the place you are currently looking at. You can use (any) HTML formatting in there, such as &lt;i&gt; tags for <i>italics</i>.\n\nYou can also use \\n for\ngenerating\ncarriage\nreturns.",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "text",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "title": "About Tile choices",
+      "text": "Choices is the heart of the game. These are used for sending you from Tile to Tile.\nA Choice will send you to the tile ID corresponding to the specified to_tile value. Choices are also used in complement to your inventory, displayed in the Stuff section:\nThese are handled with the keys 'item', 'uses' and 'requires', which can contain either a string or an array.\n'item' specifies which item from the Stuff JSON section will be added to your inventory (if not there already) upon clicking.\n'uses' will remove the specified item(s) from your inventory if they exist, and do nothing special if the item is missing.\n'requires' is used for specifying required item(s).\nIf the user is missing a required item, the option will be disabled according to what you specify with the 'disable' option: if set to 'grey', the option will be visible but greyed-out (players can't click). If set to 'invisible', the button will be completely removed. The default behavior, if nothing is specified, is 'disable':'grey'.",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "choice",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "title": "About Tile picture (and video)",
+      "text": "Store your pictures and videos in the /public folder. Upon loading a Tile, the game will check if there is a video specified. If yes, it will render the video (which will autoplay and can produce sound). If not, it will render the picture if specified. If there is no picture nor video, the section will simply not appear (for text-only stories or tiles).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "picture",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "title": "About Tile map",
+      "text": "You can specify a Map along a Picture, making it a clickable picture. These clicks work in the same way than Choices, as they can give, use or require items. If an item is missing, the clickable part will simply not be available. Be careful with this as it may confuse your players. On top of these keys, two extra keys are present: shape, and coords. Shape specifies the shape of the clickable form, and can be: 'rect' (for a rectangle), 'poly' (for an arbitrary polygon) or 'circle' (for a circle). Coords contains the coordinates specifying the location of the shape.\nYou can easily generate image maps with the website available at: <font color='blue'>https://www.image-map.net/</font> Make sure that your image has a height of exactly 300 pixels, so that it won't be resized by the game engine (which would make your coordinates incorrect).",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "map",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "About Items",
+      "text": "Items are added and used whenever a choice is made, by clicking a button or an image map. They are defined in the JSON file in the Stuff array, by specifying a key, a name and a description. The name and description will appear in the My Stuff section on the player screen. The key is used to bind the choices to the specified item. If a key is used in a choice or map and that no corresponding entry exists in the Stuff section, this will define an 'invisible' item which can be used as a trigger. For example, the choice 'Putting it all together' of the previous Tile will remained greyed-out until you visit all the other tiles first. To activate, it requires invisible items that you gather by visiting the other tiles. This can help come-up with more complex story logic while avoiding to clog the My Stuff section with technical things such as knowing whether a certain character has already been met, etc.",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "item",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "title": "About Music",
+      "text": "Your music and sound assets shall be put in the /public folder and work as follows:\n-The 'music' key let you play a track across tiles. The track will loop endlessly. If the next tile specifies the same 'music' file, the music will continue playing (and not restart at the beginning). If the next tile does not specify any music, the track will stop. If the next tile specifies another music track, the new one will play instead of the previous one. Use 'music' to set atmospheres.\n- The 'sound' key let you play a track, once, for the current track. The sound will play on top of the music (if any). If another tile is clicked, the sound, if not over, will be cut.\nLast, music and sounds from your videos will be rendered as well if present.",
+      "sound": "bell.mp3",
+      "choices": [
+        {
+          "text": "Go back",
+          "item": "sound",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "title": "That's all, folks !",
+      "music": "birds.mp3",
+      "video": "sky.mp4",
+      "text": "Now have a look at features.json to see how this story was implemented, create your own and refer to it from /server/main.js\n\nMy intention was to make creating interactive stories as easy as possible. With these features you should be able to realize many cool stories, from pure-text to pure video to mix-and-match. I hope you will like using this engine for your stories. Let me know if you have remarks or requests or if you find bugs. Experiment and see for yourself. I wish you a lot of fun with Storiz !"
+    }
+  ],
+  "Stuff": [
+    {
+      "key": "carKey",
+      "name": "Car key",
+      "description": "The key of your Tesla car. Tied to a 'Super Mario' keychain."
+    },
+    {
+      "key": "rubiksCube",
+      "name": "Rubik's Cube",
+      "description": "Always useful when getting bored"
+    },
+    {
+      "key": "oneEuro",
+      "name": "1 Euro",
+      "description": "Found on your way to the building"
+    }
+  ]
+}
