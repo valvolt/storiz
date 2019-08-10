@@ -111,10 +111,10 @@ Router.route('/story/:_storyname', function () {
   this.render('game');
 });
 
-
 // Get updated when the user's PlayerData is modified
-Meteor.subscribe('mydata',Meteor.userId());
-
+Tracker.autorun(() => {
+  Meteor.subscribe('mydata',Meteor.userId());
+});
 
 Template.game.helpers({
   playerData() {
