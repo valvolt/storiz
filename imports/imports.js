@@ -1,12 +1,14 @@
-// we create 2 collections:
-// - one which contains the static content, never published to the client
+// we create 3 collections:
+// - one which contains all the static content, never published to the client
 // - one which contains player data, where we will publish only the current player's data
 // - when the client changes the "to_data" field,
 //   the server loads the corresponding data in the "data" field
 // - when the server updates the "data" field,
 //   the client updates the corresponding data in the UI
+// - one which contains player flags (Stuff), kept on the server to make cheating harder
 export const AllContent = new Mongo.Collection('allcontent');
 export const PlayerData = new Mongo.Collection('playerdata');
+export const PlayerFlags = new Mongo.Collection('playerflags');
 
 // This function takes one JSON object which contains one Tile, and the current Stuff of the player.
 // It swaps real IDs with scrambled IDs, and removes at the time inaccessible choices (minimize)
@@ -128,7 +130,7 @@ Meteor.methods({
 Meteor.methods({
   'updateStuff' : function(oneChoice){
     if(Meteor.isServer){
-    currentStuff = PlayerData.find({player:Meteor.userId()}).fetch()[0].Stuff;
+    currentStuff = PlayerFlags.find({player:Meteor.userId()}).fetch()[0].Stuff;
 
     // if this choice gives one or several item(s), add them (if we don't have them already)
     if(oneChoice.item != undefined) {
@@ -157,7 +159,7 @@ Meteor.methods({
       }
     }
     // Update player's Stuff
-    PlayerData.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
+    PlayerFlags.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
   }}
 });
 
@@ -248,11 +250,11 @@ Meteor.methods(
         rnd = ~~(Math.random() * NewTiles.length); 
         NewTile = NewTiles[rnd];
 
-        AllKeys = PlayerData.find({player:currentPlayer}).fetch()[0].Stuff;
+        AllKeys = PlayerFlags.find({player:currentPlayer}).fetch()[0].Stuff;
         // Stripping the Tile from all the non-scrambled data
         NewTile = Meteor.call('minimize', NewTile, AllKeys);
 
-        // Stuff management: PlayerData.Stuff contains all the stuff keys (e.g. story flags).
+        // Stuff management: PlayerFlags.Stuff contains all the stuff keys (e.g. story flags).
         // We retrieve the key + description when available and append them to the current Tile
 
         // Fetch all Stuff from the story
@@ -294,7 +296,10 @@ Meteor.methods(
     currentData = {};
     currentData.player = Meteor.userId();
     currentData.game = storyname;
-    currentData.Stuff = [];
+    // We shall populate PlayerFlags with the content of the proper story's first tile (e.g. nothing)
+    currentFlags = {};
+    currentFlags.player = Meteor.userId();
+    currentFlags.Stuff = [];
 
     manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Tiles':1,'_id':0}} ).fetch()[0];
     // at this stage manyTiles contains all Tiles from the story. Searching for tile #1
@@ -308,12 +313,14 @@ Meteor.methods(
     }
 
     // here, oneTile contains the Tile with ID 1. We minimize it, store it, and return.
-    oneScrambledTile = Meteor.call('minimize',oneTile,currentData.Stuff);
+    oneScrambledTile = Meteor.call('minimize',oneTile,currentFlags.Stuff);
 
     currentData.currentScrambledTile = oneScrambledTile;
-    // save this state in the player's collection
+    // save this state in the player's collections
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
+    PlayerFlags.remove({player: Meteor.userId()});
+    PlayerFlags.insert(currentFlags);
   }
 }
 });
@@ -331,6 +338,7 @@ Meteor.methods(
       if(Meteor.isServer) {
         // Drop player data
         PlayerData.remove({player:currentPlayer});
+        PlayerFlags.remove({player:currentPlayer});
       }
     }
 });
