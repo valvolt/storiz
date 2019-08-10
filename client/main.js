@@ -22,12 +22,20 @@ Template.register.events({
             username: username,
             password: password
         }, function(error){
-          Router.go('/');
           if(error){
             console.log(error.reason); // Output error if registration fails
+            Session.set('errorMessage', error.reason);
+        } else {
+          Router.go('/');
         }
       })
     }
+});
+
+Template.register.helpers({
+  errorMessage: function() {
+    return Session.get('errorMessage');
+  }
 });
 
 Template.login.events({
@@ -36,12 +44,23 @@ Template.login.events({
         var username = $('[name=username]').val();
         var password = $('[name=password]').val();
         Meteor.loginWithPassword(username, password, function(error){
-          Router.go('/');
           if(error){
+            // 'User not found' and 'Incorrect password' are too verbose, let's fix that
+            if(error.reason == "User not found") {error.reason = "Incorrect username or password"}
+            if(error.reason == "Incorrect password") {error.reason = "Incorrect username or password"}
             console.log(error.reason);
+            Session.set('errorMessage', error.reason);
+          } else {
+            Router.go('/');
           }
        })
      }
+});
+
+Template.login.helpers({
+  errorMessage: function() {
+    return Session.get('errorMessage');
+  }
 });
 
 Template.headerfooter.helpers({

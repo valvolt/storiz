@@ -11,6 +11,11 @@
         <p><input type="submit" value="Register"></p>
     </form>
     <h3>Already have an account? <a href="{{pathFor route='login'}}">Login</a></h3>
+    {{#if errorMessage}}
+      <div class="alert">
+        <span>/!\ {{errorMessage}} /!\</span>
+      </div>
+    {{/if}}
     {{/if}}
 </template>
 
@@ -25,6 +30,11 @@
         <p><input type="submit" value="Login"></p>
     </form>
     <h3>Don't have an account? <a href="{{pathFor route='register'}}">Register</a> or use demo/demo to login</h3>
+    {{#if errorMessage}}
+      <div class="alert">
+        <span>/!\ {{errorMessage}} /!\</span>
+      </div>
+    {{/if}}
     {{/if}}
 </template>
 
