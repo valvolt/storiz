@@ -15,9 +15,11 @@ Enjoy, and as usual, feedback welcome !
 
 ## HOW-TO RUN
 
+```
 cd storiz
 meteor npm install
 meteor
+```
 
 then from your web browser, go to http://localhost:3000
 
