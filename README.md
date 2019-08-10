@@ -7,29 +7,27 @@ A simple engine for creating HTML5 choice-based games. Think super-simple Visual
 
 I finally managed to fix the concurrent access issue ! In Meteor, Sessions are shared by all users. So when two players were playing, each click on one button would refresh both pages, making the game unplayable. Now you can register and login. As long as two players run as a different user they should be fine.
 
-I learned a lot more how the refresh 'magic' of Meteor does work in the process, I rewrote almost the engine from scratch and removed code which worked but was really ugly. Now there is only one strange issue I don't know how to fix, that's why on first start you will have to refresh your page. For some reason after the first reload everything runs smoothly.
+I learned a lot more how the refresh 'magic' of Meteor does work in the process, I rewrote almost the engine from scratch and removed code which worked but was really ugly.
 
 The home page says that you can login as demo/demo. Of course, you will have to register this user the first time otherwise this won't work.
-
-Last, I'm still not too sure how Meteor handles package downloads. I've now committed .meteor/packages, this should hopefully make meteor npm install more efficient and avoid the need to run meteor remove insecure and the like.
 
 Enjoy, and as usual, feedback welcome !
 
 ## HOW-TO RUN
 
+```
 cd storiz
-
 meteor npm install
-
-meteor remove autopublish
-
-meteor remove insecure
-
 meteor
+```
 
 then from your web browser, go to http://localhost:3000
 
 ## CHANGES
+
+[NEW] - I've added a new private collection storing the story flags (e.g. Stuff keys) out of the main PlayerData collection. As this new PlayerFlags collection is never published, this avoids a data leak which could help players to cheat.
+
+[FIXED] - Upon the first story load, the server does not push its data to the client. The workaround is to refresh the page once. I still do not understand why since after this refresh everything runs smoothly...
 
 [NEW] - Now instead of hardcoding your story path, you edit /private/stories.json. This will populate a page where from users can choose which story to play. Also, they can now click 'exit' to go back to the story menu or 'restart' to reload the story
 
@@ -68,8 +66,6 @@ then from your web browser, go to http://localhost:3000
 - UUIDs are generated at server start, not game start, making replay attacks somewhat possible. A better solution would be to generate UUIDs at each click.
 
 - Since all assets are stored in the /public folder, forced browsing is possible if resources have predictable names (e.g. 1.jpg 2.jpg etc.). Not sure much can be done to prevent this.
-
-- Upon the first story load, the server does not push its data to the client. The workaround is to refresh the page once. I still do not understand why since after this refresh everything runs smoothly...
 
 ## ON THE TODO LIST...
 
