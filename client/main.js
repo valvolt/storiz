@@ -1,12 +1,14 @@
 import {PlayerData} from '../imports/imports.js';
 import {AllContent} from '../imports/imports.js';
 import {Template} from 'meteor/templating';
+import uuid from 'uuid';
 
 // Authentication and User management
 /////////////////////////////////////
 
 Router.route('/register');
 Router.route('/login');
+Router.route('/autologin');
 
 // used for logout and for quitting current game
 Router.configure({
@@ -62,6 +64,17 @@ Template.login.helpers({
     return Session.get('errorMessage');
   }
 });
+
+// Used to create an anonymous user automatically (and to delete old anonymous users)
+Template.autologin.helpers({
+  autologin: function() {
+    loginToken = uuid();
+    Meteor.call('autologin',loginToken);
+    Meteor.loginWithToken(loginToken);
+    Router.go('/');
+  }
+});
+
 
 Template.headerfooter.helpers({
   playerData() {

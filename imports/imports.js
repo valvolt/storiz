@@ -190,7 +190,7 @@ Meteor.methods(
     // update the to_tile value of the current user's game
     'toData': function(to_data){
        currentPlayer = Meteor.userId();
-       currentGame = PlayerData.find({}).fetch()[0].game;
+       currentGame = PlayerData.find({'player':currentPlayer}).fetch()[0].game;
 
       if(Meteor.isServer) {
         // Loads the PlayerData corresponding to this new tile value
@@ -351,5 +351,49 @@ Meteor.methods(
       currentStory = PlayerData.find({player:currentPlayer}).fetch()[0].game;
       Meteor.call('loadStory',currentStory);
     }
+});
+
+// This method creates an anonymous user and logs-in
+Meteor.methods(
+{
+  'autologin': function(loginToken){
+    var MaxAnonUsers = 1000;
+    if(Meteor.isServer) {
+      // Anonymous users have a username with format Anonymous-X where X is a number.
+      lowestNumber = Number.MAX_SAFE_INTEGER;
+      highestNumber = 0;
+      // We retrieve the highest and lowest numbers.
+      allanonusers = Meteor.users.find({'username':/Anonymous-*/}).fetch();
+      for (user in allanonusers) {
+        username = allanonusers[user].username;
+        usernumber = Number(username.split("-")[1]);
+        if(usernumber < lowestNumber) {
+          lowestNumber = usernumber;
+        }
+        if(usernumber > highestNumber) {
+          highestNumber = usernumber;
+        }
+      }
+      // How many anonymous users do we have currently?
+      anonusers = Meteor.users.find({'username':/Anonymous-*/}).count();
+      if(anonusers > MaxAnonUsers) {
+        // To avoid anonymous users creep, we keep the latest 400 users only.
+        // Since we make this check every time we create a user, we simply need to delete the oldest one
+        Meteor.users.remove({'username':"Anonymous-"+lowestNumber});
+      }
+      // create new anonymous user.
+      highestNumber++;
+      newAnonUser = {};
+      newAnonUser.username = "Anonymous-"+highestNumber;
+      // there is a cryptic 'createdAt' field auto-added, but it will be easier to parse this one...
+      newAnonUser.creationTime = Date.now();
+      newUserId = Accounts.createUser(newAnonUser);
+      // generate login token
+      stampedLoginToken = Accounts._generateStampedLoginToken();
+      stampedLoginToken.token = loginToken;
+      // assign token to user
+      Accounts._insertLoginToken(newUserId, stampedLoginToken);
+    }
+  }
 });
 

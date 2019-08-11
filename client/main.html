@@ -29,12 +29,21 @@
         <p>Password: <input type="password" name="password"></p>
         <p><input type="submit" value="Login"></p>
     </form>
-    <h3>Don't have an account? <a href="{{pathFor route='register'}}">Register</a> or use demo/demo to login</h3>
+    <h3>Don't have an account? <a href="{{pathFor route='register'}}">Register</a> or login as <a href="{{pathFor route='autologin'}}">Anonymous</a></h3>
     {{#if errorMessage}}
       <div class="alert">
         <span>/!\ {{errorMessage}} /!\</span>
       </div>
     {{/if}}
+    {{/if}}
+</template>
+
+<template name="autologin">
+    {{#if currentUser}}
+        {{> stories}}
+    {{else}}
+      <p>Login in progress, please wait...</p>
+      {{autologin}}
     {{/if}}
 </template>
 
