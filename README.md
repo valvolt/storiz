@@ -9,7 +9,7 @@ I finally managed to fix the concurrent access issue ! In Meteor, Sessions are s
 
 I learned a lot more how the refresh 'magic' of Meteor does work in the process, I rewrote almost the engine from scratch and removed code which worked but was really ugly.
 
-The home page says that you can login as demo/demo. Of course, you will have to register this user the first time otherwise this won't work.
+'Autologin' will create a user session (without password) which will eventually be destroyed. This is convenient if you don't want to create a user account. Anonymous users won't have access to Achievements and Save/Restore features (on the TODO list).
 
 Enjoy, and as usual, feedback welcome !
 
@@ -24,6 +24,8 @@ meteor
 then from your web browser, go to http://localhost:3000
 
 ## CHANGES
+
+[NEW] - Instead of creating an account, one can now use the 'autologin' feature. At the login page, click on the 'login as anonymous' or go to /autologin. This will create an anonymous user without a password. Only the last MaxAnonUsers users will be kept on the database (default value: 1000).
 
 [NEW] - I've added a new private collection storing the story flags (e.g. Stuff keys) out of the main PlayerData collection. As this new PlayerFlags collection is never published, this avoids a data leak which could help players to cheat.
 
@@ -65,11 +67,15 @@ then from your web browser, go to http://localhost:3000
 
 - UUIDs are generated at server start, not game start, making replay attacks somewhat possible. A better solution would be to generate UUIDs at each click.
 
-- Since all assets are stored in the /public folder, forced browsing is possible if resources have predictable names (e.g. 1.jpg 2.jpg etc.). Not sure much can be done to prevent this.
+- Since all assets are stored in the /public folder, forced browsing is possible if resources have predictable names (e.g. 1.jpg 2.jpg etc.). Not sure much can be done to prevent this (of course you can choose to create assets with cryptic names :)).
 
 ## ON THE TODO LIST...
 
-- persist progression in DB (for scoring, storing history of visited tiles etc.)
+- persist progression in DB (for logging / scoring, storing history of visited tiles etc.)
+
+- add a 'save / restore' feature for continuing a story at a later time
+
+- add an 'achievement' system
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 
