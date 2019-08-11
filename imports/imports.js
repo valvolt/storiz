@@ -377,7 +377,7 @@ Meteor.methods(
       // How many anonymous users do we have currently?
       anonusers = Meteor.users.find({'username':/Anonymous-*/}).count();
       if(anonusers > MaxAnonUsers) {
-        // To avoid anonymous users creep, we keep the latest 400 users only.
+        // To avoid anonymous users creep, we keep the latest MaxAnonUsers users only.
         // Since we make this check every time we create a user, we simply need to delete the oldest one
         Meteor.users.remove({'username':"Anonymous-"+lowestNumber});
       }
