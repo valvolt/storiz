@@ -89,11 +89,13 @@ Template.headerfooter.helpers({
 Template.headerfooter.events({
     'click .logout': function(event){
         event.preventDefault();
+        mute();
         Meteor.call('exit');
         Meteor.logout();
     },
     'click .exit': function(event){
         event.preventDefault();
+        mute();
         Meteor.call('exit');
     },
     'click .restart': function(event){
@@ -170,7 +172,10 @@ Template.game.helpers({
     currentMusic = Session.get("music");
     // Three options:
     if(this.currentScrambledTile.music == currentMusic) {
-      // 1- we have to play the same music -> we do nothing
+      // 1- we have to play the same music
+      //    - if it already plays -> we do nothing
+      //    - if it was paused -> we restart it
+      resume(this.currentScrambledTile.music);
     } else if(this.currentScrambledTile.music == undefined) {
       // 2- we do not have any music to play -> we stop the current music
       mute();

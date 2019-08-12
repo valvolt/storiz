@@ -66,6 +66,7 @@
       var currentAudio = new Audio();
       function muteAndPlay(music) {
         var thisAudio = new Audio("/"+music); // go to top directory up since media are in / and not in /story/
+console.log("mute-and-play");
         thisAudio.load()
         thisAudio.loop = true;
         // mute the old music
@@ -73,9 +74,20 @@
         // play the new music
         thisAudio.play();
         currentAudio = thisAudio;  
+console.log(currentAudio.currentSrc);
       }
       function mute() {
+console.log("pause");
+console.log(currentAudio.currentSrc);
         currentAudio.pause();
+      }
+      function resume(music) {
+console.log("resume");
+console.log(currentAudio.currentSrc);
+        if(currentAudio.paused == true) {
+console.log("yes");
+          muteAndPlay(music);
+        }
       }
     </script>
 
