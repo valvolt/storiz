@@ -301,7 +301,9 @@ Meteor.methods(
     currentFlags.player = Meteor.userId();
     currentFlags.Stuff = [];
 
-    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Tiles':1,'_id':0}} ).fetch()[0];
+    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'_id':0}} ).fetch()[0];
+    // stores the Credits
+    currentData.Credits = manyTiles.Credits;
     // at this stage manyTiles contains all Tiles from the story. Searching for tile #1
     manyTilesContent = manyTiles.Tiles;
     oneTile = null;

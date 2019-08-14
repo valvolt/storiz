@@ -17,6 +17,8 @@ function loadStories() {
     var scrambledStoryContent = scrambleTiles(storyContent);
     // Store the name of the story
     oneStory.Name = storyContent.Name;
+    // Store the credits, if any
+    oneStory.Credits = storyContent.Credits;
     // Its Tiles, enhanced with scrambled IDs
     oneStory.Tiles = scrambledStoryContent;
     // and Stuff

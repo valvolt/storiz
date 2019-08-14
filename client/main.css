@@ -3,4 +3,18 @@
   color: red;
 }
 
+#parent {
+  width:100%;
+  float: left;
+  background-color: #EEEEEE;
+}
+#leftdiv {
+  width: 500px;
+  float: left;
+  background-color: #FFFFFF;
+}
+#rightdiv {
+  width: 500px;
+  float: left;
+}
 

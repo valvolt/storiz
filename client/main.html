@@ -52,7 +52,10 @@
     <div align="left">Connected as: {{currentUser.username}}. <a href="#" class="logout">Logout</a>.</div>
   {{/if}}
   {{#each playerData}}
-    <div align="left">Currently playing: {{game}}. <a href="#" class="exit">Exit</a>. <a href="#" class="restart">Restart</a>.</div>
+    <div align="left">Currently playing: {{game}}.
+  {{#if Credits}}(<a href="#" class="credits">Show/Hide Credits</a>)
+  {{/if}} <a href="#" class="exit">Exit</a>. <a href="#" class="restart">Restart</a>.</div>
+  <div align="center" id="credits" style="display: none;border:3px solid black">{{{Credits}}}</div>
   {{/each}}
   {{> yield}}
   <div align="right">Powered by <a href="https://github.com/valvolt/storiz" target="new">Storiz</a>.</div>
@@ -66,7 +69,6 @@
       var currentAudio = new Audio();
       function muteAndPlay(music) {
         var thisAudio = new Audio("/"+music); // go to top directory up since media are in / and not in /story/
-console.log("mute-and-play");
         thisAudio.load()
         thisAudio.loop = true;
         // mute the old music
@@ -74,30 +76,32 @@ console.log("mute-and-play");
         // play the new music
         thisAudio.play();
         currentAudio = thisAudio;  
-console.log(currentAudio.currentSrc);
       }
       function mute() {
-console.log("pause");
-console.log(currentAudio.currentSrc);
         currentAudio.pause();
       }
       function resume(music) {
-console.log("resume");
-console.log(currentAudio.currentSrc);
         if(currentAudio.paused == true) {
-console.log("yes");
           muteAndPlay(music);
         }
       }
     </script>
 
+    <!-- these divs shall put content side-by-side on laptops and on top of each other on mobiles -->
+
     {{#each playerData}}
-      {{> title}}
-      {{> sound}}
-      {{music}}
-      {{> picture}}
-      {{> story}}
-      {{> stuff}}
+          {{> title}}
+          {{> sound}}
+          {{music}}
+    <div id="parent">
+        <div id="leftdiv">
+          {{> picture}}
+        </div>
+        <div id="rightdiv">
+          {{> story}}
+        </div>
+    </div>
+          {{> stuff}}
     {{else}}
       <h1>Please refresh the page</h1>
     {{/each}}
@@ -120,7 +124,7 @@ console.log("yes");
 </template>
 
 <template name="picture">
-  <div align="center" style="border:3px solid black">
+  <div align="center">
 <!--     If we have a video available, we play it. If not, we display a picture instead. If not, we display nothing. -->
   {{#if currentScrambledTile.video}}
     <video height="300px" controls autoplay>
@@ -153,15 +157,13 @@ console.log("yes");
 </template>
 
 <template name="story">
-  <div style="border:3px solid black">
+  <div id="story">
   {{> text}}
   <ul>
   {{#each currentScrambledTile.choices}}
     {{> choice}}
   {{/each}}
   </ul>
-
-
   </div>
 </template>
 
@@ -178,7 +180,7 @@ console.log("yes");
 </template>
 
 <template name="stuff">
-  <div style="border:3px solid black">
+  <div>
   <h3>My Stuff</h3>
   <ul>
   {{#each currentScrambledTile.Stuff}}

@@ -102,6 +102,15 @@ Template.headerfooter.events({
         event.preventDefault();
         Meteor.call('restart');
     },
+    'click .credits': function(event){
+        event.preventDefault();
+        var x = document.getElementById("credits");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+    },
 });
 
 // Stories
