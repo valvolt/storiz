@@ -25,6 +25,12 @@ then from your web browser, go to http://localhost:3000
 
 ## CHANGES
 
+[New] - Added an actual short sci-fi story named D3mons to give you a better feel of the engine - I hope you'll enjoy it :) With this story I come closer to the original idea I had when creating Storiz: a platform for cool stories which intermix with other types of gameplay such as hacking exercises. Don't expect real hacking there though, all you have to do is choose well where you click :) There is a hidden golden ending to show what achievements shall look like, but the feature is still under development as I'm writing this.
+
+[NEW] - Added 'Credits' feature. Use this to credit artists who contributed to your stories. Players can show/hide them from the top menu.
+
+[NEW] - Played a bit with the CSS formatting. Now on laptop screens the text and choices will appear on the right side of the screen, removing the need to scroll back and forth. If you narrow the window or if you play on a mobile, the text should appear under the picture as before.
+
 [NEW] - Instead of creating an account, one can now use the 'autologin' feature. At the login page, click on the 'login as anonymous' or go to /autologin. This will create an anonymous user without a password. Only the last MaxAnonUsers users will be kept on the database (default value: 1000).
 
 [NEW] - I've added a new private collection storing the story flags (e.g. Stuff keys) out of the main PlayerData collection. As this new PlayerFlags collection is never published, this avoids a data leak which could help players to cheat.
@@ -63,7 +69,7 @@ then from your web browser, go to http://localhost:3000
 
 - CSS is desesperately needed
 
-- An editor should be developed, for that I need to add user support, create an admin account, and let it edit / create tiles
+- An editor should be developed, for that I need to add user roles, create an admin account, and let it edit / create tiles
 
 - UUIDs are generated at server start, not game start, making replay attacks somewhat possible. A better solution would be to generate UUIDs at each click.
 
