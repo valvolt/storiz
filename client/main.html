@@ -199,7 +199,7 @@
 <!-- If user is not authenticated, reroute to login -->
 {{#if currentUser}}
   {{#each allContent}}
-    <h2><a href="/story/{{filename}}">{{Name}}</a></h2>
+    <h2><a href="/story/{{filename}}">{{Name}}</a> ({{NbTiles}} Tiles)</h2>
     <p>{{description}}</p>
   {{/each}}
 {{else}}

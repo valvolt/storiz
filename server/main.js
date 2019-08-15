@@ -21,6 +21,8 @@ function loadStories() {
     oneStory.Credits = storyContent.Credits;
     // Its Tiles, enhanced with scrambled IDs
     oneStory.Tiles = scrambledStoryContent;
+    // How many Tiles do we have? Store this as well
+    oneStory.NbTiles = oneStory.Tiles.length;
     // and Stuff
     oneStory.Stuff = storyContent.Stuff;
     // store the full story into the collection
@@ -72,7 +74,7 @@ Meteor.publish('mydata', function(playerId) {
 
 // publishes all story names
 Meteor.publish('storynames', function() {
-  return AllContent.find({ },{fields : {'filename': 1, 'Name': 1,'description':1}});
+  return AllContent.find({ },{fields : {'filename': 1, 'Name': 1,'description':1,'NbTiles':1}});
 });
 
 Meteor.startup(() => {
