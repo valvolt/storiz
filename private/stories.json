@@ -1,6 +1,14 @@
 {
   "stories": [
     {
+      "filename": "d3mons",
+      "description": "Short post-apocalyptic story"
+    },
+    {
+      "filename": "d3mons-fr",
+      "description": "Courte histoire post-apocalyptique"
+    },
+    {
       "filename": "features",
       "description": "A demo of what one can do with Stories"
     },

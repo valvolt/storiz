@@ -1,5 +1,6 @@
 {
   "Name": "Demo Tour",
+  "Credits": "<p>Histoire originale: <b>Cédric Hebert</b></p>",
   "Tiles": [
     {
       "id": "1",
