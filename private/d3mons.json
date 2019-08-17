@@ -675,5 +675,25 @@
       "name": "Nmap",
       "description": "A port scanner. Works with an i-brain. Let you find access points."
     }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "badending",
+      "name": "Re-connected",
+      "description": "The masked man connected you back to the Puppetmaster"
+    },
+    {
+      "trophy": "silver",
+      "key": "goodending",
+      "name": "Ao-1 D3mons-0",
+      "description": "Completed your first mission as a hack3r"
+    },
+    {
+      "trophy": "gold",
+      "key": "goldenending",
+      "name": "Who's Jen?",
+      "description": "You know Jen is hiding something..."
+    }
   ]
 }

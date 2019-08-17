@@ -675,5 +675,25 @@
       "name": "Nmap",
       "description": "Un scanneur de ports. Fonctionne avec un i-brain. Permets de découvrir des points d'entrée."
     }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "badending",
+      "name": "Re-connecté",
+      "description": "L'homme au masque à gaz vous a rendu au Puppetmaster"
+    },
+    {
+      "trophy": "silver",
+      "key": "goodending",
+      "name": "Ao-1 D3mons-0",
+      "description": "Vous avez accompli votre première mission de hack3r"
+    },
+    {
+      "trophy": "gold",
+      "key": "goldenending",
+      "name": "Qui est Jen?",
+      "description": "Jen vous cache quelque-chose, vous le savez..."
+    }
   ]
 }
