@@ -18,12 +18,15 @@ Enjoy, and as usual, feedback welcome !
 ```
 cd storiz
 meteor npm install
+meteor npm install --save uuid
 meteor
 ```
 
 then from your web browser, go to http://localhost:3000
 
 ## CHANGES
+
+[New] - Added a profile page for the user, where his achievements are displayed. Added an 'achievement' field as well for stories. As usual, features.json shows how this works. There a some known limitations.
 
 [New] - Added an actual short sci-fi story named D3mons to give you a better feel of the engine - I hope you'll enjoy it :) With this story I come closer to the original idea I had when creating Storiz: a platform for cool stories which intermix with other types of gameplay such as hacking exercises. Don't expect real hacking there though, all you have to do is choose well where you click :) There is a hidden golden ending to show what achievements shall look like, but the feature is still under development as I'm writing this.
 
@@ -67,6 +70,8 @@ then from your web browser, go to http://localhost:3000
 
 ## KNOWN BUGS & LIMITATIONS
 
+- Achievements are not persisted when exiting from a story, and are not available at all if no story was loaded. This should be easy to fix though.
+
 - CSS is desesperately needed
 
 - An editor should be developed, for that I need to add user roles, create an admin account, and let it edit / create tiles
@@ -85,4 +90,4 @@ then from your web browser, go to http://localhost:3000
 
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 
-- update the demo tour Youtube video with the latest content of the sample story and with user registration/login
+- update the demo tour Youtube video with the latest content of the sample story (credits, achievements, content floating, ...) and with user actions (registration, login, restart story, ...). I should also resize the video as well as some images which are too large and overlap with the text when displayed side-by-side (max supported width is 580px)
