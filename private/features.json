@@ -40,6 +40,7 @@
       "text": "Some options require some items to be activated. When you miss an item, the option can be greyed-out or completely invisible.",
       "music": "wait.mp3",
       "picture": "cube.jpg",
+      "achievement": "cube",
       "choices": [
         {
           "text": "Ok, back to business !",
@@ -67,6 +68,7 @@
       "title": "You've found the receptionist !",
       "text": "Hi, I'm Marie. Congratulations in finding me ! Now you can restart again or get more info about how storiz works",
       "picture": "receptionist.jpg",
+      "achievement": "receptionist",
       "choices": [
         {
           "text": "I want to know more !",
@@ -263,6 +265,7 @@
       "title": "That's all, folks !",
       "music": "birds.mp3",
       "video": "sky.mp4",
+      "achievement": "end",
       "text": "Now have a look at features.json to see how this story was implemented, create your own and refer to it from /server/main.js\n\nMy intention was to make creating interactive stories as easy as possible. With these features you should be able to realize many cool stories, from pure-text to pure video to mix-and-match. I hope you will like using this engine for your stories. Let me know if you have remarks or requests or if you find bugs. Experiment and see for yourself. I wish you a lot of fun with Storiz !"
     }
   ],
@@ -281,6 +284,26 @@
       "key": "oneEuro",
       "name": "1 Euro",
       "description": "Found on your way to the building"
+    }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "cube",
+      "name": "Cube",
+      "description": "You played with the cube"
+    },
+    {
+      "trophy": "silver",
+      "key": "receptionist",
+      "name": "Sample achievement",
+      "description": "Got when talking to Marie"
+    },
+    {
+      "trophy": "gold",
+      "key": "end",
+      "name": "Aware",
+      "description": "You have completed the tutorial"
     }
   ]
 }

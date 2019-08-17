@@ -237,3 +237,20 @@ Template.choice.helpers({
   }
 });
 
+// User profile and achievements
+/////////////////////////////////////
+
+Router.route('/profile/:_username', function () {
+  this.render('profile');
+});
+
+Template.profile.helpers({
+  achievements() {
+    Meteor.call('populateAchievements',function(err,res){
+console.log(res);
+      Session.set('achievements',res);
+    });
+    return Session.get('achievements');
+  }
+});
+

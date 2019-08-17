@@ -1,12 +1,14 @@
-// we create 3 collections:
+// we create several collections:
 // - one which contains all the static content, never published to the client
+// - one for all achievements, only unlocked ones will be published to the client
 // - one which contains player data, where we will publish only the current player's data
-// - when the client changes the "to_data" field,
-//   the server loads the corresponding data in the "data" field
-// - when the server updates the "data" field,
-//   the client updates the corresponding data in the UI
+//   - when the client changes the "to_data" field,
+//     the server loads the corresponding data in the "data" field
+//   - when the server updates the "data" field,
+//     the client updates the corresponding data in the UI
 // - one which contains player flags (Stuff), kept on the server to make cheating harder
 export const AllContent = new Mongo.Collection('allcontent');
+export const AllAchievements = new Mongo.Collection('allachievements');
 export const PlayerData = new Mongo.Collection('playerdata');
 export const PlayerFlags = new Mongo.Collection('playerflags');
 
@@ -184,6 +186,40 @@ Meteor.methods({
   }
 });
 
+// adds this achievement to PlayerData, if not already there
+function processAchievement(achievementKey,currentPlayer,currentGame) {
+  if(achievementKey == undefined) return;
+  // Retrieve player's achievements
+  allPlayerAchievements = PlayerData.find({player:currentPlayer}).fetch()[0].Achievements;
+  if(allPlayerAchievements == undefined) allPlayerAchievements = [];
+  // Selects this story's achievements
+  currentStoryAchievements = null;
+  updateIndex = 0;
+  for(i in allPlayerAchievements) {
+    if(allPlayerAchievements[i].story == currentGame) {
+      currentStoryAchievements = allPlayerAchievements[i];
+      updateIndex = i;
+      break;
+    }
+  }
+  if(currentStoryAchievements == null) {
+    // We had zero achievement for this story. Initializing...
+    currentStoryAchievements = {};
+    currentStoryAchievements.story = currentGame;
+    currentStoryAchievements.trophies = [];
+  }
+  // Now we can check if we already unlocked this achievement
+  if(currentStoryAchievements.trophies.includes(achievementKey)) {
+    // we already have this one, nothing to do
+  } else {
+    // that's a new one ! Update the list
+    currentStoryAchievements.trophies.push(achievementKey);
+    // and save it
+    allPlayerAchievements[updateIndex] = currentStoryAchievements;
+    PlayerData.update({player:currentPlayer},{$set:{'Achievements':allPlayerAchievements}});
+  }
+}
+
 // This method is called by the client when he chooses a Tile
 Meteor.methods(
 {
@@ -250,6 +286,10 @@ Meteor.methods(
         rnd = ~~(Math.random() * NewTiles.length); 
         NewTile = NewTiles[rnd];
 
+        // Did we unlock an Achievement?
+        processAchievement(NewTile.achievement,currentPlayer,currentGame);
+
+        // Retrieve the Stuff possessed currently by the player, since this influences available options
         AllKeys = PlayerFlags.find({player:currentPlayer}).fetch()[0].Stuff;
         // Stripping the Tile from all the non-scrambled data
         NewTile = Meteor.call('minimize', NewTile, AllKeys);
@@ -290,6 +330,7 @@ Meteor.methods(
 {
   'loadStory': function(storyname){
 //console.log("loadStory called: "+storyname);
+  if(storyname == null) return; // avoid throwing an error when we are not actually loading a story
   if(Meteor.isServer) {
 
     // We shall populate PlayerData with the content of the proper story's first tile
@@ -321,6 +362,9 @@ Meteor.methods(
     // save this state in the player's collections
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
+
+    //TODO: everywhere we delete something from PlayerFlags we should keep the Achievements intact (e.g. merely update the Stuff field)
+    //TODO: maybe PlayerData shan't be entirely dropped either
     PlayerFlags.remove({player: Meteor.userId()});
     PlayerFlags.insert(currentFlags);
   }
@@ -396,6 +440,66 @@ Meteor.methods(
       // assign token to user
       Accounts._insertLoginToken(newUserId, stampedLoginToken);
     }
+  }
+});
+
+// This method loops over all stories' achievements, and unlocks the ones the player found
+Meteor.methods(
+{
+  'populateAchievements': function(achievements){
+    achievementList = [];
+    if(Meteor.isServer){
+      // retrieving all achievements
+      allAchievements = AllAchievements.find().fetch();
+      // going through all of them, story per story
+      for(i in allAchievements) {
+        // prepare a new entry
+        oneList = {};
+        oneList.filename = allAchievements[i].filename;
+        oneList.Achievements = [];
+        // go through all achievements of the story, if any
+        if(allAchievements[i].Achievements != null) {
+          for(j in allAchievements[i].Achievements) {
+            unlocked = false;
+            // Did we unlock this one? Retrieving this story's collected trophies
+            playerData = PlayerData.find({}).fetch()[0];
+            //TODO FIX THIS: it might happen that this is empty - playerdata is populated upon story load, so no trophies if we did not load any story yet ! Fix is to populate playerData upon login
+            if(playerData == undefined) return;
+            collectedTrophies = playerData.Achievements;
+            candidateKeys = [];
+            if(playerData.Achievements != undefined) {
+              // retrieving the trophies for the current story
+              for(k in playerData.Achievements) {
+                if(playerData.Achievements[k].story == allAchievements[i].filename) {
+                  candidateKeys = playerData.Achievements[k].trophies;
+                }
+              }
+              // at this stage, candidateKeys contains all currently processed story's achievement keys. All there is to do is to compare the current key to this list
+              if(candidateKeys.includes(allAchievements[i].Achievements[j].key)) {
+                // we have this one !
+                unlocked = true;
+              }
+            }
+            if(unlocked == true) {
+              // we send the achievement in clear-text form
+              oneList.Achievements.push(allAchievements[i].Achievements[j]);
+            } else {
+              // we send the achievement in hidden form
+              hiddenItem = {};
+              hiddenItem.trophy = allAchievements[i].Achievements[j].trophy;
+              hiddenItem.name = "[LOCKED]"
+              hiddenItem.description = "[LOCKED]"
+              oneList.Achievements.push(hiddenItem);
+            }
+          }
+          // store it if there is at least one achievement to be found
+          if(oneList.Achievements.length > 0) {
+            achievementList.push(oneList);
+          }
+        }
+      }
+    }
+    return achievementList;
   }
 });
 

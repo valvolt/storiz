@@ -1,5 +1,6 @@
 import {PlayerData} from '../imports/imports.js';
 import {AllContent} from '../imports/imports.js';
+import {AllAchievements} from '../imports/imports.js';
 import uuid from 'uuid';
 
 // Retrieve the list of available stories from the /private directory
@@ -8,6 +9,8 @@ var stories = JSON.parse(Assets.getText('stories.json'));
 // loads the list of stories into the AllContent collection
 function loadStories() {
   theStories = stories.stories;
+  // cleanup of all achievements, re-building from scratch
+  AllAchievements.remove({});
   for (i in theStories) {
     // fetch the filename and description from the stories.json file
     oneStory = theStories[i];
@@ -23,10 +26,19 @@ function loadStories() {
     oneStory.Tiles = scrambledStoryContent;
     // How many Tiles do we have? Store this as well
     oneStory.NbTiles = oneStory.Tiles.length;
-    // and Stuff
+    // store the Stuff
     oneStory.Stuff = storyContent.Stuff;
     // store the full story into the collection
     AllContent.insert(oneStory);
+    // store the story's achievements into the dedicated collection
+    oneAchievementSet = {};
+    oneAchievementSet.filename = oneStory.filename;
+    if(storyContent.Achievements == null) {
+      oneAchievementSet.Achievements = [];
+    } else {
+      oneAchievementSet.Achievements = storyContent.Achievements;
+    }
+    AllAchievements.insert(oneAchievementSet);
 
 //console.log("INSERTING :");
 //console.log(oneStory);
@@ -84,6 +96,7 @@ AllContent.rawCollection().drop().catch(error => {
   // silently drop the error
 });
 
+//TODO: maybe this deletion is not necessary
 PlayerData.rawCollection().drop().catch(error => {
   // this might fail if the collection is not ready,
   // silently drop the error

@@ -48,31 +48,17 @@
 </template>
 
 <template name="headerfooter">
-  {{#if currentUser}}
-    <div align="left">Connected as: {{currentUser.username}}. <a href="#" class="logout">Logout</a>.</div>
-  {{/if}}
-  {{#each playerData}}
-    <div align="left">Currently playing: {{game}}.
-  {{#if Credits}}(<a href="#" class="credits">Show/Hide Credits</a>)
-  {{/if}} <a href="#" class="exit">Exit</a>. <a href="#" class="restart">Restart</a>.</div>
-  <div align="center" id="credits" style="display: none;border:3px solid black">{{{Credits}}}</div>
-  {{/each}}
-  {{> yield}}
-  <div align="right">Powered by <a href="https://github.com/valvolt/storiz" target="new">Storiz</a>.</div>
-</template>
-
-<!-- Game Management -->
-<!-- Else render the current game of the current user -->
-
-<template name="game">
     <script>
       var currentAudio = new Audio();
       function muteAndPlay(music) {
+        // mute the old music
+        currentAudio.pause();
+        if(music == undefined || music == "") {
+          return;
+        }
         var thisAudio = new Audio("/"+music); // go to top directory up since media are in / and not in /story/
         thisAudio.load()
         thisAudio.loop = true;
-        // mute the old music
-        currentAudio.pause();
         // play the new music
         thisAudio.play();
         currentAudio = thisAudio;  
@@ -87,6 +73,26 @@
       }
     </script>
 
+  {{#if currentUser}}
+    <div align="left">Connected as: <a href="/profile/{{currentUser.username}}">{{currentUser.username}}</a>. <a href="/story/#" class="logout">Logout</a>.</div>
+  {{/if}}
+  {{#each playerData}}
+    <div align="left">Currently playing: <a href="/story/{{game}}">{{game}}</a>.
+    {{#if Credits}}(<a href="/story/#" class="credits">Show/Hide Credits</a>)
+    {{/if}} <a href="/story/#" class="exit">Exit</a>. <a href="/story/#" class="restart">Restart</a>.</div>
+    <div align="center" id="credits" style="display: none;border:3px solid black">{{{Credits}}}</div>
+  {{/each}}
+  {{#unless playerData}}
+    <div align="left">Currently playing: <a href="/">nothing</a>.</div>
+  {{/unless}}
+  {{> yield}}
+  <div align="right">Powered by <a href="https://github.com/valvolt/storiz" target="new">Storiz</a>.</div>
+</template>
+
+<!-- Game Management -->
+<!-- Else render the current game of the current user -->
+
+<template name="game">
     <!-- these divs shall put content side-by-side on laptops and on top of each other on mobiles -->
 
     {{#each playerData}}
@@ -103,7 +109,7 @@
     </div>
           {{> stuff}}
     {{else}}
-      <h1>Please refresh the page</h1>
+      <h1>Please go back to <a href="/">main page</a> and refresh (F5) your session</h1>
     {{/each}}
 </template>
 
@@ -205,5 +211,26 @@
 {{else}}
   {{> login}}
 {{/if}}
+</template>
+
+<!-- Profile Management -->
+
+<template name="profile">
+  {{#if currentUser}}
+  <h1>My Profile</h1>
+    <p><b>Username:</b> {{currentUser.username}}</p>
+    <h2>My Achievements</h2>
+    {{#each achievements}}
+      <h3>{{filename}}</h3>
+      <table>
+        <tr><td><b>Name</b></td><td><b>Achievement</b></td><td><b>Trophy</b></td></tr>
+        {{#each Achievements}}
+          <tr><td><b>{{name}}</b></td><td>{{description}}</td><td><img align="center" height="30px" src="/system/{{trophy}}.png" title="{{trophy}}"/></td></tr>
+        {{/each}}
+      </table>
+    {{/each}}
+  {{else}}
+    {{> login}}
+  {{/if}}
 </template>
 
