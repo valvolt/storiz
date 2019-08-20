@@ -208,6 +208,14 @@ Template.game.events({
   }
 });
 
+Template.picture.helpers({
+video() {
+    var video = document.getElementById('video');
+    video.load();
+    video.play();
+  }
+});
+
 // updates the to_tile value of the PlayerData of the current user
 function manageClick(to_data) {
   // updates the to_data field of PlayerData
@@ -247,7 +255,6 @@ Router.route('/profile/:_username', function () {
 Template.profile.helpers({
   achievements() {
     Meteor.call('populateAchievements',function(err,res){
-console.log(res);
       Session.set('achievements',res);
     });
     return Session.get('achievements');

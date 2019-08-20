@@ -133,7 +133,8 @@
   <div align="center">
 <!--     If we have a video available, we play it. If not, we display a picture instead. If not, we display nothing. -->
   {{#if currentScrambledTile.video}}
-    <video height="300px" controls autoplay>
+    {{video}}
+    <video id="video" height="300px" controls autoplay>
       <source src=/{{currentScrambledTile.video}} type="video/webm"/>
     </video>
   {{else}}
