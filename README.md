@@ -1,6 +1,8 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. Built with Meteor.
 
+Play/test it here: https://valvolt-storiz.herokuapp.com/
+
 [![Features tour](https://img.youtube.com/vi/7i0tOzKHSlw/0.jpg)](https://www.youtube.com/watch?v=7i0tOzKHSlw)
 
 ## LATEST NEWS
