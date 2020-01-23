@@ -1,24 +1,14 @@
 {
   "stories": [
     {
+      "filename": "tutorial",
+      "description": "How to write your own story."
+    },    {
       "filename": "d3mons",
-      "description": "Short post-apocalyptic story"
-    },
-    {
+      "description": "Short post-apocalyptic story with a hacking theme."
+    },    {
       "filename": "d3mons-fr",
-      "description": "Courte histoire post-apocalyptique"
-    },
-    {
-      "filename": "features",
-      "description": "A demo of what one can do with Stories"
-    },
-    {
-      "filename": "simplepath",
-      "description": "A reduced version of the demo story aimed at beginners"
-    },
-    {
-      "filename": "sampleheatmap",
-      "description": "A reduced demo version where you can click on the eraser"
+      "description": "Courte histoire de hacker post-apo."
     }
   ]
 }

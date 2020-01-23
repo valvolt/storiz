@@ -1,0 +1,477 @@
+{
+  "Name": "Tutorial",
+  "Credits": "<p>Original story: C&eacute;dric Hebert</p><p>Title:  Calling Out<br/>Author: AERØHEAD<br/>Source: https://www.youtube.com/channel/UCoZbM1a4PKQ6haa2Ap4TSdg<br/>Licence: https://creativecommons.org/licenses/by-sa/3.0/deed.fr<br/>Download (7MB): https://auboutdufil.com/?id=546</p><p>Video: https://www.pexels.com/video/drone-footage-of-the-thick-fog-on-a-mountain-forest-2711145/</p><p>photos https://pixabay.com/fr/users/thuyhabich-6663646/</p>",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "Welcome",
+      "text": "Welcome to the place where you can learn about how to use the power of reality warping. I am here to teach you how to write interactive stories, stories made of choices opening-up the realm of possibilities. What do you want to hear about?",
+      "picture": "tutorial/1.jpg",
+      "choices": [
+        {
+          "text": "I want to know the basics",
+          "to_tile": "2"
+        },
+        {
+          "text": "Teach me about media files",
+          "to_tile": "3"
+        },
+        {
+          "text": "Tell me about clickable images",
+          "to_tile": "4"
+        },
+        {
+          "text": "Teach me how to add items",
+          "to_tile": "5"
+        },
+        {
+          "text": "Show me the advanced stuff",
+          "to_tile": "6"
+        },
+        {
+          "text": "Teach me about the rest",
+          "to_tile": "7"
+        },
+        {
+          "text": "Ok I'm done !",
+          "to_tile": "8"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Storiz: the basics",
+      "text": "What you see here is called a tile. A story is made of several tiles, linked to each other. When you click on a button, you are sent to the next tile.<br/>All tiles are declared in a single file. In its basic form, it looks like this.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>We shall now review the details for each tile component.",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "Next: title",
+          "to_tile": "title"
+        }
+      ]
+    },
+    {
+      "id": "title",
+      "title": "Storiz: the basics - title",
+      "text": "The title is a simple string, which will be displayed at the top of the tile. A title is optional.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      <b>\"title\": \"my first tile\",</b><br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "Next: text",
+          "to_tile": "text"
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "title": "Storiz: the basics - text",
+      "text": "The text part is what you are reading right now. It is optional, for example for stories based only on pictures and videos. The text part supports HTML tags such as &lt;b&gt; to make the text <b>bold</b>, for example. For more info on HTML tags, have a look <a target=\"new\" href=\"https://www.w3schools.com/TAGs/\">here</a>.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      <b>\"text\": \"my tile text\",</b><br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "Next: picture",
+          "to_tile": "picture"
+        }
+      ]
+    },
+    {
+      "id": "picture",
+      "title": "Storiz: the basics - picture",
+      "text": "A picture is also optional. To add one to the tile, you have to do the following:<br/>- On your computer, go to the folder where you have downloaded the Storiz engine, then enter the /public sub-folder.<br/>- It is recommended to create a sub-folder for your story if one does not exist already, for example my_folder.<br/>- Store in this subfolder the picture you want for your tile. You may want to rename your picture if its name contains spaces or special characters.<br/>- If your picture is named my_picture.png and is stored in /public/my_story, then the \"picture\" element of your tile should contain \"my_folder/my_picture.png\"<br/><br/>The picture will be resized to a height of 300 pixels.<br/>You can find free to use pictures on <a target=\"new\" href=\"https://pixabay.com\">Pixabay.com</a>.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      <b>\"picture\": \"my_folder/picture.jpg\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/picture.jpg",
+      "choices": [
+        {
+          "text": "Next: choices",
+          "to_tile": "choices"
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Storiz: the basics - choices",
+      "text": "The choices are the heart of Storiz. It is where the story branches to alternative paths. The 'choices' element is optional, but if not provided, there will be no button to click.<br/><br/>Each choice is composed of a text and a to_tile elements Both elements are required.<br/>- The text element is a string, which will be displayed as a clickable button.<br/>- The to_tile element corresponds to the id of the target tile. If no tile corresponds, you will get an error when you click.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      <b>\"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]</b><br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "Next: id",
+          "to_tile": "id"
+        }
+      ]
+    },
+    {
+      "id": "id",
+      "title": "Storiz: the basics - id",
+      "text": "An identifier for the tile. It is required to link tiles together. One tile MUST have the id \"1\", this is the tile which will be rendered first. Other tiles can have any id, as long as it matches the to_tile of a choice. It can be a number (such as \"2\" or \"56\"), but it can be any string (such as \"encounter\" or \"game over\").<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      <b>\"id\": \"1\",</b><br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "Next: the JSON file",
+          "to_tile": "json"
+        }
+      ]
+    },
+    {
+      "id": "json",
+      "title": "Storiz: the basics - the JSON file",
+      "text": "All tiles are stored within a single file, in the JSON format. This file must be stored in the /private sub-folder and have a name, such as my_story.json.<br/>You may want to look at other files stored in /private to see how other stories work. It is recommended to have the same name for your filename and for the /public sub-folder where you stored your pictures.<br/><br/>It may happen when you write your tiles to get a syntax error, for example if you miss a curly bracket or a comma. To help you, you can use a JSON Beautifier which will tell you where the error is, such as <a target=\"new\" href=\"https://duckduckgo.com/?q=json+beautifier&ia=answer\">this one</a>.<br/><br/>To add your story to the catalogue of available stories on the server, you need to edit the file /private/stories.json and to add an entry for your story there. The filename must be the name of your .json file. The description can be any text you want, the description supports HTML tags.<br/><br/>To test your story, run the server by doing the following:<br/>- open a terminal window<br/>- go to the storiz directory<br/>- type 'meteor' and hit enter<br/><br/><br/>We have now covered the basics. You are already armed for creating some cool interactive stories !",
+      "picture": "tutorial/2.jpg",
+      "choices": [
+        {
+          "text": "All good !",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Storiz: media files",
+      "text": "Adding sound and video is a great way to make your stories even more immersive. Let's walk through the available options.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"music\": \"my_folder/cool_music.mp3\",<br/>      \"sound\": \"my_folder/bang.mp3\",<br/>      \"video\": \"my_folder/my_video.mp4\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/3.jpg",
+      "choices": [
+        {
+          "text": "Next: sound",
+          "to_tile": "sound"
+        }
+      ]
+    },
+    {
+      "id": "sound",
+      "title": "Storiz: media files - sound",
+      "text": "You can add a \"sound\" element to your tile. The sound file shall be stored in the /public folder, in the same way you are already storing pictures. The sound will be played once, when the tile is rendered on-screen. If you want to surprise your audience, you may want to add a few seconds of silence before playing the sound for a surprise effect. Free sounds can be found on <a target=\"new\" href=\"https://lasonotheque.org/\">lasonotheque.org</a>.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"music\": \"my_folder/cool_music.mp3\",<br/>      <b>\"sound\": \"my_folder/laugh.mp3\",</b><br/>      \"video\": \"my_folder/my_video.mp4\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/3.jpg",
+      "sound": "tutorial/laugh.mp3",
+      "choices": [
+        {
+          "text": "Next: music",
+          "to_tile": "music"
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "title": "Storiz: media files - music",
+      "text": "The \"music\" element works in the same way as the \"sound\" one: the file to be played must be in the /public folder and will play as soon as the tile is rendered. There are however two major differences with the \"sound\" element:<br/>- the \"music\" will be played in an endless loop<br/>- if the next tile rendered on-screen has the same \"music\" value, then the music will continue playing. In other words, the music will play until the player renders a tile which has no \"music\" element or a different \"music\" value.<br/><br/>It is possible to have both music and sound elements for the same tile. Free music can be found on <a target=\"new\" href=\"https://www.auboutdufil.com/\">www.auboutdufil.com</a>.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      <b>\"music\": \"my_folder/cool_music.mp3\",</b><br/>      \"sound\": \"my_folder/laugh.mp3\",<br/>      \"video\": \"my_folder/my_video.mp4\",<br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/3.jpg",
+      "music": "tutorial/Aerohead_CallingOut.mp3",
+      "choices": [
+        {
+          "text": "Next: video",
+          "to_tile": "video"
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "title": "Storiz: media files - video",
+      "text": "The \"video\" element works in the same way as the \"picture\" element. The video file must be stored in the /public folder and will play automatically as soon as the tile is rendered on-screen.<br/>The video will be resized to have a height of 300 pixels. The sound of the video will play, keep that in mind if you have a sound or music element already set.<br/><br/>You cannot have a \"video\" and \"picture\" at the same time: if that's the case, only the video will be rendered.<br/><br/>You can find free to use videos on <a target=\"new\" href=\"https://www.pexels.com\">Pexels.com</a>.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"music\": \"my_folder/cool_music.mp3\",<br/>      \"sound\": \"my_folder/laugh.mp3\",<br/>      <b>\"video\": \"my_folder/my_video.mp4\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "video": "tutorial/video.mp4",
+      "music": "tutorial/Aerohead_CallingOut.mp3",
+      "choices": [
+        {
+          "text": "All good !",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Storiz: clickable images",
+      "text": "An image on which you can click is called an image map. Its zones work as (extra) choices and are defined with the \"map\" element. You can decide to have only choices, or only a map, or both for your tile. Be careful not to confuse your players as nothing will tell them the picture is clickable if you don't tell them.<br/><br/><pre>  \"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.png\",<br/>      \"map\": [<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"373,253,163,134,71,62,179,99,375,213\",<br/>          \"to_tile\": \"3\"<br/>        },<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"18,299,151,233,111,158,3,207,3,297\",<br/>          \"to_tile\": \"4\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>Each clickable zone is composed of a shape, coordinates, and a to_tile.<br/>- The \"to_tile\" defines the target tile id, like for a choice.<br/>- The \"shape\" is the shape of the zone which can be clicked, and the \"coords\" corresponds to the related coordinates.<br/><br/>To create an image map, you have to do the following:<br/>- First, resize the picture so that its height is exactly 300 pixels<br/>- Upload your image to <a target=\"new\" href=\"https://www.image-map.net/\">image-map.net</a><br/>- Edit your clickable zones on the website, then click \"show me the code\"<br/>- Copy the \"shape\" and \"coords\" values to your map element<br/><br/>Congratulations, you have created a clickable picture ! Click on the left flower to go back to the main menu.",
+      "picture": "tutorial/4.jpg",
+      "map": [
+        {
+          "shape": "poly",
+          "coords": "42,98,37,75,50,57,81,59,134,34,151,45,162,82,179,101,202,107,182,115,197,167,158,169,143,206,87,215,50,229,27,221,20,203,36,181,38,167,60,156,50,145,52,134,70,125,73,118,10,111",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Storiz: item management",
+      "text": "Storiz supports the management of items, which open-up interesting possibilities. Items can be collected and used for unlocking certain choices. Let's see how this works.<br/><br/><pre>  \"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      \"key\": \"my_item_2\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]<br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      \"item\": \"my_item_2\"<br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      \"requires\": \"my_item_1\",<br/>      \"uses\": \"my_item_1\",<br/>      \"disable\": \"invisible\"<br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Next: Stuff",
+          "to_tile": "stuff"
+        }
+      ]
+    },
+    {
+      "id": "stuff",
+      "title": "Storiz: item management - Stuff",
+      "text": "All the items of the story shall be declared in the \"Stuff\" section. Each item in this section is defined by a key, a name and a description.<br/>- The \"name\" and the \"description\" are simple strings which will appear as such to the player.<br/>- The \"key\" must be a unique identifier for the item. This key will never be displayed on screen and is used for binding the item to the choices or maps.<br/><br/>These elements are called 'items' but they can be used any way you like. They can represent objects, such as a sword, or something else, such as the name of a contact, or the current mood of the character. What matters is that these elements will have an impact in the choices the player can make by enabling otherwise unavailable options.<br/><br/><pre>  <b>\"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      \"key\": \"my_item_2\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]</b><br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      \"item\": \"my_item_2\"<br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      \"requires\": \"my_item_1\",<br/>      \"uses\": \"my_item_1\",<br/>      \"disable\": \"invisible\"<br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Next: item",
+          "to_tile": "item"
+        }
+      ]
+    },
+    {
+      "id": "item",
+      "title": "Storiz: item management - item",
+      "text": "This element can be added to a choice or map option. Its value shall be corresponding to a \"key\" declared in the Stuff section. If the player takes this choice, the item will be added to the inventory of the player.<br/>The \"item\" element can be declared in two ways:<br/>- if the option gives a single item, you can declare it in the following way: \"item\": \"my_item\"<br/>- if the option gives two or more items, you can declare them in an array structure like this: \"item\": \"[my_item_1,my_item_2,my_item_3]\"<br/><br/><pre>  \"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      <b>\"key\": \"my_item_2\",</b><br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]<br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      <b>\"item\": \"my_item_2\"</b><br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      \"requires\": \"my_item_1\",<br/>      \"uses\": \"my_item_1\",<br/>      \"disable\": \"invisible\"<br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Pick a flower",
+          "item": "aflower",
+          "to_tile": "item"
+        },
+        {
+          "text": "Next: uses",
+          "requires": "aflower",
+          "to_tile": "uses"
+        }
+      ]
+    },
+    {
+      "id": "uses",
+      "title": "Storiz: item management - uses",
+      "text": "This element is the counterpart of the \"item\" element. It can be added to a choice or a map option. If the player takes this choice, and if the player had the corresponding item, then the item will be removed. If no such item was obtained, nothing will happen.<br/><br/>The \"item\" element can be declared in two ways:<br/>- if the option removes a single item, you can declare it in the following way: \"uses\": \"my_item\"<br/>- if the option removes two or more items, you can declare them in an array structure like this: \"uses\": \"[my_item_1,my_item_2,my_item_3]\"<br/><br/>Note that an option can both give items and use (other) items.<br/><br/><pre>  \"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      \"key\": \"my_item_2\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]<br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      \"item\": \"my_item_2\"<br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      \"requires\": \"my_item_1\",<br/>      <b>\"uses\": \"my_item_1\",</b><br/>      \"disable\": \"invisible\"<br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Discard your flower",
+          "uses": "aflower",
+          "item": "noflower",
+          "to_tile": "uses"
+        },
+        {
+          "text": "Next: requires",
+          "requires": "noflower",
+          "uses": "noflower",
+          "to_tile": "requires"
+        }
+      ]
+    },
+    {
+      "id": "requires",
+      "title": "Storiz: item management - requires",
+      "text": "This element can be added to a choice or map option. If the player did not collect the corresponding item(s), then the option will be disabled. That is, the player won't be able to choose the option. If it is a choice option, as seen in the previous tile, it will be grayed-out. If it is a map option, it will disappear entirely.<br/><br/>- if the option requires a single item, you can declare it in the following way: \"requires\": \"my_item\"<br/>- if the option requires two or more items, you can declare them in an array structure like this: \"requires\": \"[my_item_1,my_item_2,my_item_3]\"<br/><br/>The \"requires\" element is useful for branching the story based on which elements the player picked up.<br/><br/>Note that an option can both give items and use (other) items.<br/><br/><pre>  \"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      \"key\": \"my_item_2\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]<br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      \"item\": \"my_item_2\"<br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      <b>\"requires\": \"my_item_1\",</b><br/>      \"uses\": \"my_item_1\",<br/>      \"disable\": \"invisible\"<br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Next: disable",
+          "to_tile": "disable"
+        }
+      ]
+    },
+    {
+      "id": "disable",
+      "title": "Storiz: item management - disable",
+      "text": "This element can be added to a choice option. It complements the \"requires\" element and controls the behavior of the corresponding choice button.<br/><br/>- \"disable\": \"grey\" - This is the default option. If the player misses at least one of the \"required\" items, the button will be greyed-out. It will still be visible but the player won't be able to click on it. It is useful to tell the player that there are other options which he could try to unlock when replaying the game.<br/>- \"disable\": \"invisible\" - If specified, then if the player misses at least one of the \"required\" items, the button will be completely removed. It is useful to keep some branches as a surprise or to avoid having too many greyed-out buttons.<br/><br/>The \"requires\" element is useful for branching the story based on which elements the player picked up.<br/><br/>Note that an option can both give items and use (other) items.<br/><br/><pre>  \"Stuff\": [<br/>    {      \"key\": \"my_item_1\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    },<br/>    {<br/>      \"key\": \"my_item_2\",<br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]<br/><br/><br/>  \"choices\": [<br/>    {<br/>      \"text\": \"first choice\",<br/>      \"to_tile\": \"2\",<br/>      \"item\": \"my_item_2\"<br/>    },<br/>    {<br/>      \"text\": \"second choice\",<br/>      \"to_tile\": \"3\",<br/>      \"requires\": \"my_item_1\",<br/>      \"uses\": \"my_item_1\",<br/>      <b>\"disable\": \"invisible\"</b><br/>    }<br/>  ]<pre>",
+      "picture": "tutorial/5.jpg",
+      "choices": [
+        {
+          "text": "Pick a flower",
+          "item": "aflower",
+          "to_tile": "disable"
+        },
+        {
+          "text": "All good !",
+          "requires": "aflower",
+          "disable": "invisible",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "title": "Storiz: advanced topics",
+      "text": "These are advanced topics which can let you design even more complex stories. Are you ready?",
+      "picture": "tutorial/6.jpg",
+      "choices": [
+        {
+          "text": "Next: collecting clues",
+          "to_tile": "clues"
+        }
+      ]
+    },
+    {
+      "id": "clues",
+      "title": "Storiz: advanced topics - collecting clues",
+      "text": "When you write tile id \"x\", you can let player find items (such as clues in a clickable image, for example) and stay on the same tile (to search for more items maybe) by setting the target \"to_tile\" to \"x\", that is, to the current id. This will trigger the attached \"item\" keyword but will keep the player on the same tile.<br/><br/>You can click on this picture to collect up to six flowers.",
+      "picture": "tutorial/6-3.png",
+      "map": [
+        {
+          "shape": "circle",
+          "coords": "82,97,27",
+          "to_tile": "clues",
+          "item": "aflower"
+        },
+        {
+          "shape": "circle",
+          "coords": "184,185,23",
+          "to_tile": "clues",
+          "item": "aflower2"
+        },
+        {
+          "shape": "circle",
+          "coords": "91,227,31",
+          "to_tile": "clues",
+          "item": "aflower3"
+        },
+        {
+          "shape": "circle",
+          "coords": "382,188,30",
+          "to_tile": "clues",
+          "item": "aflower4"
+        },
+        {
+          "shape": "circle",
+          "coords": "159,38,32",
+          "to_tile": "clues",
+          "item": "aflower5"
+        },
+        {
+          "shape": "circle",
+          "coords": "363,63,42",
+          "to_tile": "clues",
+          "item": "aflower6"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Next: randomness",
+          "to_tile": "randomness"
+        }
+      ]
+    },
+    {
+      "id": "randomness",
+      "title": "Storiz: advanced topics - randomness",
+      "text": "It is possible to assign the same \"id\" to several tiles. When this is the case, the engine will choose at random which tile to render. If you have 4 tiles with the same id, then each of these tiles will have a 25% chance to be rendered each time the player chooses to visit this id.<br/>It is possible to add some randomness to your stories this way, which is nice for replay value, but be careful not to alienate the player. It is recommended to have only slight changes between two tiles having the same id (such as giving a different object upon visit, making the player encounter a different character, or just see a similar picture with different colors or hear a different background music).<br/><br/>Click the reload button to (possibly) see another picture (50% chance)",
+      "picture": "tutorial/6.jpg",
+      "choices": [
+        {
+          "text": "Reload this tile",
+          "to_tile": "randomness"
+        },
+        {
+          "text": "Next: flags",
+          "to_tile": "flags"
+        }
+      ]
+    },
+    {
+      "id": "randomness",
+      "title": "Storiz: advanced topics - randomness",
+      "text": "It is possible to assign the same \"id\" to several tiles. When this is the case, the engine will choose at random which tile to render. If you have 4 tiles with the same id, then each of these tiles will have a 25% chance to be rendered each time the player chooses to visit this id.<br/>It is possible to add some randomness to your stories this way, which is nice for replay value, but be careful not to alienate the player. It is recommended to have only slight changes between two tiles having the same id (such as giving a different object upon visit, making the player encounter a different character, or just see a similar picture with different colors or hear a different background music).<br/><br/>Click the reload button to (possibly) see another picture (50% chance)",
+      "picture": "tutorial/6-2.jpg",
+      "choices": [
+        {
+          "text": "Reload this tile",
+          "to_tile": "randomness"
+        },
+        {
+          "text": "Next: flags",
+          "to_tile": "flags"
+        }
+      ]
+    },
+    {
+      "id": "flags",
+      "title": "Storiz: advanced topics - flags",
+      "text": "Story flags is a powerful means to control which branch the player visits. For example the player could be free to visit 5 places in any order, and could visit a 6th one once all the other places were visited.<br/>To do this, simply use the \"item\" and \"requires\" elements, but don't declare the items as keys in the Stuff section. In other words, flags are objects which are invisible to the player.<br/>Back to our example, visiting place 1 will give item flag_1 to the player, place 2 will give item flag_2 etc. And place 6 will require all six flags to unlock.",
+      "picture": "tutorial/6.jpg",
+      "choices": [
+        {
+          "text": "Next: disabling with an item",
+          "to_tile": "disabling"
+        }
+      ]
+    },
+    {
+      "id": "disabling",
+      "title": "Storiz: advanced topics - disabling with an item",
+      "text": "The \"requires\" let you disable a choice if you are missing an object. Now how to do the opposite? For example, imagine the following: the player can pick a heavy armor or ignore it. Later, the player is given the choice to swim across a river. If the player has picked-up the armor, you want this to lead to the player to drown. To achieve this result, you can do the following:<br/><br/>1- create an item called \"armor\"<br/>2- upon starting, assign the player the flag \"no_armor\"<br/>3- when the player picks the choice to take the armor, define it as \"item\": \"armor\", \"uses\": \"no_armor\"<br/><br/>This means that the player will at any point in time either have the flag \"no_armor\" or the item \"armor\" but not both.<br/><br/>Now when the choice to swim is given, do the following:<br/><br/>4- create an option where the player can swim, as \"requires\": \"no_armor\", \"disable\": \"invisible\"<br/>5- add an option where the player drowns, as \"requires\": \"armor\", \"disable\": \"invisible\"<br/><br/>What this will do is the following: the player will only see one option, never both. If he has the armor he will be forced to drown, and if he ignored it, he will be forced to pick the option where he can swim.<br/><br/>It gets more complex if more than one object is involved. For example, to handle the case where a player can have found a floating spell, it could be solved by assigning a corresponding \"no_floating_spell\" flag to the player at the beginning, and defining an option where the player drowns if he has an armor and no floating spell:<br/><br/>- option 1: \"requires\": [\"armor\",\"no_floating_spell\"]<br/>- option 2: \"requires\": \"no_armor\"",
+      "picture": "tutorial/6.jpg",
+      "choices": [
+        {
+          "text": "All good !",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Storiz: miscellaneous",
+      "text": "Use these elements to polish your story.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "picture": "tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "name",
+      "title": "Storiz: Name",
+      "text": "The \"Name\" of your story will appear in the story menu, along with the description set in the stories.json file.<br/><br/><pre>{<br/>  <b>\"Name\": \"My Story\",</b><br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "picture": "tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "Next: Credits",
+          "to_tile": "credits"
+        }
+      ]
+    },
+    {
+      "id": "credits",
+      "title": "Storiz: Credits",
+      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show/Hide Credits\" link above to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "picture": "tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "All good !",
+          "to_tile": "1"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Storiz: wrapping-up",
+      "text": "You are now aware of all the current features of Storiz. To help you, the <b>template.json</b> file was created as a minimal structure containing all the supported keywords. You can use it as a reference. Have fun writing your next story !",
+      "video": "tutorial/video.mp4",
+      "music": "tutorial/Aerohead_CallingOut.mp3"
+    }
+  ],
+  "Stuff": [
+    {
+      "key": "aflower",
+      "name": "A flower",
+      "description": "A flower."
+    },
+    {
+      "key": "aflower2",
+      "name": "A flower",
+      "description": "Another flower."
+    },
+    {
+      "key": "aflower3",
+      "name": "A flower",
+      "description": "What's this? A flower."
+    },
+    {
+      "key": "aflower4",
+      "name": "A flower",
+      "description": "Aaaand a flower."
+    },
+    {
+      "key": "aflower5",
+      "name": "A flower",
+      "description": "Yup, that's a flower."
+    },
+    {
+      "key": "aflower6",
+      "name": "A flower",
+      "description": "Flowers, flowers everywhere !"
+    }
+  ]
+}
+
