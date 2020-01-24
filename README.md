@@ -3,7 +3,10 @@ A simple engine for creating HTML5 choice-based games. Think super-simple Visual
 
 Play/test it here: https://valvolt-storiz.herokuapp.com/
 
+[![Features tour](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/sample-storiz.png)](https://valvolt-storiz.herokuapp.com/)
+
 [![Features tour](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/tuto-storiz.png)](https://valvolt-storiz.herokuapp.com/)
+
 
 ## LATEST NEWS
 
