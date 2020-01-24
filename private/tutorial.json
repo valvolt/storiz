@@ -78,7 +78,7 @@
       "id": "picture",
       "title": "Storiz: the basics - picture",
       "text": "A picture is also optional. To add one to the tile, you have to do the following:<br/>- On your computer, go to the folder where you have downloaded the Storiz engine, then enter the /public sub-folder.<br/>- It is recommended to create a sub-folder for your story if one does not exist already, for example my_folder.<br/>- Store in this subfolder the picture you want for your tile. You may want to rename your picture if its name contains spaces or special characters.<br/>- If your picture is named my_picture.png and is stored in /public/my_story, then the \"picture\" element of your tile should contain \"my_folder/my_picture.png\"<br/><br/>The picture will be resized to a height of 300 pixels.<br/>You can find free to use pictures on <a target=\"new\" href=\"https://pixabay.com\">Pixabay.com</a>.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      <b>\"picture\": \"my_folder/picture.jpg\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
-      "picture": "tutorial/picture.jpg",
+      "picture": "tutorial/6-2.jpg",
       "choices": [
         {
           "text": "Next: choices",
