@@ -13,7 +13,7 @@ RUN mkdir /opt/storiz
 WORKDIR /opt/storiz/
 
 # Copy some stuff, but public/ and private/ will be mounted
-COPY package.json .
+COPY package*.json ./
 ADD .meteor ./.meteor
 ADD client ./client
 ADD imports ./imports
