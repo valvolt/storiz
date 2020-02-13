@@ -31,6 +31,10 @@ then from your web browser, go to http://localhost:3000
 
 ## CHANGES
 
+[New] - Added a new feature named 'item codes'. Players knowing the right code(s) can unlock the corresponding item(s) via an input field auto-added to your story if it needs it. I have an idea in mind for these codes, if you want to know you'll have to be patient :)
+
+[New] - My friend Henrik added a Dockerfile for those of you who want to deploy Storiz in a docker container. The /public and /private directories will map to your local Document folder (on Windows machine) if you run the container with the command described in the Dockerfile. Thanks Henrik for this welcome contribution!
+
 [New] - Added a profile page for the user, where his achievements are displayed. Added an 'achievement' field as well for stories. As usual, features.json shows how this works. There a some known limitations.
 
 [New] - Added an actual short sci-fi story named D3mons to give you a better feel of the engine - I hope you'll enjoy it :) With this story I come closer to the original idea I had when creating Storiz: a platform for cool stories which intermix with other types of gameplay such as hacking exercises. Don't expect real hacking there though, all you have to do is choose well where you click :) There is a hidden golden ending to show what achievements shall look like, but the feature is still under development as I'm writing this.
