@@ -41,12 +41,12 @@
           "text": "xxx",
           "requires": "my_item_1",
           "disable": "grey",
-          "uses": "[my_item_1, my_item_2]",
+          "uses": ["my_item_1", "my_item_2"],
           "to_tile": "3"
         },
         {
           "text": "yyy",
-          "requires": "[my_item_1, my_item_2]",
+          "requires": ["my_item_1", "my_item_2"],
           "disable": "invisible",
           "uses": "my_item_1",
           "to_tile": "4"
