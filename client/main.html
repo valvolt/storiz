@@ -189,6 +189,7 @@
 <template name="stuff">
   <div>
   <h3>My Stuff</h3>
+  {{#if hasCode}}{{> flag}}{{/if}}
   <ul>
   {{#each currentScrambledTile.Stuff}}
     {{> item}}
@@ -201,6 +202,12 @@
     <li>{{name}} ({{description}})</li>
 </template>
 
+<template name="flag">
+   <form>
+      <input type = "text" name = "flag" placeholder = "item code">
+      <input type = "submit" value = "UNLOCK">
+   </form>
+</template>
 
 <template name="stories">
 <!-- If user is not authenticated, reroute to login -->

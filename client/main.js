@@ -216,6 +216,17 @@ video() {
   }
 });
 
+Template.flag.events({
+   'submit form': function(event) {
+      event.preventDefault();
+      var textValue = event.target.flag.value;
+      event.target.flag.value = "";
+      Meteor.call('unlock', textValue);
+      // refresh page
+      Meteor.call('toData', this.to_data);
+   }
+});
+
 // updates the to_tile value of the PlayerData of the current user
 function manageClick(to_data) {
   // updates the to_data field of PlayerData

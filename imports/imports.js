@@ -272,6 +272,12 @@ Meteor.methods(
             }
           }
 
+          // if we could not find any valid tile ID, we fallback to loading the first one
+          // this allows to refresh the initial Tile (as it has no scrambled_to_tile value)
+          if(to_tile == null) {
+            to_tile = 1;
+          }
+
         var NewTiles = [];
         // Now that we have the real ID, we search for the corresponding Tile(s)
           for (var i=0 ; i < AllTiles.length ; i++)
@@ -342,7 +348,19 @@ Meteor.methods(
     currentFlags.player = Meteor.userId();
     currentFlags.Stuff = [];
 
-    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'_id':0}} ).fetch()[0];
+    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
+
+    // do we have at least one item which can be activated with a code?
+    // if yes we keep it in mind - this will be used to activate the input field on screen
+    theStuff = manyTiles.Stuff;
+    for (i in theStuff) {
+      if(theStuff[i].code != undefined) {
+        // found one !
+        currentData.hasCode = 1;
+        break;
+      }
+    }
+
     // stores the Credits
     currentData.Credits = manyTiles.Credits;
     // at this stage manyTiles contains all Tiles from the story. Searching for tile #1
@@ -359,6 +377,7 @@ Meteor.methods(
     oneScrambledTile = Meteor.call('minimize',oneTile,currentFlags.Stuff);
 
     currentData.currentScrambledTile = oneScrambledTile;
+    currentData.to_data = oneScrambledTile.id;
     // save this state in the player's collections
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
@@ -501,5 +520,32 @@ Meteor.methods(
     }
     return achievementList;
   }
+});
+
+// This method is invoked when the player submits an item code.
+// It checks if an item has the corresponding code and returns the item key.
+// If found, it adds the item to the player's stuff
+Meteor.methods(
+{
+    'unlock': function(itemcode){
+      if(Meteor.isServer) {
+        // Fetch all Stuff from the story
+        StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
+        StoryStuff = StoryStuff.Stuff;
+        // Fetch the current player's stuff
+        currentStuff = PlayerFlags.find({player:Meteor.userId()}).fetch()[0].Stuff;
+
+        // Do we have an item with the input code?
+        for (var i=0 ; i < StoryStuff.length ; i++)
+        {
+          // check code, retrieve key
+          if(StoryStuff[i].code == itemcode) {
+            // found one match. We add the corresponding key to the player stuff
+            currentStuff = Meteor.call('addItem',StoryStuff[i].key,currentStuff);
+            PlayerFlags.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
+          }
+        }
+      }
+    }
 });
 

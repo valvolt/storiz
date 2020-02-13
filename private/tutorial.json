@@ -286,6 +286,18 @@
       "picture": "tutorial/6.jpg",
       "choices": [
         {
+          "text": "Next: item codes",
+          "to_tile": "code"
+        }
+      ]
+    },
+    {
+      "id": "code",
+      "title": "Storiz: advanced topics - item codes",
+      "text": "You can assign a code to one or more items. If one of your items has a code, Storiz will automatically add an 'Unlock' input field in the Stuff section where the player can type in codes. If the right code is entered, the corresponding item will be added to the player's stuff. This can be used as a cheat code, or for giving items to players who earned it in another way, for example by playing another story.<br/><br/>Code-wise, just add the 'code' keyword to any item to make it unlockable.<br/><br/><pre>  \"Stuff\": [<br/>    {<br/>      \"key\": \"my_item_1\",<br/>      <b>\"code\": \"603e6e47-bc27-4794-b0e9-fd32863f1c93\",</b><br/>      \"name\": \"Name of item\",<br/>      \"description\": \"Description of item\"<br/>    }<br/>  ]</pre><br/>Try it now!<br/>Enter code '603e6e47-bc27-4794-b0e9-fd32863f1c93' below to unlock - guess what - a flower!",
+      "picture": "tutorial/6.jpg",
+      "choices": [
+        {
           "text": "Next: collecting clues",
           "to_tile": "clues"
         }
@@ -471,6 +483,12 @@
       "key": "aflower6",
       "name": "A flower",
       "description": "Flowers, flowers everywhere !"
+    },
+    {
+      "key": "aflower7",
+      "code": "603e6e47-bc27-4794-b0e9-fd32863f1c93",
+      "name": "A flower",
+      "description": "A flower obtained via an item code"
     }
   ]
 }
