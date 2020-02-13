@@ -20,6 +20,8 @@ Enjoy, and as usual, feedback welcome !
 
 ## HOW-TO RUN
 
+### on your machine
+
 ```
 cd storiz
 meteor npm install
@@ -28,6 +30,15 @@ meteor
 ```
 
 then from your web browser, go to http://localhost:3000
+
+### from Docker
+
+```
+docker build --no-cache -t storiz .
+docker run -d -p 80:3000 --name storiz storiz:latest
+```
+
+then from your web browser, go to http://localhost
 
 ## CHANGES
 
