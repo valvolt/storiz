@@ -21,13 +21,17 @@ function loadStories() {
     // Store the name of the story
     oneStory.Name = storyContent.Name;
     // Store the credits, if any
-    oneStory.Credits = storyContent.Credits;
+    if(storyContent.Credits != null) {
+      oneStory.Credits = storyContent.Credits;
+    }
     // Its Tiles, enhanced with scrambled IDs
     oneStory.Tiles = scrambledStoryContent;
     // How many Tiles do we have? Store this as well
     oneStory.NbTiles = oneStory.Tiles.length;
-    // store the Stuff
-    oneStory.Stuff = storyContent.Stuff;
+    // store the Stuff, if any
+    if(storyContent.Stuff != null) {
+      oneStory.Stuff = storyContent.Stuff;
+    }
     // store the full story into the collection
     AllContent.insert(oneStory);
     // store the story's achievements into the dedicated collection

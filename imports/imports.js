@@ -6,11 +6,11 @@
 //     the server loads the corresponding data in the "data" field
 //   - when the server updates the "data" field,
 //     the client updates the corresponding data in the UI
-// - one which contains player flags (Stuff), kept on the server to make cheating harder
+// - one which contains player item keys (Stuff), kept on the server to make cheating harder
 export const AllContent = new Mongo.Collection('allcontent');
 export const AllAchievements = new Mongo.Collection('allachievements');
 export const PlayerData = new Mongo.Collection('playerdata');
-export const PlayerFlags = new Mongo.Collection('playerflags');
+export const PlayerStuff = new Mongo.Collection('playerstuff');
 
 // This function takes one JSON object which contains one Tile, and the current Stuff of the player.
 // It swaps real IDs with scrambled IDs, and removes at the time inaccessible choices (minimize)
@@ -132,7 +132,9 @@ Meteor.methods({
 Meteor.methods({
   'updateStuff' : function(oneChoice){
     if(Meteor.isServer){
-    currentStuff = PlayerFlags.find({player:Meteor.userId()}).fetch()[0].Stuff;
+    currentStuff = PlayerStuff.find({player:Meteor.userId()}).fetch()[0].Stuff;
+
+console.log(PlayerStuff.find({player:Meteor.userId()}).fetch()[0]);
 
     // if this choice gives one or several item(s), add them (if we don't have them already)
     if(oneChoice.item != undefined) {
@@ -161,7 +163,7 @@ Meteor.methods({
       }
     }
     // Update player's Stuff
-    PlayerFlags.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
+    PlayerStuff.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
   }}
 });
 
@@ -296,11 +298,11 @@ Meteor.methods(
         processAchievement(NewTile.achievement,currentPlayer,currentGame);
 
         // Retrieve the Stuff possessed currently by the player, since this influences available options
-        AllKeys = PlayerFlags.find({player:currentPlayer}).fetch()[0].Stuff;
+        AllKeys = PlayerStuff.find({player:currentPlayer}).fetch()[0].Stuff;
         // Stripping the Tile from all the non-scrambled data
         NewTile = Meteor.call('minimize', NewTile, AllKeys);
 
-        // Stuff management: PlayerFlags.Stuff contains all the stuff keys (e.g. story flags).
+        // Stuff management: PlayerStuff.Stuff contains all the stuff keys (e.g. story flags).
         // We retrieve the key + description when available and append them to the current Tile
 
         // Fetch all Stuff from the story
@@ -343,21 +345,28 @@ Meteor.methods(
     currentData = {};
     currentData.player = Meteor.userId();
     currentData.game = storyname;
-    // We shall populate PlayerFlags with the content of the proper story's first tile (e.g. nothing)
+    // We shall populate PlayerStuff with the content of the proper story's first tile (e.g. nothing)
     currentFlags = {};
     currentFlags.player = Meteor.userId();
     currentFlags.Stuff = [];
 
     manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
 
+    // it may happen that manyTiles is null, when we are on the home page and not in a story
+    if (manyTiles == undefined) {
+      return;
+    }
+
     // do we have at least one item which can be activated with a code?
     // if yes we keep it in mind - this will be used to activate the input field on screen
     theStuff = manyTiles.Stuff;
-    for (i in theStuff) {
-      if(theStuff[i].code != undefined) {
-        // found one !
-        currentData.hasCode = 1;
-        break;
+    if (theStuff != undefined) {
+      for (i in theStuff) {
+        if(theStuff[i].code != undefined) {
+          // found one !
+          currentData.hasCode = 1;
+          break;
+        }
       }
     }
 
@@ -382,10 +391,10 @@ Meteor.methods(
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
 
-    //TODO: everywhere we delete something from PlayerFlags we should keep the Achievements intact (e.g. merely update the Stuff field)
+    //TODO: everywhere we delete something from PlayerStuff we should keep the Achievements intact (e.g. merely update the Stuff field)
     //TODO: maybe PlayerData shan't be entirely dropped either
-    PlayerFlags.remove({player: Meteor.userId()});
-    PlayerFlags.insert(currentFlags);
+    PlayerStuff.remove({player: Meteor.userId()});
+    PlayerStuff.insert(currentFlags);
   }
 }
 });
@@ -403,7 +412,7 @@ Meteor.methods(
       if(Meteor.isServer) {
         // Drop player data
         PlayerData.remove({player:currentPlayer});
-        PlayerFlags.remove({player:currentPlayer});
+        PlayerStuff.remove({player:currentPlayer});
       }
     }
 });
@@ -533,7 +542,7 @@ Meteor.methods(
         StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
         StoryStuff = StoryStuff.Stuff;
         // Fetch the current player's stuff
-        currentStuff = PlayerFlags.find({player:Meteor.userId()}).fetch()[0].Stuff;
+        currentStuff = PlayerStuff.find({player:Meteor.userId()}).fetch()[0].Stuff;
 
         // Do we have an item with the input code?
         for (var i=0 ; i < StoryStuff.length ; i++)
@@ -542,7 +551,7 @@ Meteor.methods(
           if(StoryStuff[i].code == itemcode) {
             // found one match. We add the corresponding key to the player stuff
             currentStuff = Meteor.call('addItem',StoryStuff[i].key,currentStuff);
-            PlayerFlags.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
+            PlayerStuff.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
           }
         }
       }

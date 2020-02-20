@@ -165,6 +165,7 @@ Template.game.helpers({
     if(PlayerData.find({}).count() > 0) {
 //console.log("SOME DATA FOUND");
 //console.log(PlayerData.find({}).fetch()[0]);
+console.log(Meteor.user());
       return PlayerData.find({});
     } else {
     return null;}
