@@ -14,7 +14,7 @@ I finally managed to fix the concurrent access issue ! In Meteor, Sessions are s
 
 I learned a lot more how the refresh 'magic' of Meteor does work in the process, I rewrote almost the engine from scratch and removed code which worked but was really ugly.
 
-'Autologin' will create a user session (without password) which will eventually be destroyed. This is convenient if you don't want to create a user account. Anonymous users won't have access to Achievements and Save/Restore features (on the TODO list).
+'Autologin' will create a user session (without password) which will eventually be destroyed. This is convenient if you don't want to create a user account. Anonymous users lose (now working) Achievements and can't Save/Restore (feature on the TODO list).
 
 Enjoy, and as usual, feedback welcome !
 
@@ -41,6 +41,8 @@ docker run -d -p 80:3000 --name storiz storiz:latest
 then from your web browser, go to http://localhost
 
 ## CHANGES
+
+[Fixed] - Achievements are now working properly. Updated the tutorial to explain how to use them. Achievements are persisted for the user between games (according that it's a registered user - Achievements unlocked by anonymous accounts will be lost)
 
 [New] - Added a new feature named 'item codes'. Players knowing the right code(s) can unlock the corresponding item(s) via an input field auto-added to your story if it needs it. I have an idea in mind for these codes, if you want to know you'll have to be patient :)
 
