@@ -412,7 +412,7 @@
     {
       "id": "7",
       "title": "Storiz: miscellaneous",
-      "text": "Use these elements to polish your story.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "text": "Use these elements to polish your story.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "tutorial/7.jpg",
       "choices": [
         {
@@ -424,7 +424,7 @@
     {
       "id": "name",
       "title": "Storiz: Name",
-      "text": "The \"Name\" of your story will appear in the story menu, along with the description set in the stories.json file.<br/><br/><pre>{<br/>  <b>\"Name\": \"My Story\",</b><br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "text": "The \"Name\" of your story will appear in the story menu, along with the description set in the stories.json file.<br/><br/><pre>{<br/>  <b>\"Name\": \"My Story\",</b><br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "tutorial/7.jpg",
       "choices": [
         {
@@ -436,7 +436,19 @@
     {
       "id": "credits",
       "title": "Storiz: Credits",
-      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show/Hide Credits\" link above to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ]<br/>}</pre>",
+      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show/Hide Credits\" link above to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "picture": "tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "Next: Achievements",
+          "to_tile": "achievements"
+        }
+      ]
+    },
+    {
+      "id": "achievements",
+      "title": "Storiz: Achievements",
+      "text": "Achievements, or trophies, can be unlocked when reaching certain tiles. For example, the golden ending of your story can unlock the best achievement. Clicking on the username lists all locked and unlocked achievements. The latter are persisted between games.<br/>There are three types of trophies: <b>'bronze', 'silver' and 'gold'</b>. To add one to your story, define it in the optional 'achievements' section, and assign its key to one or more tiles. Upon visiting the tile, the player will unlock the trophy.<br/><br/><pre>    {<br/>      \"id\": \"5\",<br/>      \"title\": \"xxx\",<br/>      \"text\": \"xxx\",<br/>      \"picture\": \"folder/picture.jpg\",<br/>      <b>\"achievement\": \"badending\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"button text\",<br/>          \"to_tile\": \"6\"<br/>        }<br/>      ]<br/>    }<br/><br/><br/><b>\"Achievements\": [<br/>    {<br/>      \"trophy\": \"bronze\",<br/>      \"key\": \"badending\",<br/>      \"name\": \"Ouch\",<br/>      \"description\": \"This bad ending is worth a bronze badge\"<br/>    },<br/>    {<br/>      \"trophy\": \"silver\",<br/>      \"key\": \"goodending\",<br/>      \"name\": \"Nice\",<br/>      \"description\": \"This good ending is worth a silver badge\"<br/>    }<br/>  ]</b></pre>",
       "picture": "tutorial/7.jpg",
       "choices": [
         {
@@ -448,6 +460,7 @@
     {
       "id": "8",
       "title": "Storiz: wrapping-up",
+      "achievement": "completed",
       "text": "You are now aware of all the current features of Storiz. To help you, the <b>template.json</b> file was created as a minimal structure containing all the supported keywords. You can use it as a reference. Have fun writing your next story !",
       "video": "tutorial/video.mp4",
       "music": "tutorial/Aerohead_CallingOut.mp3"
@@ -489,6 +502,14 @@
       "code": "603e6e47-bc27-4794-b0e9-fd32863f1c93",
       "name": "A flower",
       "description": "A flower obtained via an item code"
+    }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "completed",
+      "name": "Done !",
+      "description": "Completed the tutorial."
     }
   ]
 }

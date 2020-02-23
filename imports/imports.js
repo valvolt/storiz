@@ -6,11 +6,11 @@
 //     the server loads the corresponding data in the "data" field
 //   - when the server updates the "data" field,
 //     the client updates the corresponding data in the UI
-// - one which contains player item keys (Stuff), kept on the server to make cheating harder
+// - one which contains player's persistant memory, including item keys (Stuff), kept on the server to make cheating harder
 export const AllContent = new Mongo.Collection('allcontent');
 export const AllAchievements = new Mongo.Collection('allachievements');
 export const PlayerData = new Mongo.Collection('playerdata');
-export const PlayerStuff = new Mongo.Collection('playerstuff');
+export const PlayerMemory = new Mongo.Collection('playermemory');
 
 // This function takes one JSON object which contains one Tile, and the current Stuff of the player.
 // It swaps real IDs with scrambled IDs, and removes at the time inaccessible choices (minimize)
@@ -132,10 +132,7 @@ Meteor.methods({
 Meteor.methods({
   'updateStuff' : function(oneChoice){
     if(Meteor.isServer){
-    currentStuff = PlayerStuff.find({player:Meteor.userId()}).fetch()[0].Stuff;
-
-console.log(PlayerStuff.find({player:Meteor.userId()}).fetch()[0]);
-
+    currentStuff = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].Stuff;
     // if this choice gives one or several item(s), add them (if we don't have them already)
     if(oneChoice.item != undefined) {
       // we have something
@@ -163,7 +160,7 @@ console.log(PlayerStuff.find({player:Meteor.userId()}).fetch()[0]);
       }
     }
     // Update player's Stuff
-    PlayerStuff.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
+    PlayerMemory.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
   }}
 });
 
@@ -192,18 +189,27 @@ Meteor.methods({
 function processAchievement(achievementKey,currentPlayer,currentGame) {
   if(achievementKey == undefined) return;
   // Retrieve player's achievements
-  allPlayerAchievements = PlayerData.find({player:currentPlayer}).fetch()[0].Achievements;
+  allPlayerAchievements = PlayerMemory.find({player:currentPlayer}).fetch()[0].Achievements;
   if(allPlayerAchievements == undefined) allPlayerAchievements = [];
+
   // Selects this story's achievements
   currentStoryAchievements = null;
   updateIndex = 0;
+  found = false;
   for(i in allPlayerAchievements) {
     if(allPlayerAchievements[i].story == currentGame) {
       currentStoryAchievements = allPlayerAchievements[i];
       updateIndex = i;
+      found = true;
       break;
     }
   }
+
+  // If we did not find any entry for this story, we create some space
+  if(found == false) {
+    updateIndex = allPlayerAchievements.length;
+  }
+
   if(currentStoryAchievements == null) {
     // We had zero achievement for this story. Initializing...
     currentStoryAchievements = {};
@@ -218,7 +224,7 @@ function processAchievement(achievementKey,currentPlayer,currentGame) {
     currentStoryAchievements.trophies.push(achievementKey);
     // and save it
     allPlayerAchievements[updateIndex] = currentStoryAchievements;
-    PlayerData.update({player:currentPlayer},{$set:{'Achievements':allPlayerAchievements}});
+    PlayerMemory.update({player:currentPlayer},{$set:{'Achievements':allPlayerAchievements}});
   }
 }
 
@@ -298,11 +304,11 @@ Meteor.methods(
         processAchievement(NewTile.achievement,currentPlayer,currentGame);
 
         // Retrieve the Stuff possessed currently by the player, since this influences available options
-        AllKeys = PlayerStuff.find({player:currentPlayer}).fetch()[0].Stuff;
+        AllKeys = PlayerMemory.find({player:currentPlayer}).fetch()[0].Stuff;
         // Stripping the Tile from all the non-scrambled data
         NewTile = Meteor.call('minimize', NewTile, AllKeys);
 
-        // Stuff management: PlayerStuff.Stuff contains all the stuff keys (e.g. story flags).
+        // Stuff management: PlayerMemory.Stuff contains all the stuff keys (e.g. story flags).
         // We retrieve the key + description when available and append them to the current Tile
 
         // Fetch all Stuff from the story
@@ -345,10 +351,15 @@ Meteor.methods(
     currentData = {};
     currentData.player = Meteor.userId();
     currentData.game = storyname;
-    // We shall populate PlayerStuff with the content of the proper story's first tile (e.g. nothing)
-    currentFlags = {};
-    currentFlags.player = Meteor.userId();
-    currentFlags.Stuff = [];
+
+    // We shall create and populate PlayerMemory for this story
+    if(PlayerMemory.find({player: Meteor.userId()}).fetch()[0] == undefined) {
+      // new player
+      PlayerMemory.insert({player:Meteor.userId()});
+    }
+    // update player's memory data
+    PlayerMemory.update({player:Meteor.userId()}, { $set: { game: storyname } });
+    PlayerMemory.update({player:Meteor.userId()}, { $set: { Stuff: [] } });
 
     manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
 
@@ -383,18 +394,13 @@ Meteor.methods(
     }
 
     // here, oneTile contains the Tile with ID 1. We minimize it, store it, and return.
-    oneScrambledTile = Meteor.call('minimize',oneTile,currentFlags.Stuff);
+    oneScrambledTile = Meteor.call('minimize',oneTile,[]);
 
     currentData.currentScrambledTile = oneScrambledTile;
     currentData.to_data = oneScrambledTile.id;
     // save this state in the player's collections
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
-
-    //TODO: everywhere we delete something from PlayerStuff we should keep the Achievements intact (e.g. merely update the Stuff field)
-    //TODO: maybe PlayerData shan't be entirely dropped either
-    PlayerStuff.remove({player: Meteor.userId()});
-    PlayerStuff.insert(currentFlags);
   }
 }
 });
@@ -412,7 +418,9 @@ Meteor.methods(
       if(Meteor.isServer) {
         // Drop player data
         PlayerData.remove({player:currentPlayer});
-        PlayerStuff.remove({player:currentPlayer});
+
+        // Remove stored Stuff from memory
+        PlayerMemory.update({player:currentPlayer}, { $set: { Stuff: [] } });
       }
     }
 });
@@ -490,16 +498,14 @@ Meteor.methods(
           for(j in allAchievements[i].Achievements) {
             unlocked = false;
             // Did we unlock this one? Retrieving this story's collected trophies
-            playerData = PlayerData.find({}).fetch()[0];
-            //TODO FIX THIS: it might happen that this is empty - playerdata is populated upon story load, so no trophies if we did not load any story yet ! Fix is to populate playerData upon login
-            if(playerData == undefined) return;
-            collectedTrophies = playerData.Achievements;
+            playerMemory = PlayerMemory.find({player:Meteor.userId()}).fetch()[0];
+            collectedTrophies = playerMemory.Achievements;
             candidateKeys = [];
-            if(playerData.Achievements != undefined) {
+            if(playerMemory.Achievements != undefined) {
               // retrieving the trophies for the current story
-              for(k in playerData.Achievements) {
-                if(playerData.Achievements[k].story == allAchievements[i].filename) {
-                  candidateKeys = playerData.Achievements[k].trophies;
+              for(k in playerMemory.Achievements) {
+                if(playerMemory.Achievements[k].story == allAchievements[i].filename) {
+                  candidateKeys = playerMemory.Achievements[k].trophies;
                 }
               }
               // at this stage, candidateKeys contains all currently processed story's achievement keys. All there is to do is to compare the current key to this list
@@ -542,7 +548,7 @@ Meteor.methods(
         StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
         StoryStuff = StoryStuff.Stuff;
         // Fetch the current player's stuff
-        currentStuff = PlayerStuff.find({player:Meteor.userId()}).fetch()[0].Stuff;
+        currentStuff = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].Stuff;
 
         // Do we have an item with the input code?
         for (var i=0 ; i < StoryStuff.length ; i++)
@@ -551,7 +557,7 @@ Meteor.methods(
           if(StoryStuff[i].code == itemcode) {
             // found one match. We add the corresponding key to the player stuff
             currentStuff = Meteor.call('addItem',StoryStuff[i].key,currentStuff);
-            PlayerStuff.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
+            PlayerMemory.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
           }
         }
       }

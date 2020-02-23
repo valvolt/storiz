@@ -10,6 +10,7 @@
       "music": "folder/music.mp3",
       "video": "folder/video.mp4",
       "picture": "folder/picture.jpg",
+      "achievement": "badending",
       "map": [
         {
           "shape": "poly",
@@ -76,6 +77,26 @@
       "key": "my_item_2",
       "name": "Name of item",
       "description": "Description of item"
+    }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "badending",
+      "name": "Ouch",
+      "description": "This bad ending is worth a bronze badge"
+    },
+    {
+      "trophy": "silver",
+      "key": "goodending",
+      "name": "Nice",
+      "description": "This good ending is worth a silver badge"
+    },
+    {
+      "trophy": "gold",
+      "key": "goldenending",
+      "name": "Wow !",
+      "description": "The best ending nets you a gold badge"
     }
   ]
 }
