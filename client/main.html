@@ -227,7 +227,9 @@
   {{#if currentUser}}
   <h1>My Profile</h1>
     <p><b>Username:</b> {{currentUser.username}}</p>
-    <h2>My Achievements</h2>
+
+  <h2>My Achievements</h2>
+  {{#if isRegistered}}
     {{#each achievements}}
       <h3>{{filename}}</h3>
       <table>
@@ -237,6 +239,9 @@
         {{/each}}
       </table>
     {{/each}}
+  {{else}}
+    <p>Achievements are not persisted for anonymous users. Please register to see and collect them.</p>
+  {{/if}}
   {{else}}
     {{> login}}
   {{/if}}

@@ -162,10 +162,13 @@ Tracker.autorun(() => {
 Template.game.helpers({
   playerData() {
     // get user data
+console.log("PLAYER DATA");
+console.log(PlayerData.find({}).fetch()[0]);
+console.log("PLAYER");
+console.log(Meteor.user());
+//console.log("PLAYER MEMORY");
+//console.log(PlayerMemory.find({}).fetch()[0]);
     if(PlayerData.find({}).count() > 0) {
-//console.log("SOME DATA FOUND");
-//console.log(PlayerData.find({}).fetch()[0]);
-//console.log(Meteor.user());
       return PlayerData.find({});
     } else {
     return null;}
@@ -262,6 +265,12 @@ Template.choice.helpers({
 
 Router.route('/profile/:_username', function () {
   this.render('profile');
+});
+
+Template.profile.helpers({
+  isRegistered: function () {
+    return (Meteor.user().username.match(/Anonymous-[0-9]+/) == null);
+  }
 });
 
 Template.profile.helpers({
