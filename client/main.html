@@ -93,24 +93,30 @@
 <!-- Else render the current game of the current user -->
 
 <template name="game">
-    <!-- these divs shall put content side-by-side on laptops and on top of each other on mobiles -->
-
-    {{#each playerData}}
-          {{> title}}
-          {{> sound}}
-          {{music}}
-    <div id="parent">
-        <div id="leftdiv">
-          {{> picture}}
-        </div>
-        <div id="rightdiv">
-          {{> story}}
-        </div>
-    </div>
-          {{> stuff}}
+    {{bookmark}}
+    {{#if currentUser}}
+      <!-- these divs shall put content side-by-side on laptops and on top of each other on mobiles -->
+      {{loadOrRefresh}}
+      {{#each playerData}}
+            {{> title}}
+            {{> sound}}
+            {{music}}
+      <div id="parent">
+          <div id="leftdiv">
+            {{> picture}}
+          </div>
+          <div id="rightdiv">
+            {{> story}}
+          </div>
+      </div>
+            {{> stuff}}
+      {{else}}
+        <h1>Please go back to <a href="/">main page</a> and refresh (F5) your session</h1>
+      {{/each}}
     {{else}}
-      <h1>Please go back to <a href="/">main page</a> and refresh (F5) your session</h1>
-    {{/each}}
+        {{> login}}
+    {{/if}}
+
 </template>
 
 <template name="title">

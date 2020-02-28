@@ -34,7 +34,14 @@ Template.register.events({
               console.log(error.reason); // Output error if registration fails
               Session.set('errorMessage', error.reason);
           } else {
-            Router.go('/');
+            // Was a story already specified? If yes, send there already
+            storyname = Session.get('storyname');
+            if(storyname == undefined) {
+              Router.go('/');
+            } else {
+              Router.go('/story/'+storyname);
+              Meteor.call('loadStory',storyname);
+            }
           }
         })
       }
@@ -60,7 +67,14 @@ Template.login.events({
             console.log(error.reason);
             Session.set('errorMessage', error.reason);
           } else {
-            Router.go('/');
+            // Was a story already specified? If yes, send there already
+            storyname = Session.get('storyname');
+            if(storyname == undefined) {
+              Router.go('/');
+            } else {
+              Router.go('/story/'+storyname);
+              Meteor.call('loadStory',storyname);
+            }
           }
        })
      }
@@ -75,10 +89,18 @@ Template.login.helpers({
 // Used to create an anonymous user automatically (and to delete old anonymous users)
 Template.autologin.helpers({
   autologin: function() {
+console.log(Session.get('storyname'));
     loginToken = uuid();
     Meteor.call('autologin',loginToken);
     Meteor.loginWithToken(loginToken);
-    Router.go('/');
+    // Was a story already specified? If yes, send there already
+    storyname = Session.get('storyname');
+    if(storyname == undefined) {
+      Router.go('/');
+    } else {
+      Router.go('/story/'+storyname);
+      Meteor.call('loadStory',storyname);
+    }
   }
 });
 
@@ -167,6 +189,27 @@ Tracker.autorun(() => {
 });
 
 Template.game.helpers({
+  bookmark() {
+    // Persist current story name, useful to login or autologin to this story
+    Session.set('storyname', Router.current().params._storyname);
+  },
+  loadOrRefresh() {
+    // Check if the (right) story is loaded.
+    // We do this by comparing the currently loaded story (if exists) with the current URL
+    // Do we have data available?
+    loadedData = PlayerData.find({});
+    if(loadedData.count() > 0) {
+      // we have something in memory. Is it the right story?
+      currentStory = loadedData.fetch()[0].game;
+      if (currentStory == Session.get('storyname')) {
+        // nothing to do: we are on the right story
+        return;
+      }
+    }
+    // if we arrive here, it means that either we have nothing loaded, or we have the wrong story
+    // let's fix this
+    Meteor.call('loadStory',Session.get('storyname'));
+  },
   playerData() {
     // get user data
 //console.log("PLAYER DATA");
@@ -179,14 +222,6 @@ Template.game.helpers({
       return PlayerData.find({});
     } else {
     return null;}
-  },
-  currentGame() {
-    currentData = PlayerData.find({}).fetch()[0];
-    if(currentData == undefined) {
-      return null;
-    } else {
-      return currentData.game;
-    }
   },
   music() {
     currentMusic = Session.get("music");
