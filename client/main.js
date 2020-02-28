@@ -20,17 +20,24 @@ Template.register.events({
         event.preventDefault();
         var username = $('[name=username]').val();
         var password = $('[name=password]').val();
-        Accounts.createUser({
-            username: username,
-            password: password
-        }, function(error){
-          if(error){
-            console.log(error.reason); // Output error if registration fails
-            Session.set('errorMessage', error.reason);
+        // If the user tries to create a username with format Anonymous-X, this user
+        // will be treated as a non-registered user...
+        if(username.match(/Anonymous-[0-9]+/) != null) {
+          console.log("Please don't choose a username looking like an anonymous account");
+          Session.set('errorMessage', "Please don't choose a username looking like an anonymous account");
         } else {
-          Router.go('/');
-        }
-      })
+          Accounts.createUser({
+              username: username,
+              password: password
+          }, function(error){
+            if(error){
+              console.log(error.reason); // Output error if registration fails
+              Session.set('errorMessage', error.reason);
+          } else {
+            Router.go('/');
+          }
+        })
+      }
     }
 });
 
@@ -162,10 +169,10 @@ Tracker.autorun(() => {
 Template.game.helpers({
   playerData() {
     // get user data
-console.log("PLAYER DATA");
-console.log(PlayerData.find({}).fetch()[0]);
-console.log("PLAYER");
-console.log(Meteor.user());
+//console.log("PLAYER DATA");
+//console.log(PlayerData.find({}).fetch()[0]);
+//console.log("PLAYER");
+//console.log(Meteor.user());
 //console.log("PLAYER MEMORY");
 //console.log(PlayerMemory.find({}).fetch()[0]);
     if(PlayerData.find({}).count() > 0) {

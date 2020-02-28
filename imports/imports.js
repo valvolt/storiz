@@ -185,9 +185,15 @@ Meteor.methods({
   }
 });
 
-// adds this achievement to PlayerData, if not already there
+// adds this achievement to PlayerMemory, if not already there
 function processAchievement(achievementKey,currentPlayer,currentGame) {
+  // if there is no achievement to process, end here
   if(achievementKey == undefined) return;
+  // if the player is not registered, end here - anonymous users are rotated, meaning that achievements will be lost anyway...
+  if(Meteor.user().username.match(/Anonymous-[0-9]+/) != null) {
+    // we have a match, meaning that our user is not registered
+    return;
+  }
   // Retrieve player's achievements
   allPlayerAchievements = PlayerMemory.find({player:currentPlayer}).fetch()[0].Achievements;
   if(allPlayerAchievements == undefined) allPlayerAchievements = [];
