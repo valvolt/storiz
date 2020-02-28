@@ -25,7 +25,6 @@ Enjoy, and as usual, feedback welcome !
 ```
 cd storiz
 meteor npm install
-meteor npm install --save uuid
 meteor
 ```
 
@@ -42,7 +41,9 @@ then from your web browser, go to http://localhost
 
 ## CHANGES
 
-[Fixed] - Achievements are now working properly. Updated the tutorial to explain how to use them. Achievements are persisted for the user between games (according that it's a registered user - Achievements unlocked by anonymous accounts will be lost)
+[Fixed/New] - Now stories URLs can be bookmarked. Changing the URL will also now load the proper story. This should also get rid of the 'please refresh your browser' error message.
+
+[Fixed] - Achievements are now working properly. Updated the tutorial to explain how to use them. Achievements are persisted for the user between games (according that it's a registered user - Anonymous accounts won't access achievements as they would anyway be lost between sessions)
 
 [New] - Added a new feature named 'item codes'. Players knowing the right code(s) can unlock the corresponding item(s) via an input field auto-added to your story if it needs it. I have an idea in mind for these codes, if you want to know you'll have to be patient :)
 
