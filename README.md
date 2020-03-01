@@ -8,7 +8,7 @@ Play/test it here: https://valvolt-storiz.herokuapp.com/
 [![Features tour](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/tuto-storiz.png)](https://valvolt-storiz.herokuapp.com/)
 
 
-## LATEST NEWS
+## LATEST NEWS (check the CHANGES below as well !)
 
 I finally managed to fix the concurrent access issue ! In Meteor, Sessions are shared by all users. So when two players were playing, each click on one button would refresh both pages, making the game unplayable. Now you can register and login. As long as two players run as a different user they should be fine.
 
@@ -40,6 +40,8 @@ docker run -d -p 80:3000 --name storiz storiz:latest
 then from your web browser, go to http://localhost
 
 ## CHANGES
+
+[New] - Stories are now auto-saved. You can switch between them and resume where you left. If you have registered your account, you can now logout and resume playing later. Of course though, Anonymous users will lose their progress between sessions.
 
 [Fixed/New] - Now stories URLs can be bookmarked. Changing the URL will also now load the proper story. This should also get rid of the 'please refresh your browser' error message.
 
