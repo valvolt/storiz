@@ -641,16 +641,21 @@ Meteor.methods(
         StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
         StoryStuff = StoryStuff.Stuff;
         // Fetch the current player's stuff
-        currentStuff = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].Stuff;
-
-        // Do we have an item with the input code?
-        for (var i=0 ; i < StoryStuff.length ; i++)
-        {
-          // check code, retrieve key
-          if(StoryStuff[i].code == itemcode) {
-            // found one match. We add the corresponding key to the player stuff
-            currentStuff = Meteor.call('addItem',StoryStuff[i].key,currentStuff);
-            PlayerMemory.update({player:Meteor.userId()},{$set:{'Stuff':currentStuff}});
+        memory = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].memory;
+        for (i in memory) {
+          if (memory[i].game == PlayerMemory.find({player:Meteor.userId()}).fetch()[0].currentGame) {
+            currentStuff = memory[i].Stuff;
+            // Do we have an item with the input code?
+            for (var j=0 ; j < StoryStuff.length ; j++)
+            {
+              // check code, retrieve key
+              if(StoryStuff[j].code == itemcode) {
+                // found one match. We add the corresponding key to the player stuff
+                memory[i].Stuff = Meteor.call('addItem',StoryStuff[j].key,currentStuff);
+                PlayerMemory.update({player:Meteor.userId()},{$set:{'memory':memory}});
+              }
+            }
+            break;
           }
         }
       }
