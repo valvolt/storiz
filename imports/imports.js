@@ -132,7 +132,15 @@ Meteor.methods({
 Meteor.methods({
   'updateStuff' : function(oneChoice){
     if(Meteor.isServer){
-    currentStuff = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].Stuff;
+    currentGame = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].currentGame;
+    memory = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].memory;
+    for (i in memory) {
+      if(memory[i].game == currentGame) {
+        currentStuff = memory[i].Stuff;
+        break;
+      }
+    }
+
     // if this choice gives one or several item(s), add them (if we don't have them already)
     if(oneChoice.item != undefined) {
       // we have something
@@ -159,8 +167,15 @@ Meteor.methods({
         currentStuff = Meteor.call('removeItem',oneChoice.uses,currentStuff);
       }
     }
-    // Update player's Stuff
-    PlayerMemory.update({player:currentPlayer},{$set:{'Stuff':currentStuff}});
+
+    for (i in memory) {
+      if(memory[i].game == currentGame) {
+        memory[i].Stuff = currentStuff;
+        break;
+      }
+    }
+
+    PlayerMemory.update({player:currentPlayer},{$set:{'memory':memory}});
   }}
 });
 
@@ -243,129 +258,170 @@ Meteor.methods(
        currentGame = PlayerData.find({'player':currentPlayer}).fetch()[0].game;
 
       if(Meteor.isServer) {
-        // Loads the PlayerData corresponding to this new tile value
-        // Search in AllContent the data corresponding to the to_data value
+      // Loads the PlayerData corresponding to this new tile value
+      // Search in AllContent the data corresponding to the to_data value
 
-          AllTiles = AllContent.find({'filename':currentGame}).fetch()[0].Tiles;
+      AllTiles = AllContent.find({'filename':currentGame}).fetch()[0].Tiles;
 
-        // We have a scrambled ID assigned to a Choice. We need first to retrieve the associated real ID
-          to_tile = null;
-        // Run through all Tiles
-          for (var i=0 ; i < AllTiles.length ; i++)
+      // We have a scrambled ID assigned to a Choice. We need first to retrieve the associated real ID
+      to_tile = null;
+      // Run through all Tiles
+      for (var i=0 ; i < AllTiles.length ; i++)
+      {
+        if(to_tile != null) break;
+        AllChoices = AllTiles[i].choices;
+        if(AllChoices != undefined) {
+          // Run through all Choices
+          for (var j=0 ; j < AllChoices.length ; j++)
           {
-            if(to_tile != null) break;
-            AllChoices = AllTiles[i].choices;
-            if(AllChoices != undefined) {
-              // Run through all Choices
-              for (var j=0 ; j < AllChoices.length ; j++)
-              {
-                if(AllChoices[j].scrambled_to_tile == to_data)
-                {
-                  // update the player's Stuff accordingly
-                  Meteor.call('updateStuff',AllChoices[j]);
-                  // retrieve the non-scrambled tile ID
-                  to_tile = AllChoices[j].to_tile;
-                  break;
-                }
-              }
+            if(AllChoices[j].scrambled_to_tile == to_data)
+            {
+              // update the player's Stuff accordingly
+              Meteor.call('updateStuff',AllChoices[j]);
+
+              // retrieve the non-scrambled tile ID
+              to_tile = AllChoices[j].to_tile;
+              break;
             }
-            AllMaps = AllTiles[i].map;
-            if(AllMaps != undefined) {
-              // Run through all Maps
-              for (var j=0 ; j < AllMaps.length ; j++)
-              {
-                if(AllMaps[j].scrambled_to_tile == to_data)
-                {
-                  // update the player's Stuff accordingly
-                  Meteor.call('updateStuff',AllMaps[j]);
-                  // retrieve the non-scrambled tile ID
-                  to_tile = AllMaps[j].to_tile;
-                  break;
-                }
-              }
-            }
-          }
-
-          // if we could not find any valid tile ID, we fallback to loading the first one
-          // this allows to refresh the initial Tile (as it has no scrambled_to_tile value)
-          if(to_tile == null) {
-            to_tile = 1;
-          }
-
-        var NewTiles = [];
-        // Now that we have the real ID, we search for the corresponding Tile(s)
-          for (var i=0 ; i < AllTiles.length ; i++)
-          {
-              if (AllTiles[i].id == to_tile) {
-                NewTiles.push(AllTiles[i]);
-              }
-          }
-
-        // If we have more than one Tile, choose one at random.
-        // Use this feature with care !
-        rnd = ~~(Math.random() * NewTiles.length); 
-        NewTile = NewTiles[rnd];
-
-        // Did we unlock an Achievement?
-        processAchievement(NewTile.achievement,currentPlayer,currentGame);
-
-        // Retrieve the Stuff possessed currently by the player, since this influences available options
-        AllKeys = PlayerMemory.find({player:currentPlayer}).fetch()[0].Stuff;
-        // Stripping the Tile from all the non-scrambled data
-        NewTile = Meteor.call('minimize', NewTile, AllKeys);
-
-        // Stuff management: PlayerMemory.Stuff contains all the stuff keys (e.g. story flags).
-        // We retrieve the key + description when available and append them to the current Tile
-
-        // Fetch all Stuff from the story
-        StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
-        StoryStuff = StoryStuff.Stuff;
-        TileStuff = [];
-
-        for (var i=0 ; i < StoryStuff.length ; i++)
-        {
-          // check if we have the key in our player Stuff (key, name, description)
-          if(AllKeys.includes(StoryStuff[i].key)) {
-            oneItem = {};
-            oneItem.name = StoryStuff[i].name;
-            oneItem.description = StoryStuff[i].description;
-            TileStuff.push(oneItem);
           }
         }
 
-        // Append current Stuff to the Tile
-        NewTile.Stuff = TileStuff;
-
-        // Update the PlayerData accordingly
-        PlayerData.update({player:currentPlayer},{$set:{'currentScrambledTile':NewTile}});
-
-        // this triggers a Tile refresh on-screen
-        PlayerData.update({player:currentPlayer},{$set:{'to_data':to_data}});
+        AllMaps = AllTiles[i].map;
+        if(AllMaps != undefined) {
+          // Run through all Maps
+          for (var j=0 ; j < AllMaps.length ; j++)
+          {
+            if(AllMaps[j].scrambled_to_tile == to_data)
+            {
+              // update the player's Stuff accordingly
+              Meteor.call('updateStuff',AllMaps[j]);
+              // retrieve the non-scrambled tile ID
+              to_tile = AllMaps[j].to_tile;
+              break;
+            }
+          }
+        }
       }
+
+      // if we could not find any valid tile ID, we fallback to loading the first one
+      // this allows to refresh the initial Tile (as it has no scrambled_to_tile value)
+      if(to_tile == null) {
+        to_tile = 1;
+      }
+
+      // now that we know the real tile ID, keep this in memory
+      memory = PlayerMemory.find({'player':currentPlayer}).fetch()[0].memory;
+      // memory has the following format: [{"game":"tutorial","tile":"3","Stuff":[]}]
+      // Update the tile for the current game
+      for (var i=0 ; i < memory.length ; i++)
+      {
+          if (memory[i].game == currentGame) {
+            memory[i].tile = to_tile;
+          }
+      }
+      PlayerMemory.update({player:currentPlayer},{$set:{'memory':memory}});
+
+      var NewTiles = [];
+      // Now that we have the real ID, we search for the corresponding Tile(s)
+        for (var i=0 ; i < AllTiles.length ; i++)
+        {
+            if (AllTiles[i].id == to_tile) {
+              NewTiles.push(AllTiles[i]);
+            }
+        }
+
+      // If we have more than one Tile, choose one at random.
+      // Use this feature with care !
+      rnd = ~~(Math.random() * NewTiles.length); 
+      NewTile = NewTiles[rnd];
+
+      // Did we unlock an Achievement?
+      processAchievement(NewTile.achievement,currentPlayer,currentGame);
+
+      // Retrieve the Stuff possessed currently by the player, since this influences available options
+      AllKeys = [];
+      for (i in memory) {
+        if(memory[i].game == currentGame) {
+          AllKeys = memory[i].Stuff;
+          break;
+        }
+      }
+
+      // Stripping the Tile from all the non-scrambled data
+      NewTile = Meteor.call('minimize', NewTile, AllKeys);
+
+      // Stuff management: PlayerMemory.Stuff contains all the stuff keys (e.g. story flags).
+      // We retrieve the key + description when available and append them to the current Tile
+
+      // Fetch all Stuff from the story
+      StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
+      StoryStuff = StoryStuff.Stuff;
+      TileStuff = [];
+
+      for (var i=0 ; i < StoryStuff.length ; i++)
+      {
+        // check if we have the key in our player Stuff (key, name, description)
+        if(AllKeys.includes(StoryStuff[i].key)) {
+          oneItem = {};
+          oneItem.name = StoryStuff[i].name;
+          oneItem.description = StoryStuff[i].description;
+          TileStuff.push(oneItem);
+        }
+      }
+
+      // Append current Stuff to the Tile
+      NewTile.Stuff = TileStuff;
+
+      // Update the PlayerData accordingly
+      PlayerData.update({player:currentPlayer},{$set:{'currentScrambledTile':NewTile}});
+
     }
+  }
 });
 
 // This method is called by the client when a new game is loaded
 Meteor.methods(
 {
   'loadStory': function(storyname){
-//console.log("loadStory called: "+storyname);
   if(storyname == null) return; // avoid throwing an error when we are not actually loading a story
   if(Meteor.isServer) {
+
+    // Do we already have a Tile in memory? If yes, load this one
+    // If we have no PlayerMemory yet, we create one
+    if(PlayerMemory.find({player: Meteor.userId()}).fetch()[0] == undefined) {
+      // new player
+      PlayerMemory.insert({player:Meteor.userId(),memory:[{game:storyname,tile:"1",Stuff:[]}]});
+    }
+
+    // Update current game 
+    PlayerMemory.update({player:Meteor.userId()}, { $set: { "currentGame": storyname } });
+
+    // Did we already have a Tile in memory for this story? If yes, we reuse it. If not, we initialize it.
+    memory = PlayerMemory.find({player:Meteor.userId()}).fetch()[0].memory;
+
+    // Do we have a tile for the current game?
+    startFromTile = null;
+    startWithStuff = [];
+    for (var i=0 ; i < memory.length ; i++)
+    {
+      if (memory[i].game == storyname) {
+        startFromTile = memory[i].tile;
+        startWithStuff = memory[i].Stuff;
+      }
+    }
+
+    if(startFromTile == null) {
+      // we don't have a tile for the current game, we will use "1" by default
+      startFromTile = "1";
+      // and we set the memory accordingly
+      memory.push({"game":storyname,"tile":"1",Stuff:[]});
+      PlayerMemory.update({player:Meteor.userId()}, { $set: { "memory": memory } });
+    }
 
     // We shall populate PlayerData with the content of the proper story's first tile
     currentData = {};
     currentData.player = Meteor.userId();
     currentData.game = storyname;
-
-    // We shall create and populate PlayerMemory for this story
-    if(PlayerMemory.find({player: Meteor.userId()}).fetch()[0] == undefined) {
-      // new player
-      PlayerMemory.insert({player:Meteor.userId()});
-    }
-    // update player's memory data
-    PlayerMemory.update({player:Meteor.userId()}, { $set: { game: storyname } });
-    PlayerMemory.update({player:Meteor.userId()}, { $set: { Stuff: [] } });
 
     manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
 
@@ -389,24 +445,43 @@ Meteor.methods(
 
     // stores the Credits
     currentData.Credits = manyTiles.Credits;
-    // at this stage manyTiles contains all Tiles from the story. Searching for tile #1
+    // at this stage manyTiles contains all Tiles from the story. Searching for tile 'startFromTile' (default: "1")
     manyTilesContent = manyTiles.Tiles;
     oneTile = null;
     for (i = 0; i < manyTilesContent.length; i++) {
       oneTile = manyTilesContent[i];
-      if(oneTile.id == '1') {
+      if(oneTile.id == startFromTile) {
         break;
       }
     }
 
-    // here, oneTile contains the Tile with ID 1. We minimize it, store it, and return.
-    oneScrambledTile = Meteor.call('minimize',oneTile,[]);
+    // Fetch all Stuff from the story
+    StoryStuff = AllContent.find( { 'filename': currentData.game } , {fields: {'Stuff':1,'_id':0}} ).fetch()[0];
+    StoryStuff = StoryStuff.Stuff;
+    TileStuff = [];
+
+    for (var i=0 ; i < StoryStuff.length ; i++)
+    {
+      // check if we have the key in our player Stuff (key, name, description)
+      if(startWithStuff.includes(StoryStuff[i].key)) {
+        oneItem = {};
+        oneItem.name = StoryStuff[i].name;
+        oneItem.description = StoryStuff[i].description;
+        TileStuff.push(oneItem);
+      }
+    }
+
+    // here, oneTile contains the Tile with ID 'startFromTile' (1 by default). We minimize it, store it, and return.
+    oneScrambledTile = Meteor.call('minimize',oneTile,startWithStuff);
+    oneScrambledTile.Stuff = TileStuff;
 
     currentData.currentScrambledTile = oneScrambledTile;
     currentData.to_data = oneScrambledTile.id;
+
     // save this state in the player's collections
     PlayerData.remove({player: Meteor.userId()});
     PlayerData.insert(currentData);
+
   }
 }
 });
@@ -435,9 +510,21 @@ Meteor.methods(
 Meteor.methods(
 {
     'restart': function(){
-      currentPlayer = Meteor.userId();
-      currentStory = PlayerData.find({player:currentPlayer}).fetch()[0].game;
-      Meteor.call('loadStory',currentStory);
+      if(Meteor.isServer) {
+        currentPlayer = Meteor.userId();
+        currentStory = PlayerData.find({player:currentPlayer}).fetch()[0].game;
+        memory = PlayerMemory.find({player:currentPlayer}).fetch()[0].memory;
+
+        for (i in memory) {
+          if(memory[i].game == currentStory) {
+            memory[i].tile = "1";
+            memory[i].Stuff = [];
+            PlayerMemory.update({player:currentPlayer},{$set:{'memory':memory}});
+            break;
+          }
+        }
+        Meteor.call('loadStory',currentStory);
+      }
     }
 });
 

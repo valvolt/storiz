@@ -43,9 +43,6 @@ function loadStories() {
       oneAchievementSet.Achievements = storyContent.Achievements;
     }
     AllAchievements.insert(oneAchievementSet);
-
-//console.log("INSERTING :");
-//console.log(oneStory);
   }
 }
 

@@ -40,7 +40,6 @@ Template.register.events({
               Router.go('/');
             } else {
               Router.go('/story/'+storyname);
-              Meteor.call('loadStory',storyname);
             }
           }
         })
@@ -73,7 +72,6 @@ Template.login.events({
               Router.go('/');
             } else {
               Router.go('/story/'+storyname);
-              Meteor.call('loadStory',storyname);
             }
           }
        })
@@ -89,7 +87,6 @@ Template.login.helpers({
 // Used to create an anonymous user automatically (and to delete old anonymous users)
 Template.autologin.helpers({
   autologin: function() {
-console.log(Session.get('storyname'));
     loginToken = uuid();
     Meteor.call('autologin',loginToken);
     Meteor.loginWithToken(loginToken);
@@ -99,7 +96,6 @@ console.log(Session.get('storyname'));
       Router.go('/');
     } else {
       Router.go('/story/'+storyname);
-      Meteor.call('loadStory',storyname);
     }
   }
 });
@@ -170,8 +166,6 @@ Template.stories.events({
     // url is of format http://<location>/story/<storyname>
     storyname = url.split("/");
     storyname = storyname[storyname.length-1];
-    // loading story data...
-    Meteor.call('loadStory',storyname);
   }
 });
 
@@ -212,12 +206,6 @@ Template.game.helpers({
   },
   playerData() {
     // get user data
-//console.log("PLAYER DATA");
-//console.log(PlayerData.find({}).fetch()[0]);
-//console.log("PLAYER");
-//console.log(Meteor.user());
-//console.log("PLAYER MEMORY");
-//console.log(PlayerMemory.find({}).fetch()[0]);
     if(PlayerData.find({}).count() > 0) {
       return PlayerData.find({});
     } else {
