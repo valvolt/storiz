@@ -3,18 +3,24 @@ A simple engine for creating HTML5 choice-based games. Think super-simple Visual
 
 Play/test it here: https://valvolt-storiz.herokuapp.com/
 
-[![Features tour](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/sample-storiz.png)](https://valvolt-storiz.herokuapp.com/)
-
-[![Features tour](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/tuto-storiz.png)](https://valvolt-storiz.herokuapp.com/)
-
-
 ## LATEST NEWS (check the CHANGES below as well !)
 
-I finally managed to fix the concurrent access issue ! In Meteor, Sessions are shared by all users. So when two players were playing, each click on one button would refresh both pages, making the game unplayable. Now you can register and login. As long as two players run as a different user they should be fine.
+A big, BIG thank you to Anne 'Shinari' Radunski who spent several weeks rethinking the complete user experience. She created beautiful prototypes which I used as a target to reach and she designed the Storiz logo. What I implemented is not as perfect as what she proposed, but it's a huge improvement over the previous version.
 
-I learned a lot more how the refresh 'magic' of Meteor does work in the process, I rewrote almost the engine from scratch and removed code which worked but was really ugly.
+Just compare these screenshots:
 
-'Autologin' will create a user session (without password) which will eventually be destroyed. This is convenient if you don't want to create a user account. Anonymous users lose (now working) Achievements and can't Save/Restore (feature on the TODO list).
+'D3mons' story:
+
+![Old](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/sample-storiz.png)
+![New](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/new-sample-storiz.png)
+
+'Tutorial':
+
+![Old](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/tuto-storiz.png)
+![New](https://raw.githubusercontent.com/valvolt/storiz/master/public/tutorial/new-tuto-storiz.png)
+
+
+There is still work to do on the design, but it's reasonably functional so I thought I could release it to you.
 
 Enjoy, and as usual, feedback welcome !
 
@@ -40,6 +46,10 @@ docker run -d -p 80:3000 --name storiz storiz:latest
 then from your web browser, go to http://localhost
 
 ## CHANGES
+
+[Done] - Major redesign of the whole UI, made possible by Anne Radunski's impressive designs (thanks again Anne !). There is still some work to do (cf TODO list underneath) but it works good already.
+
+[New] - The new design gave birth to the 'mood' feature, which lets you choose background effects. This one has untapped potential that I may explore later.
 
 [New] - Stories are now auto-saved. You can switch between them and resume where you left. If you have registered your account, you can now logout and resume playing later. Of course though, Anonymous users will lose their progress between sessions.
 
@@ -95,9 +105,9 @@ then from your web browser, go to http://localhost
 
 ## KNOWN BUGS & LIMITATIONS
 
-- Achievements are not persisted when exiting from a story, and are not available at all if no story was loaded. This should be easy to fix though.
+- The new UI design is really nice on laptops but don't work anymore on mobile phones. I should create a specific design for mobiles, not sure where to start with this one.
 
-- CSS is desesperately needed
+- Whenever I do a database structure change, I need to delete user accounts on Heroku. Just create a new account, sorry for that. And if your account does not work anymore, it might be that it's still an old version. Either create another account or send me a message and I will delete the defective account for you.
 
 - An editor should be developed, for that I need to add user roles, create an admin account, and let it edit / create tiles
 
@@ -109,10 +119,12 @@ then from your web browser, go to http://localhost
 
 - persist progression in DB (for logging / scoring, storing history of visited tiles etc.)
 
-- add a 'save / restore' feature for continuing a story at a later time
-
-- add an 'achievement' system
-
 - make a tile editor (possibly with direct upload of pictures / videos to folder /public)
 
-- update the demo tour Youtube video with the latest content of the sample story (credits, achievements, content floating, ...) and with user actions (registration, login, restart story, ...). I should also resize the video as well as some images which are too large and overlap with the text when displayed side-by-side (max supported width is 580px)
+- explain how the 'logout', 'restart', 'exit' and other functions work. They are rather self-explanatory though.
+
+- add a 'change password' feature and a 'reset password' feature.
+
+- redesign the 'Credits' page
+
+- complete the 'Profile' page, let user upload an avatar and display the avatar with the username
