@@ -421,6 +421,7 @@
     {
       "id": "25",
       "title": "nmap",
+      "mood": "hacker",
       "text": "As during your first encounter, the d3mon stops for a second. You understand that he tries to connect to your i-brain. But you're faster. In an instant, a mass of information flows to you.<br/><br/>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST<br>Nmap scan report for zan (192.168.9.105)<br/>Host is up (0.00012s latency).<br/>Not shown: 997 closed ports<br/>PORT     STATE SERVICE<br/>17/tcp  open  QOTD<br/>23/tcp  open  telnet<br/>194/tcp  open  internet relay chat<br/><br/>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br/><br/>No room for mistakes...",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -462,6 +463,7 @@
     {
       "id": "26",
       "title": "QOTD",
+      "mood": "hacker",
       "text": "The connection works instantly, but apparently nothing happens. Quick, an idea!",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -481,6 +483,7 @@
     {
       "id": "27",
       "title": "Telnet",
+      "mood": "hacker",
       "text": "The connection works instantly.<br/><br/>Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ _",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -501,6 +504,7 @@
     },
     {
       "id": "28",
+      "mood": "hacker",
       "title": "IRC",
       "text": "The connection works instantly.<br/><br/>-> You have joined the channel #conversation<br/>*** Channel modes: no messages from outside, topic protection<br/><br/>*** Welcome guest, your nickname is set to guest-53642<br/>*** Change your nickname with /nick<br/>&lt;Zan&gt; You! Help me, I beg of you!",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -529,6 +533,7 @@
     {
       "id": "29",
       "title": "...",
+      "mood": "hacker",
       "text": "As you attempt executing a new command, you feel a violent pain at your left shoulder. You've lost too much time, the d3mon is on you! The connection is instantly severed. You just have the time to see your agressor punch you in the face.",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -542,6 +547,7 @@
     {
       "id": "30",
       "title": "Quote Of The Day",
+      "mood": "hacker",
       "text": "hello<br/><br/>\"The birth of the i-brain will seal our fate\"<br/>- Jensy Crakow",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -559,6 +565,7 @@
     {
       "id": "31",
       "title": "Lights off",
+      "mood": "hacker",
       "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ shutdown now<br/><br/>Broadcast message from zan@localhost.localdomain<br/>(/dev/pts/0) ...<br/><br/>The system is going down for shutdown NOW!<br/>",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -586,6 +593,7 @@
     {
       "id": "32",
       "title": "Telnet",
+      "mood": "hacker",
       "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ find / -name *.mkv<br/><br/>find: '/home/zan/Documents/memories/secrets': Permission denied<br/>/home/zan/Documents/memories/HappyDays.mkv<br/>/home/zan/Documents/memories/JenSBetrayal.mkv",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -603,6 +611,7 @@
     {
       "id": "33",
       "title": "IRC",
+      "mood": "hacker",
       "text": "&lt;Zan&gt; You! Help me, I beg of you!<br/>&lt;guest-53642&gt; What can I do?<br/>&lt;Zan&lt; Are you a hack3r?<br/>&lt;guest-53642&gt; Yes.<br/>&lt;Zan&gt; I you shutdown my i-brain, I die.<br/>&lt;guest-53642&gt; Is there another way?<br/>&lt;Zan&gt; Did Jen sent you?<br/>",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -619,6 +628,7 @@
     },
     {
       "id": "34",
+      "mood": "hacker",
       "title": "IRC",
       "text": "You get no reply. Are you really surprised?",
       "music": "d3mons/Creo-Showdown.mp3",

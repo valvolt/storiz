@@ -77,7 +77,7 @@
     {
       "id": "picture",
       "title": "Storiz: the basics - picture",
-      "text": "A picture is also optional. To add one to the tile, you have to do the following:<br/>- On your computer, go to the folder where you have downloaded the Storiz engine, then enter the /public sub-folder.<br/>- It is recommended to create a sub-folder for your story if one does not exist already, for example my_folder.<br/>- Store in this subfolder the picture you want for your tile. You may want to rename your picture if its name contains spaces or special characters.<br/>- If your picture is named my_picture.png and is stored in /public/my_story, then the \"picture\" element of your tile should contain \"my_folder/my_picture.png\"<br/><br/>The picture will be resized to a height of 300 pixels.<br/>You can find free to use pictures on <a target=\"new\" href=\"https://pixabay.com\">Pixabay.com</a>.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      <b>\"picture\": \"my_folder/picture.jpg\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "text": "A picture is also optional. To add one to the tile, you have to do the following:<br/>- On your computer, go to the folder where you have downloaded the Storiz engine, then enter the /public sub-folder.<br/>- It is recommended to create a sub-folder for your story if one does not exist already, for example my_folder.<br/>- Store in this subfolder the picture you want for your tile. You may want to rename your picture if its name contains spaces or special characters.<br/>- If your picture is named my_picture.png and is stored in /public/my_story, then the \"picture\" element of your tile should contain \"my_folder/my_picture.png\"<br/><br/>The picture will be displayed as a background image.<br/>You can find free to use pictures on <a target=\"new\" href=\"https://pixabay.com\">Pixabay.com</a>.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      <b>\"picture\": \"my_folder/picture.jpg\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
       "picture": "tutorial/6-2.jpg",
       "choices": [
         {
@@ -163,7 +163,8 @@
     {
       "id": "video",
       "title": "Storiz: media files - video",
-      "text": "The \"video\" element works in the same way as the \"picture\" element. The video file must be stored in the /public folder and will play automatically as soon as the tile is rendered on-screen.<br/>The video will be resized to have a height of 300 pixels. The sound of the video will play, keep that in mind if you have a sound or music element already set.<br/><br/>You cannot have a \"video\" and \"picture\" at the same time: if that's the case, only the video will be rendered.<br/><br/>You can find free to use videos on <a target=\"new\" href=\"https://www.pexels.com\">Pexels.com</a>.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"music\": \"my_folder/cool_music.mp3\",<br/>      \"sound\": \"my_folder/laugh.mp3\",<br/>      <b>\"video\": \"my_folder/my_video.mp4\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "text": "The \"video\" element works in the same way as the \"picture\" element. The video file must be stored in the /public folder and will play automatically as soon as the tile is rendered on-screen.<br/>The video will be resized to have a height of 300 pixels. The sound of the video will play, keep that in mind if you have a sound or music element already set.<br/><br/><br/>You can find free to use videos on <a target=\"new\" href=\"https://www.pexels.com\">Pexels.com</a>.<br/><br/>  <pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"music\": \"my_folder/cool_music.mp3\",<br/>      \"sound\": \"my_folder/laugh.mp3\",<br/>      <b>\"video\": \"my_folder/my_video.mp4\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre>",
+      "picture": "tutorial/3.jpg",
       "video": "tutorial/video.mp4",
       "music": "tutorial/Aerohead_CallingOut.mp3",
       "choices": [
@@ -176,7 +177,7 @@
     {
       "id": "4",
       "title": "Storiz: clickable images",
-      "text": "An image on which you can click is called an image map. Its zones work as (extra) choices and are defined with the \"map\" element. You can decide to have only choices, or only a map, or both for your tile. Be careful not to confuse your players as nothing will tell them the picture is clickable if you don't tell them.<br/><br/><pre>  \"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.png\",<br/>      \"map\": [<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"373,253,163,134,71,62,179,99,375,213\",<br/>          \"to_tile\": \"3\"<br/>        },<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"18,299,151,233,111,158,3,207,3,297\",<br/>          \"to_tile\": \"4\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>Each clickable zone is composed of a shape, coordinates, and a to_tile.<br/>- The \"to_tile\" defines the target tile id, like for a choice.<br/>- The \"shape\" is the shape of the zone which can be clicked, and the \"coords\" corresponds to the related coordinates.<br/><br/>To create an image map, you have to do the following:<br/>- First, resize the picture so that its height is exactly 300 pixels<br/>- Upload your image to <a target=\"new\" href=\"https://www.image-map.net/\">image-map.net</a><br/>- Edit your clickable zones on the website, then click \"show me the code\"<br/>- Copy the \"shape\" and \"coords\" values to your map element<br/><br/>Congratulations, you have created a clickable picture ! Click on the left flower to go back to the main menu.",
+      "text": "An image on which you can click is called an image map. Its zones work as (extra) choices and are defined with the \"map\" element. You can decide to have only choices, or only a map, or both for your tile. A clickable picture will always appear on the top layer with a height of 300 pixels, as well as in the background.<br/><br/><pre>  \"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.png\",<br/>      \"map\": [<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"373,253,163,134,71,62,179,99,375,213\",<br/>          \"to_tile\": \"3\"<br/>        },<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"18,299,151,233,111,158,3,207,3,297\",<br/>          \"to_tile\": \"4\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>Each clickable zone is composed of a shape, coordinates, and a to_tile.<br/>- The \"to_tile\" defines the target tile id, like for a choice.<br/>- The \"shape\" is the shape of the zone which can be clicked, and the \"coords\" corresponds to the related coordinates.<br/><br/>To create an image map, you have to do the following:<br/>- First, resize the picture so that its height is exactly 300 pixels<br/>- Upload your image to <a target=\"new\" href=\"https://www.image-map.net/\">image-map.net</a><br/>- Edit your clickable zones on the website, then click \"show me the code\"<br/>- Copy the \"shape\" and \"coords\" values to your map element<br/><br/>Congratulations, you have created a clickable picture ! Click on the left flower to go back to the main menu.",
       "picture": "tutorial/4.jpg",
       "map": [
         {
@@ -416,6 +417,105 @@
       "picture": "tutorial/7.jpg",
       "choices": [
         {
+          "text": "Next: Mood",
+          "to_tile": "mood"
+        }
+      ]
+    },
+    {
+      "id": "mood",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      <b>\"mood\": \"cold\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "Show me the \"hot\" mood",
+          "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"gritty\" mood",
+          "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
+        },
+        {
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "mood-hot",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "tutorial/7.jpg",
+      "mood": "hot",
+      "choices": [
+        {
+          "text": "Show me the \"gritty\" mood",
+          "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "mood-gritty",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      <b>\"mood\": \"gritty\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "tutorial/7.jpg",
+      "mood": "gritty",
+      "choices": [
+        {
+          "text": "Show me the \"hot\" mood",
+          "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "mood-hacker",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.jpg\",<br/>      <b>\"mood\": \"hacker\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "tutorial/7.jpg",
+      "mood": "hacker",
+      "choices": [
+        {
+          "text": "Show me the \"hot\" mood",
+          "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"gritty\" mood",
+          "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood"
+        },
+        {
           "text": "Next: Name",
           "to_tile": "name"
         }
@@ -462,6 +562,7 @@
       "title": "Storiz: wrapping-up",
       "achievement": "completed",
       "text": "You are now aware of all the current features of Storiz. To help you, the <b>template.json</b> file was created as a minimal structure containing all the supported keywords. You can use it as a reference. Have fun writing your next story !",
+      "picture": "tutorial/7.jpg",
       "video": "tutorial/video.mp4",
       "music": "tutorial/Aerohead_CallingOut.mp3"
     }

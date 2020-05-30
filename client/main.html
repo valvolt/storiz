@@ -1,21 +1,27 @@
 <!-- User Management -->
-
 <template name="register">
     {{#if currentUser}}
         {{> game}}
     {{else}}
-    <h2>Create account</h2>
-    <form class="register">
-        <p>Username: <input type="username" name="username"></p>
-        <p>Password: <input type="password" name="password"></p>
-        <p><input type="submit" value="Register"></p>
-    </form>
-    <h3>Already have an account? <a href="{{pathFor route='login'}}">Login</a></h3>
+    <div class=fullblack></div>
+    <div class="loginbox" align="center">
+      <p>&nbsp;</p>
+      <img src="system/logo-white.svg" width="100px"/><br/><div class="logo">STORIZ</div>
+      <h4>Create account</h4>
+      <form class="register">
+        <p><input type="username" name="username" placeholder="Username"></p>
+        <p>&nbsp;</p>
+        <p><input type="password" name="password" placeholder="Password"></p>
+        <p>&nbsp;</p>
+        <p><input type="submit" class="w3-button" value="Register"></p>
+      </form>
+      <p>Already have an account? <a href="{{pathFor route='login'}}">Login</a></p>
     {{#if errorMessage}}
-      <div class="alert">
-        <span>/!\ {{errorMessage}} /!\</span>
-      </div>
-    {{/if}}
+        <div class="alert">
+          <span>/!\ {{errorMessage}} /!\</span>
+        </div>
+      {{/if}}
+    </div>
     {{/if}}
 </template>
 
@@ -23,18 +29,25 @@
     {{#if currentUser}}
         {{> game}}
     {{else}}
-    <h2>Login</h2>
-    <form class="login">
-        <p>Username: <input type="username" name="username"></p>
-        <p>Password: <input type="password" name="password"></p>
-        <p><input type="submit" value="Login"></p>
-    </form>
-    <h3>Don't have an account? <a href="{{pathFor route='register'}}">Register</a> or login as <a href="{{pathFor route='autologin'}}">Anonymous</a></h3>
-    {{#if errorMessage}}
-      <div class="alert">
-        <span>/!\ {{errorMessage}} /!\</span>
-      </div>
-    {{/if}}
+    <div class=fullblack></div>
+    <div class="loginbox" align="center">
+      <p>&nbsp;</p>
+      <img src="system/logo-white.svg" width="100px"/><br/><div class="logo">STORIZ</div>
+      <h4>&nbsp;</h4>
+      <form>
+        <p><input type="username" name="username" placeholder="Username"></p>
+        <p>&nbsp;</p>
+        <p><input type="password" name="password" placeholder="Password"></p>
+        <p>&nbsp;</p>
+        <p><input class="w3-btn" type="submit" value="START"></p>
+      </form>
+      <p>Need an account? <a href="{{pathFor route='register'}}">Register</a> or login as <a href="{{pathFor route='autologin'}}">Anonymous</a></p>
+      {{#if errorMessage}}
+        <div class="alert">
+          <span>/!\ {{errorMessage}} /!\</span>
+        </div>
+      {{/if}}
+    </div>
     {{/if}}
 </template>
 
@@ -73,20 +86,10 @@
       }
     </script>
 
-  {{#if currentUser}}
-    <div align="left">Connected as: <a href="/profile/{{currentUser.username}}">{{currentUser.username}}</a>. <a href="/story/#" class="logout">Logout</a>.</div>
-  {{/if}}
   {{#each playerData}}
-    <div align="left">Currently playing: <a href="/story/{{game}}">{{game}}</a>.
-    {{#if Credits}}(<a href="/story/#" class="credits">Show/Hide Credits</a>)
-    {{/if}} <a href="/story/#" class="exit">Exit</a>. <a href="/story/#" class="restart">Restart</a>.</div>
-    <div align="center" id="credits" style="display: none;border:3px solid black">{{{Credits}}}</div>
+    <div align="center" id="credits">{{{Credits}}}<p><input class="w3-button credits" type="button" value="[CLOSE]"/></p></div>
   {{/each}}
-  {{#unless playerData}}
-    <div align="left">Currently playing: <a href="/">nothing</a>.</div>
-  {{/unless}}
   {{> yield}}
-  <div align="right">Powered by <a href="https://github.com/valvolt/storiz" target="new">Storiz</a>.</div>
 </template>
 
 <!-- Game Management -->
@@ -95,33 +98,71 @@
 <template name="game">
     {{bookmark}}
     {{#if currentUser}}
-      <!-- these divs shall put content side-by-side on laptops and on top of each other on mobiles -->
       {{loadOrRefresh}}
       {{#each playerData}}
-            {{> title}}
             {{> sound}}
             {{music}}
-      <div id="parent">
-          <div id="leftdiv">
             {{> picture}}
-          </div>
-          <div id="rightdiv">
-            {{> story}}
-          </div>
-      </div>
-            {{> stuff}}
+<div class="grid-container">
+  <div class="grid-info">{{> info}}</div>
+  <div class="grid-left" align="left">
+    <div class="font-{{currentScrambledTile.mood}}">
+      {{> storyname}}
+    </div>
+  </div>
+  <div class="grid-title"><div class="caps">{{> title}}</div></div>  
+  <div id="grid-main" class="grid-main">
+    <div class="font-{{currentScrambledTile.mood}}">
+      {{> interactive}}{{> story}}
+    </div>
+  </div>
+  <div class="grid-right" align="left">
+    <div class="font-{{currentScrambledTile.mood}}">
+      {{> options}}
+    </div>
+  </div>
+  <div class="grid-footer">{{> stuff}}</div>
+  <div class="grid-l-empty"></div>
+  <div class="grid-r-empty"></div>
+</div>
       {{else}}
-        <h1>Please go back to <a href="/">main page</a> and refresh (F5) your session</h1>
+        <h1>Please wait for the page to load. If this takes too long, you may have triggered a bug. Let us know by opening a new issue <a href="https://github.com/valvolt/storiz/issues">here</a>.</h1>
       {{/each}}
     {{else}}
         {{> login}}
     {{/if}}
+</template>
 
+<template name="storyname">
+  <div align="left" class="caps">{{Name}}</div>
+</template>
+
+<template name="options">
+  <input class="w3-button exit" type="button" value="EX1T"/>
+  -<input class="w3-button restart" type="button" value="REST4RT"/>
+  -<input class="w3-button logout" type="button" value="LOG0UT"/>
+</template>
+
+<template name="info">
+{{#if currentUser}}
+  <div class="info">
+    <div class="info-{{currentScrambledTile.mood}}">
+      <div align="left" class="icon"><a href="https://github.com/valvolt/storiz/wiki" target="new"><img src="/system/logo-{{currentScrambledTile.mood}}.svg" width="50px"/><br/>STORIZ</a></div>
+      <div align="right">
+      {{#if Credits}}<input class="w3-button credits" type="button" value="ABOUT"/>
+
+      {{/if}}
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/profile/{{currentUser.username}}">{{currentUser.username}}</a>
+      </div>
+    </div>
+  </div>
+{{/if}}
 </template>
 
 <template name="title">
   <header>
-    <h1 align="center">{{currentScrambledTile.title}}</h1>
+    <h1>{{currentScrambledTile.title}}</h1>
   </header>
 </template>
 
@@ -136,8 +177,18 @@
 </template>
 
 <template name="picture">
-  <div align="center">
-<!--     If we have a video available, we play it. If not, we display a picture instead. If not, we display nothing. -->
+  <div class=fullwhite></div>
+  <div class="background">
+    {{#if currentScrambledTile.picture}}
+      <img src="/{{currentScrambledTile.picture}}"/>
+    {{/if}}
+  </div>
+  <div class="cover cover-{{currentScrambledTile.mood}}"></div>
+</template>
+
+<!-- Handles interactive content: videos and clickable pictures -->
+<template name="interactive">
+  <div class="interactive" align="center">
   {{#if currentScrambledTile.video}}
     {{video}}
     <video id="video" height="300px" controls autoplay>
@@ -148,10 +199,6 @@
       <!--     If we have a picture map, we add it here. We take the assumption that map comes with a picture. -->
       <img src="/{{currentScrambledTile.picture}}" height="300px" usemap="#{{currentScrambledTile.id}}"/>
       {{> maps}}
-    {{else}}
-      {{#if currentScrambledTile.picture}}
-        <img src="/{{currentScrambledTile.picture}}" height="300px"/>
-      {{/if}}
     {{/if}}
   {{/if}}
   </div>
@@ -186,15 +233,14 @@
 
 <template name="choice">
   {{#if enabled}}
-    <li><button tile="{{to_tile}}" item="{{item}}" uses="{{uses}}">{{text}}</button></li>
+    <li><input class="w3-button" type="button" tile="{{to_tile}}" item="{{item}}" uses="{{uses}}" value="&#x25B8; {{text}}"/></li>
   {{else}}
-    <li><button disabled>{{text}}</button></li>
+    <li><input class="w3-button" type="button" disabled value="{{text}}"/></li>
   {{/if}}
 </template>
 
 <template name="stuff">
   <div>
-  <h3>My Stuff</h3>
   {{#if hasCode}}{{> flag}}{{/if}}
   <ul>
   {{#each currentScrambledTile.Stuff}}
@@ -217,13 +263,27 @@
 
 <template name="stories">
 <!-- If user is not authenticated, reroute to login -->
+{{> info}}
+<div class="stories">
 {{#if currentUser}}
   {{#each allContent}}
-    <h2><a href="/story/{{filename}}">{{Name}}</a> ({{NbTiles}} Tiles)</h2>
-    <p>{{description}}</p>
+  <div class="hex{{hex}}">
+    <div class="hex-container">
+      <div class="hexagon">
+        <a href="/story/{{filename}}">{{Name}}</a> ({{NbTiles}} Tiles)
+        <p>{{description}}</p>
+      </div>
+    </div>
+  </div>
   {{/each}}
 {{else}}
   {{> login}}
+{{/if}}
+</div>
+{{#if currentUser}}
+    <div class="github" align="center">
+      <a href="https://github.com/valvolt/storiz" target="new"><img height="30px" src="/system/github.png"></a>
+    </div>
 {{/if}}
 </template>
 
@@ -231,23 +291,45 @@
 
 <template name="profile">
   {{#if currentUser}}
-  <h1>My Profile</h1>
-    <p><b>Username:</b> {{currentUser.username}}</p>
+  <div class="fullgrid"></div>
 
-  <h2>My Achievements</h2>
-  {{#if isRegistered}}
-    {{#each achievements}}
-      <h3>{{filename}}</h3>
-      <table>
-        <tr><td><b>Name</b></td><td><b>Achievement</b></td><td><b>Trophy</b></td></tr>
-        {{#each Achievements}}
-          <tr><td><b>{{name}}</b></td><td>{{description}}</td><td><img align="center" height="30px" src="/system/{{trophy}}.png" title="{{trophy}}"/></td></tr>
-        {{/each}}
-      </table>
-    {{/each}}
-  {{else}}
+
+  <div class="info">
+    <div class="info-{{currentScrambledTile.mood}}">
+      <div align="left" class="icon"><a href="https://github.com/valvolt/storiz/wiki" target="new"><img src="/system/logo-{{currentScrambledTile.mood}}.svg" width="50px"/><br/>STORIZ</a></div>
+      <div align="right">
+      <input class="w3-button back" type="button" value="BACK"/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/profile/{{currentUser.username}}">{{currentUser.username}}</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="profilemenu">
+    Profile
+    <p><input class="w3-button profile" type="button" value="Basic Information" id="button-profile"/></p>
+    <p><input style="font-weight: bold;" class="w3-button achievements" type="button" value="Achievements" id="button-achievements"/></p>
+  </div>
+  <div id="achievements" class="profilebox">
+    {{#if isRegistered}}
+      {{#each achievements}}
+        <h3>{{filename}}</h3>
+        <table>
+          <tr><td><b>Name</b></td><td><b>Achievement</b></td><td><b>Trophy</b></td></tr>
+          {{#each Achievements}}
+            <tr><td><b>{{name}}</b></td><td>{{description}}</td><td><img align="center" height="30px" src="/system/{{trophy}}.png" title="{{trophy}}"/></td></tr>
+          {{/each}}
+        </table>
+      {{/each}}
+    {{else}}
     <p>Achievements are not persisted for anonymous users. Please register to see and collect them.</p>
-  {{/if}}
+    {{/if}}
+    </div>
+  <div style="display: none;" id="profile" class="profilebox">
+      <p><b>Username:</b></p>
+      <p>{{currentUser.username}}</p>
+    </div>
   {{else}}
     {{> login}}
   {{/if}}

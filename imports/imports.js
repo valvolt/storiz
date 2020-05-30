@@ -256,7 +256,6 @@ Meteor.methods(
     'toData': function(to_data){
        currentPlayer = Meteor.userId();
        currentGame = PlayerData.find({'player':currentPlayer}).fetch()[0].game;
-
       if(Meteor.isServer) {
       // Loads the PlayerData corresponding to this new tile value
       // Search in AllContent the data corresponding to the to_data value
@@ -423,7 +422,7 @@ Meteor.methods(
     currentData.player = Meteor.userId();
     currentData.game = storyname;
 
-    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
+    manyTiles = AllContent.find( { 'filename': storyname } , {fields: {'Name':1,'Credits':1,'Tiles':1,'Stuff':1,'_id':0}} ).fetch()[0];
 
     // it may happen that manyTiles is null, when we are on the home page and not in a story
     if (manyTiles == undefined) {
@@ -445,6 +444,8 @@ Meteor.methods(
 
     // stores the Credits
     currentData.Credits = manyTiles.Credits;
+    // stores the story name
+    currentData.Name = manyTiles.Name;
     // at this stage manyTiles contains all Tiles from the story. Searching for tile 'startFromTile' (default: "1")
     manyTilesContent = manyTiles.Tiles;
     oneTile = null;

@@ -421,6 +421,7 @@
     {
       "id": "25",
       "title": "nmap",
+      "mood": "hacker",
       "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain. Mais vous êtes plus rapide. En un instant, une quantité d'information vous parvient.<br><br>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST<br>Nmap scan report for zan (192.168.9.105)<br>Host is up (0.00012s latency).<br>Not shown: 997 closed ports<br>PORT     STATE SERVICE<br>17/tcp  open  QOTD<br>23/tcp  open  telnet<br>194/tcp  open  internet relay chat<br><br>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br><br>Pas le droit à l'erreur...",
       "music": "d3mons/Creo-Showdown.mp3",
       "picture": "d3mons/chernobyl-3711290_1280.jpg",
@@ -461,6 +462,7 @@
     },
     {
       "id": "26",
+      "mood": "hacker",
       "title": "QOTD",
       "text": "La connexion est immédiate, mais apparemment rien ne se passe. Une idée, vite ! ",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -480,6 +482,7 @@
     },
     {
       "id": "27",
+      "mood": "hacker",
       "title": "Telnet",
       "text": "La connexion est immédiate.<br/><br/>Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ _",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -501,6 +504,7 @@
     },
     {
       "id": "28",
+      "mood": "hacker",
       "title": "IRC",
       "text": "La connexion est immédiate.<br/><br/>-> You have joined the channel #conversation<br/>*** Channel modes: no messages from outside, topic protection<br/><br/>*** Welcome guest, your nickname is set to guest-53642<br/>*** Change your nickname with /nick<br/>&lt;Zan&gt; Vous ! Aidez-moi, je vous en prie !",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -528,6 +532,7 @@
     },
     {
       "id": "29",
+      "mood": "hacker",
       "title": "...",
       "text": "Alors que vous tentez une nouvelle commande, vous ressentez une violente douleur à l'épaule. Vous avez perdu trop de temps, le d3mon est sur vous ! La connexion est immédiatement rompue. Vous avez juste le temps de voir votre agresseur vous envoyer son poing au visage.",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -541,6 +546,7 @@
     },
     {
       "id": "30",
+      "mood": "hacker",
       "title": "Quote Of The Day",
       "text": "hello<br/><br/>\"L'invention de l'i-brain causera notre perte\"<br/>- Jensy Crakow",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -558,6 +564,7 @@
     },
     {
       "id": "31",
+      "mood": "hacker",
       "title": "Extinction des feux",
       "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ shutdown now<br/><br/>Broadcast message from zan@localhost.localdomain<br/>(/dev/pts/0) ...<br/><br/>The system is going down for shutdown NOW!<br/>",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -585,6 +592,7 @@
     },
     {
       "id": "32",
+      "mood": "hacker",
       "title": "Telnet",
       "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ find / -name *.mkv<br/><br/>find: '/home/zan/Documents/souvenirs/secrets': Permission denied<br/>/home/zan/Documents/souvenirs/JoursHeureux.mkv<br/>/home/zan/Documents/souvenirs/TrahisonDeJen.mkv",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -602,6 +610,7 @@
     },
     {
       "id": "33",
+      "mood": "hacker",
       "title": "IRC",
       "text": "&lt;Zan&gt; Vous ! Aidez-moi, je vous en prie !<br/>&lt;guest-53642&gt; Qu'est-ce que je peux faire?<br/>&lt;Zan&lt; Vous êtes un hack3r?<br/>&lt;guest-53642&gt; Oui<br/>&lt;Zan&gt; Si vous désactivez mon i-brain je vais mourir...<br/>&lt;guest-53642&gt; Il y a une autre solution ?<br/>&lt;Zan&gt; C'est Jen qui vous envoie ?<br/>",
       "music": "d3mons/Creo-Showdown.mp3",
@@ -619,6 +628,7 @@
     },
     {
       "id": "34",
+      "mood": "hacker",
       "title": "IRC",
       "text": "Aucune réponse ne vient. Est-ce si étonnant ?",
       "music": "d3mons/Creo-Showdown.mp3",

@@ -130,10 +130,10 @@ Template.headerfooter.events({
     'click .credits': function(event){
         event.preventDefault();
         var x = document.getElementById("credits");
-        if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
+        if (x.style.display === "block") {
           x.style.display = "none";
+        } else {
+          x.style.display = "block";
         }
     },
 });
@@ -152,8 +152,20 @@ Meteor.subscribe('storynames');
 Template.stories.helpers({
   allContent() {
     // get list of all available stories
-    if(AllContent.find({}).count() > 0) {
-      return AllContent.find({});
+    allStories = AllContent.find({});
+    if(allStories.count() > 0) {
+      // we loop over stories and give them a place in the hex grid
+      let count = 1;
+      numberedStories = [];
+      allStories.forEach(function(content) {
+        content.hex = count;
+        // we keep only the 12 first stories (!) for spacing reasons
+        if(count < 13) {
+          numberedStories.push(content);
+        }
+        count += 1;
+      });
+      return numberedStories;
     }
     return null;
   },
@@ -237,8 +249,9 @@ Template.game.events({
 });
 
 Template.game.events({
-  'click button'(event, instance) {
+  'click input'(event, instance) {
     manageClick(event.target.getAttribute('tile'));
+    document.getElementById("grid-main").scrollTop=0;
   }
 });
 
@@ -310,5 +323,34 @@ Template.profile.helpers({
     });
     return Session.get('achievements');
   }
+});
+
+Template.profile.events({
+    'click .profile': function(event){
+        event.preventDefault();
+        var x = document.getElementById("profile");
+        var y = document.getElementById("achievements");
+        var b1 = document.getElementById("button-profile");
+        var b2 = document.getElementById("button-achievements");
+        x.style.display = "block";
+        y.style.display = "none";
+        b1.style.fontWeight = "bold";
+        b2.style.fontWeight = "normal";
+    },
+    'click .achievements': function(event){
+        event.preventDefault();
+        var x = document.getElementById("profile");
+        var y = document.getElementById("achievements");
+        var b1 = document.getElementById("button-profile");
+        var b2 = document.getElementById("button-achievements");
+        x.style.display = "none";
+        y.style.display = "block";
+        b1.style.fontWeight = "normal";
+        b2.style.fontWeight = "bold";
+    },
+    'click .back': function(event){
+        event.preventDefault();
+        window.history.back();
+    }
 });
 
