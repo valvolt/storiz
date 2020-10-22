@@ -371,6 +371,9 @@ Meteor.methods(
       // Append current Stuff to the Tile
       NewTile.Stuff = TileStuff;
 
+      // Store where we are coming from (useful for refreshing the tile)
+      NewTile.from = to_data;
+
       // Update the PlayerData accordingly
       PlayerData.update({player:currentPlayer},{$set:{'currentScrambledTile':NewTile}});
 

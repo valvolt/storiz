@@ -270,15 +270,17 @@ Template.flag.events({
       event.target.flag.value = "";
       Meteor.call('unlock', textValue);
       // refresh page
-      Meteor.call('toData', this.to_data);
+      manageClick(this.currentScrambledTile.from);
    }
 });
 
 // updates the to_tile value of the PlayerData of the current user
 function manageClick(to_data) {
   // updates the to_data field of PlayerData
-  //and asks server to fetch the corresponding data
-  Meteor.call('toData', to_data);
+  //and asks server to fetch the corresponding data (if not null, otherwise do nothing)
+  if(to_data != null) {
+    Meteor.call('toData', to_data);
+  }
 };
 
 Template.sound.helpers({
