@@ -251,7 +251,9 @@
 </template>
 
 <template name="item">
-    <li>{{name}} ({{description}})</li>
+    {{#if notEmpty}}
+      <li>{{name}} ({{description}})</li>
+    {{/if}}
 </template>
 
 <template name="flag">

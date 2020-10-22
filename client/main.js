@@ -305,6 +305,16 @@ Template.choice.helpers({
   }
 });
 
+Template.item.helpers({
+  notEmpty() {
+    // get user data (used to display current game)
+    if(this.name != undefined) {
+      return true;
+    }
+    return false;
+  }
+});
+
 // User profile and achievements
 /////////////////////////////////////
 
