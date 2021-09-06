@@ -26,7 +26,43 @@ Enjoy, and as usual, feedback welcome !
 
 ## HOW-TO RUN
 
-### on your machine
+### Option 1: from Dockerhub
+```docker pull valvolt2/storiz```
+
+Save and load with
+```docker save -o ${PWD}/storiz_latest.tgz storiz```
+```docker load -i storiz_latest.tgz```
+
+The image will fetch the content of the stories from your local disk.
+From the /storiz directory:
+
+**run image (Windows Powershell):**
+```docker run -d -p 80:3000 --name storiz --mount type=bind,source=${PWD}\private,target=/home/appuser/storiz/private --mount type=bind,source=${PWD}\public,target=/home/appuser/storiz/public storiz:latest```
+
+**run image (Linux):**
+```docker run -d -p 80:3000 --name storiz --mount type=bind,source=${PWD}/private,target=/home/appuser/storiz/private --mount type=bind,source=${PWD}/public,target=/home/appuser/storiz/public storiz:latest```
+
+then from your web browser, go to http://localhost
+
+### Option 2: build from local Dockerfile
+
+```
+docker build --no-cache -t storiz .
+docker run -d -p 80:3000 --name storiz storiz:latest
+```
+
+then from your web browser, go to http://localhost
+
+The image will fetch the content of the stories from your local disk.
+From the /storiz directory:
+
+**run image (Windows Powershell):**
+```docker run -d -p 80:3000 --name storiz --mount type=bind,source=${PWD}\private,target=/home/appuser/storiz/private --mount type=bind,source=${PWD}\public,target=/home/appuser/storiz/public storiz:latest```
+
+**run image (Linux):**
+```docker run -d -p 80:3000 --name storiz --mount type=bind,source=${PWD}/private,target=/home/appuser/storiz/private --mount type=bind,source=${PWD}/public,target=/home/appuser/storiz/public storiz:latest```
+
+### Option 3: build on your machine
 
 ```
 cd storiz
@@ -36,16 +72,9 @@ meteor
 
 then from your web browser, go to http://localhost:3000
 
-### from Docker
-
-```
-docker build --no-cache -t storiz .
-docker run -d -p 80:3000 --name storiz storiz:latest
-```
-
-then from your web browser, go to http://localhost
-
 ## CHANGES
+
+[New] - Image now available on Dockerhub. Some dependencies are outdated and updating meteor makes the application crash, so at least the dockerhub image should be a way to keep running the application while I investigate how to properly update. If you have an idea for a fix, feel free to send a pull request !
 
 [Done] - Major redesign of the whole UI, made possible by Anne Radunski's impressive designs (thanks again Anne !). There is still some work to do (cf TODO list underneath) but it works good already.
 
