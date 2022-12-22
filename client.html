@@ -1,0 +1,111 @@
+
+
+      {{#each playerData}}
+  {{#if hasSound currentScrambledTile.sound}}
+      <div hidden>
+      <audio controls autoplay>
+        <source src="/{{currentScrambledTile.sound}}" type="audio/mpeg">
+      </audio>
+      </div>
+  {{/if}}
+            {{music}}
+  <div class=fullwhite></div>
+  <div class="background">
+    {{#if currentScrambledTile.picture}}
+      <img src="/{{currentScrambledTile.picture}}"/>
+    {{/if}}
+  </div>
+  <div class="cover cover-{{currentScrambledTile.mood}}"></div>
+</template>
+
+<div class="grid-container">
+  <div class="grid-info">{{#if currentUser}}
+  <div class="info">
+    <div class="info-{{currentScrambledTile.mood}}">
+      <div align="left" class="icon"><a href="https://github.com/valvolt/storiz/wiki" target="new"><img src="/system/logo-{{currentScrambledTile.mood}}.svg" width="50px"/><br/>STORIZ</a></div>
+      <div align="right">
+      {{#if Credits}}<input class="w3-button credits" type="button" value="ABOUT"/>
+
+      {{/if}}
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/profile/{{currentUser.username}}">{{currentUser.username}}</a>
+      </div>
+    </div>
+  </div>
+{{/if}}
+</div>
+  <div class="grid-left" align="left">
+    <div class="font-{{currentScrambledTile.mood}}">
+        <div align="left" class="caps">{{Name}}</div>
+    </div>
+  </div>
+  <div class="grid-title"><div class="caps">  <header>
+    <h1>{{currentScrambledTile.title}}</h1>
+  </header>
+</div></div>  
+  <div id="grid-main" class="grid-main">
+    <div class="font-{{currentScrambledTile.mood}}">
+        <div class="interactive" align="center">
+  {{#if currentScrambledTile.video}}
+    {{video}}
+    <video id="video" height="300px" controls autoplay>
+      <source src=/{{currentScrambledTile.video}} type="video/webm"/>
+    </video>
+  {{else}}
+    {{#if currentScrambledTile.map}}
+      <!--     If we have a picture map, we add it here. We take the assumption that map comes with a picture. -->
+      <img src="/{{currentScrambledTile.picture}}" height="300px" usemap="#{{currentScrambledTile.id}}"/>
+        <map name={{currentScrambledTile.id}}>
+    {{#each currentScrambledTile.map}}
+        <area shape="{{shape}}" coords="{{coords}}" tile={{to_tile}} item={{item}} uses={{uses}} />
+    {{/each}}
+  </map>
+
+    {{/if}}
+  {{/if}}
+  </div>
+  <div id="story">
+  <p>{{{currentScrambledTile.text}}}</p>
+  <ul>
+  {{#each currentScrambledTile.choices}}
+      {{#if enabled}}
+    <li><input class="w3-button" type="button" tile="{{to_tile}}" item="{{item}}" uses="{{uses}}" value="&#x25B8; {{text}}"/></li>
+  {{else}}
+    <li><input class="w3-button" type="button" disabled value="{{text}}"/></li>
+  {{/if}}
+
+  {{/each}}
+  </ul>
+  </div>
+
+    </div>
+  </div>
+  <div class="grid-right" align="left">
+    <div class="font-{{currentScrambledTile.mood}}">
+        <input class="w3-button exit" type="button" value="EX1T"/>
+  -<input class="w3-button restart" type="button" value="REST4RT"/>
+  -<input class="w3-button logout" type="button" value="LOG0UT"/>
+
+    </div>
+  </div>
+  <div class="grid-footer">  <div>
+  {{#if hasCode}}   <form>
+      <input type = "text" name = "flag" placeholder = "item code">
+      <input type = "submit" value = "UNLOCK">
+   </form>
+{{/if}}
+  <ul>
+  {{#each currentScrambledTile.Stuff}}
+        {{#if notEmpty}}
+      <li>{{name}} ({{description}})</li>
+    {{/if}}
+  {{/each}}
+  </ul>
+  </div>
+</div>
+  <div class="grid-l-empty"></div>
+  <div class="grid-r-empty"></div>
+</div>
+
+    <div align="center" id="credits">{{{Credits}}}<p><input class="w3-button credits" type="button" value="[CLOSE]"/></p></div>
+
