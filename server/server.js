@@ -193,12 +193,14 @@ app.get('/story/:name', function (req, res) {
         width: 40vw;
         height: auto
       }
+      video {
+        width: 100%
+      }
       #picture,
       #video {
         display: none;
         margin: 0 auto;
         text-align: center;
-        width: calc(100vw - 10%);
         height: auto
       }
       #choices button {
@@ -256,6 +258,29 @@ app.get('/story/:name', function (req, res) {
     </div>
 
     <script>
+      var currentMusic = ""
+      var currentAudio = new Audio();
+      function processMusic(newMusic) {
+        if(newMusic == currentMusic) {
+          // nothing to do, we keep the music playing
+          return;
+        } else {
+          currentMusic = newMusic
+          if(currentMusic == "") {
+            // stop music
+            currentAudio.pause();
+          } else {
+            // stop music, load and play new music
+            currentAudio.pause();
+            var thisAudio = new Audio(currentMusic);
+            thisAudio.load();
+            thisAudio.loop = true;
+            thisAudio.play();
+            currentAudio = thisAudio;
+          }
+        }
+      }
+    
       function processTile(tileID) {
         var xhttp = new XMLHttpRequest();
 
@@ -265,6 +290,16 @@ app.get('/story/:name', function (req, res) {
             var tile = JSON.parse(this.responseText);
 
 debug = tile;
+
+            // music
+            processMusic(tile.music)
+
+            // sound
+            if (tile.sound) {
+              var thisSound = new Audio(tile.sound);
+              thisSound.load();
+              thisSound.play();
+            }
 
             // picture
             if (tile.picture) {
