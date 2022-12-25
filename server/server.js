@@ -146,16 +146,37 @@ app.get('/story/:name', function (req, res) {
 
   // Does the story exist?
   var currentStory = undefined;
-  for (let story of stories) {
+  // make a copy of stories to later edit them while keeping original tiles intact
+  storiesCopy = JSON.parse(JSON.stringify(stories));
+
+  for (let story of storiesCopy) {
     if(story.Name == req.params.name) {
       currentStory = story;
     }
   }
+
   if(currentStory == undefined) {
     console.log("Forged story name - "+req.params.name);
     res.setHeader("Content-Type", "application/json");
     res.send({"error":"server error"});
     return;
+  }
+
+  var tileToFetch = "";
+
+  // Did the player ever play this story?
+  newStory = {};
+  for (let playerStory of currentPlayer.stories) {
+    if(playerStory.name == req.params.name) {
+      newStory = playerStory;
+    }
+  }
+  if(newStory.name == undefined) {
+    // New story for user. We'll then fetch tile 1
+    tileToFetch = 1
+  } else {
+    // Known story for user.
+    tileToFetch = newStory.tile.scrambledId
   }
 
   const canvas = `
@@ -243,6 +264,8 @@ app.get('/story/:name', function (req, res) {
           if (this.readyState == 4 && this.status == 200) {
             var tile = JSON.parse(this.responseText);
 
+debug = tile;
+
             // picture
             if (tile.picture) {
               document.getElementById("background").style.backgroundImage = "url(" + tile.picture + ")";
@@ -303,12 +326,17 @@ app.get('/story/:name', function (req, res) {
         };
 
         // fetch user data
-        xhttp.open("GET", "/story/D3mons/"+tileID, true);
+        var storyname = "`+req.params.name+`";
+console.log("/story/"+storyname+"/"+tileID);
+        xhttp.open("GET", "/story/"+storyname+"/"+tileID, true);
         xhttp.send();
       }
+
+var debug = ""
+      
+      window.onload = processTile('`+tileToFetch+`');
     </script>
 
-    <button type="button" onclick="processTile('1')">Go</button>
   </body>
 </html>
 `
@@ -347,11 +375,15 @@ app.get('/story/:name/:tileId', function (req, res) {
 
   // Does the story exist?
   var currentStory = undefined;
-  for (let story of stories) {
+  // make a copy of stories to later edit them while keeping original tiles intact
+  storiesCopy = JSON.parse(JSON.stringify(stories));
+
+  for (let story of storiesCopy) {
     if(story.Name == req.params.name) {
       currentStory = story;
     }
   }
+
   if(currentStory == undefined) {
     console.log("Forged story name - "+req.params.name);
     res.setHeader("Content-Type", "application/json");
@@ -381,7 +413,7 @@ app.get('/story/:name/:tileId', function (req, res) {
         newStory.tile = tile;
       }
     }
-    currentPlayer.stories.push(scramble(newStory));
+    currentPlayer.stories.push(scramble(newStory, "1"));
     // store updated player in players
     players.push(currentPlayer);
 
@@ -393,9 +425,9 @@ app.get('/story/:name/:tileId', function (req, res) {
   } else {
     // Known story for user. Is the requested tileID valid?
     // if tileID is the current tile, we just return (refresh)
-    if(req.params.tileId == newStory.tile.id) {
+    if(req.params.tileId == newStory.tile.scrambledId) {
       res.setHeader("Content-Type", "application/json");
-      res.send(newStory);
+      res.send(newStory.tile);
     } else {
       // is the tileId valid? Let's try to retrieve it
       const element = newStory.tilemap.find(obj => obj.scrambled_to_tile === req.params.tileId);
@@ -416,13 +448,17 @@ app.get('/story/:name/:tileId', function (req, res) {
       }
     }
 
-    newStory = scramble(newStory);
+    newStory = scramble(newStory, req.params.tileId);
 
-// WEIRD BUG - If I remove this console.log, the game stops working
-// (the newStory is not refreshed properly if not printed ?!?)
-console.log(newStory);
+    // we keep only the current tile of the current story in memory
+    // meaning we remove stories which name is the current story name
 
-    currentPlayer.stories.push(newStory);
+    const filteredArray = currentPlayer.stories.filter(element => element.name !== newStory.name);
+    // add new tile for story
+    filteredArray.push(newStory);
+    // update player data
+    currentPlayer.stories = filteredArray;
+
     // store updated player in players
     players.push(currentPlayer);
 
@@ -455,9 +491,10 @@ var server = app.listen(8000, async function () {
 
 // modifies the player's tile in the following way:
 // - generates random numbers for to_tile
-// - keeps a map of random numbers / real numbers
+// - keeps current scrambled Tile Id in memory (to stop/resume playing)
+// - keeps a map of random numbers / real numbers (for next choice visit)
 // - disables or removes unreachable choices
-function scramble(story) {
+function scramble(story, currentTileId) {
 
   var array = story.tile.choices;
 
@@ -475,6 +512,7 @@ function scramble(story) {
   }
 
   // TODO: remove invalid choices (due to missing Stuff)
+  story.tile.scrambledId = currentTileId;
   story.tile.choices = array;
   story.tilemap = newArray;
   
