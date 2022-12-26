@@ -19,6 +19,11 @@ app.set('etag', false);
 //  next();
 //})
 
+//app.use(function (req, res, next) {
+//  res.setHeader("Content-Security-Policy", "default-src 'self'; img-src 'self'");
+//  next();
+//})
+
 app.use(function(req, res, next) {
   if (req.path.startsWith('/public/')) {
     res.setHeader("Content-Type", "text/html");
@@ -81,8 +86,8 @@ app.post('/register', function (req, res) {
   player.stories = [];
   players.push(player);
   
-  // log user in
-  res.cookie('SESSION',req.body.username, { maxAge: 900000, httpOnly: true });
+  // log user in (session valid for 4 hours)
+  res.cookie('SESSION',req.body.username, { maxAge: 14400000, httpOnly: true });
   res.redirect('/');
 })
 
@@ -229,6 +234,42 @@ app.get('/story/:name', function (req, res) {
         z-index: -1;
         overflow: scroll;
       }
+
+
+
+#stuff {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+tr:nth-child(odd) {
+  background-color: #ccc;
+}
+
+td:first-child,
+th:first-child {
+  width: 30%;
+}
+
+
+
     </style>
   </head>
   <body>
@@ -250,6 +291,11 @@ app.get('/story/:name', function (req, res) {
           </div>
           <p id="text"></p>
           <div id="choices">
+          </div>
+          <div id="stuff">
+          <p>&nbsp;</p>
+          <table>
+          </table>
           </div>
         </main>
       <footer>
@@ -393,6 +439,20 @@ debug = tile;
                 mapElement.appendChild(areaElement);
               });
             }
+            
+            // stuff
+            if (Array.isArray(tile.stuff) && tile.stuff.length > 0) {
+              document.getElementById("stuff").style.display = "block";
+              const table = document.getElementById('stuff').querySelector('table');
+              table.innerHTML = "<tr><th>Stuff</th><th>Description</th></tr>";
+              tile.stuff.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = "<td>"+item.name+"</td><td>"+item.description+"</td>";
+                table.appendChild(row);
+              });
+            } else {
+              document.getElementById("stuff").style.display = "none";
+            }
           }
         };
 
@@ -402,8 +462,6 @@ debug = tile;
         xhttp.send();
       }
 
-var debug = ""
-      
       // resizes the 'map' coordinates to the size of the image
       function adjustCoords() {
         const imgElement = document.getElementById("img");
@@ -441,6 +499,8 @@ var debug = ""
         processTile('`+tileToFetch+`');
       }
       
+var debug = ""
+
       window.onload = init();
     </script>
 
@@ -547,13 +607,69 @@ app.get('/story/:name/:tileId', function (req, res) {
         return;
       }
 
-      // at this point, the tile is valid. We return the tile corresponding to element.to_tile
+    // at this point, the tile is valid.
+    
+    // Did we obtain or lose stuff?
+    var currentStuff = newStory.stuff;
+    // retrieve the items obtained when performing the choice
+    // search in 'choices', if exists
+    searchArray = newStory.tile.choices;
+    var found = ""
+    if (searchArray != undefined) {
+      found = newStory.tile.choices.find(entry => entry.to_tile === req.params.tileId);
+    }
+    if (found == "") {
+      // search in 'map', if exists
+      searchArray = newStory.tile['map'];
+      if (searchArray != undefined) {
+        found = newStory.tile["map"].find(entry => entry.to_tile === req.params.tileId);
+      }
+    }
+
+    // 'found' contains the choice entry.
+    // Did we obtain an item?
+    var newItems = found.item;
+    if (newItems != undefined) {
+      // add item(s) to the player's stuff
+      var newItemArray = [];
+      if (Array.isArray(newItems) == false) {
+        // newItems can either contain a single element or an array.
+        // we make sure it's an array in all cases
+        newItemArray.push(newItems);
+      } else {
+        newItemArray = newItems;
+      }
+      // store, without duplicates
+      currentStuff = [...new Set(currentStuff.concat(newItemArray))];
+    }
+
+    // Did we lose an item?
+    var usedItems = found.uses;
+    if (usedItems != undefined) {
+      // remove item(s) from the player's stuff
+      var usedItemArray = [];
+      if (Array.isArray(usedItems) == false) {
+        // usedItems can either contain a single element or an array.
+        // we make sure it's an array in all cases
+        usedItemArray.push(usedItems);
+      } else {
+        usedItemArray = usedItems;
+      }
+      currentStuff = currentStuff.filter(x => !usedItemArray.includes(x));
+    }
+    
+    // We return the tile corresponding to element.to_tile
 
     for (let tile of currentStory.Tiles) {
       if(tile.id == element.to_tile) {
         newStory.tile = tile;
       }
     }
+
+    // update player's stuff
+    newStory.stuff = currentStuff;
+    // store a description of the current player's stuff in the current tile
+    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key)).map(item => ({ name: item.name, description: item.description }));
 
     newStory = scramble(newStory, req.params.tileId);
 
@@ -576,7 +692,6 @@ app.get('/story/:name/:tileId', function (req, res) {
     }
   }
 })
-
 
 
 // Main server
