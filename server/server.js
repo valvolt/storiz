@@ -240,7 +240,8 @@ app.get('/story/:name', function (req, res) {
       <div id="content">
         <main>
           <div id="picture">
-            <img src="">
+            <img src="" id="img">
+            <map name="clickable" id="map"></map>
           </div>
           <div id="video">
             <video autoplay controls>
@@ -280,6 +281,16 @@ app.get('/story/:name', function (req, res) {
           }
         }
       }
+
+
+
+  const mapElement = document.getElementById("map");
+
+  mapElement.addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log(event.target.getAttribute('to_tile'));
+  });
+
     
       function processTile(tileID) {
         var xhttp = new XMLHttpRequest();
@@ -311,7 +322,7 @@ debug = tile;
 
             if (tile.picture && !tile.video) {
               document.getElementById("picture").style.display = "block";
-              document.getElementById("picture").firstElementChild.src = tile.picture;
+              document.getElementById("img").src = tile.picture;
             } else {
               document.getElementById("picture").style.display = "none";
             }
@@ -357,19 +368,80 @@ debug = tile;
               }
               document.getElementById("choices").style.display = "block";
             }
+
+            // map
+            imgElement = document.getElementById("img");
+            window.addEventListener('resize', adjustCoords);
+            imgElement.addEventListener('load', adjustCoords);
+            if (tile.map == undefined) {
+              if (imgElement.hasAttribute('usemap')) {
+                imgElement.setAttribute('usemap', '');
+                while (mapElement.firstChild) {
+                  mapElement.removeChild(mapElement.firstChild);
+                }
+              }
+            } else {
+              imgElement.setAttribute('usemap', '#clickable');
+
+              tile.map.forEach(area => {
+                const areaElement = document.createElement('area');
+                areaElement.setAttribute('shape', area.shape);
+                areaElement.setAttribute('origcoords', area.coords);
+                areaElement.setAttribute('coords', area.coords);
+                areaElement.setAttribute('href', "#");
+                areaElement.setAttribute('to_tile', area.to_tile);
+                mapElement.appendChild(areaElement);
+              });
+            }
           }
         };
 
         // fetch user data
         var storyname = "`+req.params.name+`";
-console.log("/story/"+storyname+"/"+tileID);
         xhttp.open("GET", "/story/"+storyname+"/"+tileID, true);
         xhttp.send();
       }
 
 var debug = ""
       
-      window.onload = processTile('`+tileToFetch+`');
+      // resizes the 'map' coordinates to the size of the image
+      function adjustCoords() {
+        const imgElement = document.getElementById("img");
+        var height = imgElement.naturalHeight;
+        var currentHeight = imgElement.clientHeight;
+
+        const mapElement = document.getElementById("map");
+        
+        if (imgElement.hasAttribute('usemap')) {
+          // scale according to new clientHeight / naturalHeight ratio
+          var ratio = currentHeight / height;
+          // recompute map coordinates
+          var areaElements = mapElement.getElementsByTagName("area");
+
+          for (var i = 0; i < areaElements.length; i++) {
+            var coords = areaElements[i].attributes.origcoords.value;
+            // rescale each coord
+            var newCoords = "";
+
+            coords.split(",").forEach(function(coord) {
+              newCoords += coord * ratio + ",";
+            });
+
+            // Remove the trailing comma from the newCoords string
+            newCoords = newCoords.substring(0, newCoords.length - 1);
+
+            // Stores new coords
+            areaElements[i].coords = newCoords;
+          }
+        }
+      }
+
+      
+      function init() {
+        processTile('`+tileToFetch+`');
+      }
+      
+      window.onload = init();
     </script>
 
   </body>
@@ -533,23 +605,28 @@ function scramble(story, currentTileId) {
 
   var array = story.tile.choices;
 
-  // we create a map to later retrieve the original to_tile values
-  const newArray = array.map(obj => ({
-    to_tile: obj.to_tile,
-    scrambled_to_tile: uuid.v4()
-  }));
+  if(array) {
+    // we create a map to later retrieve the original to_tile values
+    const newArray = array.map(obj => ({
+      to_tile: obj.to_tile,
+      scrambled_to_tile: uuid.v4()
+    }));
   
-  // and we scramble the original to_tile values
-  for (let i = 0; i < array.length; i++) {
-    const elem = array[i];
-    const newElem = newArray.find(obj => obj.to_tile === elem.to_tile);
-    elem.to_tile = newElem.scrambled_to_tile;
+    // and we scramble the original to_tile values
+    for (let i = 0; i < array.length; i++) {
+      const elem = array[i];
+      const newElem = newArray.find(obj => obj.to_tile === elem.to_tile);
+      elem.to_tile = newElem.scrambled_to_tile;
+    }
+    story.tile.choices = array;
+    story.tilemap = newArray;
+  } else {
+    // no choices for this tile, we add an empty tilemap
+    story.tilemap = [];
   }
 
   // TODO: remove invalid choices (due to missing Stuff)
   story.tile.scrambledId = currentTileId;
-  story.tile.choices = array;
-  story.tilemap = newArray;
   
   return story;
 }
