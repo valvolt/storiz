@@ -406,10 +406,14 @@ debug = tile;
               for (var i = 0; i < tile.choices.length; i++) {
                 var button = document.createElement("button");
                 button.innerHTML = tile.choices[i].text;
-                button.setAttribute("to_tile", tile.choices[i].to_tile)
-                button.onclick = function() {
-                  processTile(this.getAttribute("to_tile"));
-                };
+                if (tile.choices[i].disabled) {
+                  button.disabled = true;
+                } else {
+                  button.setAttribute("to_tile", tile.choices[i].to_tile)
+                  button.onclick = function() {
+                    processTile(this.getAttribute("to_tile"));
+                  };
+                }
                 document.getElementById("choices").appendChild(button);
               }
               document.getElementById("choices").style.display = "block";
@@ -725,6 +729,40 @@ function scramble(story, currentTileId) {
   var array = story.tile.choices;
 
   if(array) {
+
+//console.log(story.stuff);
+//console.log(story.tile.choices);
+
+
+    const filteredArray = story.tile.choices.map(entry => {
+      if (!entry.hasOwnProperty('requires')) {
+        return entry;  // no item required, keep the entry
+      }
+      if (Array.isArray(entry.requires)) {
+        // check if all values in the 'requires' array are contained in my stuff
+        if (entry.requires.every(item => story.stuff.includes(item))) {
+          return entry;  // keep the entry
+        }
+      } else {
+        // 'requires' is a single value, check if it is contained in myStuffArray
+        if (story.stuff.includes(entry.requires)) {
+          return entry;  // keep the entry
+        }
+      }
+
+      // 'requires' criteria not met, check if entry has 'disable' attribute set to 'invisible'
+      if (entry.hasOwnProperty('disable') && entry.disable === 'invisible') {
+        return null;  // drop the entry entirely
+      }
+
+      // grey-out the entry (default operation when the requirements are not met)
+      delete entry.to_tile;
+      return {...entry, disabled: true};
+    });
+
+    // remove null elements from the array
+    array = filteredArray.filter(entry => entry !== null);
+
     // we create a map to later retrieve the original to_tile values
     newArray = array.map(obj => ({
       to_tile: obj.to_tile,
@@ -743,6 +781,9 @@ function scramble(story, currentTileId) {
   var mapArray = story.tile['map'];
 
   if(mapArray) {
+    // we purge the options which should not be visible
+    //TODO
+
     // we create a map to later retrieve the original to_tile values
     mapNewArray = mapArray.map(obj => ({
       to_tile: obj.to_tile,
@@ -761,8 +802,6 @@ function scramble(story, currentTileId) {
   // concatenate both 'choices' and 'map' arrays together
   story.tilemap = newArray.concat(mapNewArray);
 
-
-  // TODO: remove invalid choices (due to missing Stuff)
   story.tile.scrambledId = currentTileId;
   
   return story;
