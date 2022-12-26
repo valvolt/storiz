@@ -288,7 +288,7 @@ app.get('/story/:name', function (req, res) {
 
   mapElement.addEventListener('click', function(event) {
     event.preventDefault();
-    console.log(event.target.getAttribute('to_tile'));
+    processTile(event.target.getAttribute('to_tile'));
   });
 
     
@@ -603,11 +603,15 @@ var server = app.listen(8000, async function () {
 // - disables or removes unreachable choices
 function scramble(story, currentTileId) {
 
+  story.tilemap = [];
+  var newArray = [];
+  var mapNewArray = [];
+
   var array = story.tile.choices;
 
   if(array) {
     // we create a map to later retrieve the original to_tile values
-    const newArray = array.map(obj => ({
+    newArray = array.map(obj => ({
       to_tile: obj.to_tile,
       scrambled_to_tile: uuid.v4()
     }));
@@ -619,11 +623,29 @@ function scramble(story, currentTileId) {
       elem.to_tile = newElem.scrambled_to_tile;
     }
     story.tile.choices = array;
-    story.tilemap = newArray;
-  } else {
-    // no choices for this tile, we add an empty tilemap
-    story.tilemap = [];
   }
+
+  var mapArray = story.tile['map'];
+
+  if(mapArray) {
+    // we create a map to later retrieve the original to_tile values
+    mapNewArray = mapArray.map(obj => ({
+      to_tile: obj.to_tile,
+      scrambled_to_tile: uuid.v4()
+    }));
+  
+    // and we scramble the original to_tile values
+    for (let i = 0; i < mapArray.length; i++) {
+      const elem = mapArray[i];
+      const newElem = mapNewArray.find(obj => obj.to_tile === elem.to_tile);
+      elem.to_tile = newElem.scrambled_to_tile;
+    }
+    story.tile['map'] = mapArray;
+  }
+
+  // concatenate both 'choices' and 'map' arrays together
+  story.tilemap = newArray.concat(mapNewArray);
+
 
   // TODO: remove invalid choices (due to missing Stuff)
   story.tile.scrambledId = currentTileId;
