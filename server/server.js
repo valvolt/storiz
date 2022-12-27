@@ -268,7 +268,18 @@ th:first-child {
   width: 30%;
 }
 
+#code form {
+  display: flex;
+  width: 100%;
+}
 
+#code input[type="text"] {
+  flex: 1;
+}
+
+#code input[type="submit"] {
+  margin-left: auto;
+}
 
     </style>
   </head>
@@ -293,9 +304,15 @@ th:first-child {
           <div id="choices">
           </div>
           <div id="stuff">
-          <p>&nbsp;</p>
-          <table>
-          </table>
+            <p>&nbsp;</p>
+            <table><tbody></tbody></table>
+          </div>
+          <div id="code">
+            <p>&nbsp;</p>
+            <form>
+              <input type = "text" id = "codeinput" name = "code" placeholder = "item code">
+              <button id="unlock-button">UNLOCK</button>
+            </form>
           </div>
         </main>
       <footer>
@@ -337,6 +354,62 @@ th:first-child {
     processTile(event.target.getAttribute('to_tile'));
   });
 
+  const unlockButton = document.getElementById('unlock-button');
+
+  unlockButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    unlockItem(event.target.form.code.value);
+  });
+
+
+      function unlockItem(code) {
+        var xhttp = new XMLHttpRequest();
+
+        // update elements based on fetched data
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var item = JSON.parse(this.responseText);
+
+            // clear input field
+            document.getElementById('codeinput').value= ""
+
+            // did we unlock something?
+            if (item.name == undefined) {
+              // no item found, nothing to do
+              return;
+            }
+            
+            document.getElementById("stuff").style.display = "block";
+            // create new row for the item
+            var row = document.createElement('tr');
+            row.innerHTML = "<td>"+item.name+"</td><td>"+item.description+"</td>";
+
+            const table = document.getElementById('stuff').querySelector('table');
+console.log(table.rows.length);
+            
+            // if the table is empty, create one
+            if(table.rows.length == 0) {
+              table.innerHTML = "<tr><th>Stuff</th><th>Description</th></tr>";         
+            }
+            // append the new row (unless it's already there)
+            var rowExists = false;
+            for (var i = 0; i < table.rows.length; i++) {
+              if (table.rows[i].innerHTML == row.innerHTML) {
+                rowExists = true;
+                break;
+              }
+            }
+            if (!rowExists) {
+              table.appendChild(row);
+            }
+          }
+        }
+        
+        // send unlock request
+        var storyname = "`+req.params.name+`";
+        xhttp.open("GET", "/unlock/"+storyname+"/"+code, true);
+        xhttp.send();
+      }
     
       function processTile(tileID) {
         var xhttp = new XMLHttpRequest();
@@ -584,6 +657,11 @@ app.get('/story/:name/:tileId', function (req, res) {
         newStory.tile = tile;
       }
     }
+    // does the story use item code(s) ?
+    if(currentStory.Stuff.some(entry => entry.hasOwnProperty('code'))) {
+      newStory.tile.code = true;
+    }
+    
     currentPlayer.stories.push(scramble(newStory, "1"));
     // store updated player in players
     players.push(currentPlayer);
@@ -632,6 +710,7 @@ app.get('/story/:name/:tileId', function (req, res) {
 
     // 'found' contains the choice entry.
     // Did we obtain an item?
+console.log(found);
     var newItems = found.item;
     if (newItems != undefined) {
       // add item(s) to the player's stuff
@@ -676,6 +755,11 @@ app.get('/story/:name/:tileId', function (req, res) {
     newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key)).map(item => ({ name: item.name, description: item.description }));
 
     newStory = scramble(newStory, req.params.tileId);
+    
+    // Shall we enable the Code field?
+    if(currentStory.Stuff.some(entry => entry.hasOwnProperty('code'))) {
+      newStory.tile.code = true;
+    }
 
     // we keep only the current tile of the current story in memory
     // meaning we remove stories which name is the current story name
@@ -693,6 +777,89 @@ app.get('/story/:name/:tileId', function (req, res) {
     var newTile = newStory.tile;
     res.setHeader("Content-Type", "application/json");
     res.send(newTile);
+    }
+  }
+})
+
+// add the item specified by the 'code' value to the user's stuff
+app.get('/unlock/:name/:code', function (req, res) {
+
+  // Get player
+  var username = "";
+  if(req.cookies.SESSION != undefined) {
+    username = req.cookies.SESSION;
+  } else {
+    // If no user is logged-in, propose to log in
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"please log in"});
+    return;
+  }
+
+  // Does the player exist?
+  var currentPlayer = undefined
+  for (let player of players) {
+    if(player.username == username) {
+      currentPlayer = player;
+    }
+  }
+  if (currentPlayer == undefined) {
+    console.log("Forged SESSION cookie - "+req.cookies.SESSION);
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"server error"});
+    return;
+  }
+
+  // Does the story exist?
+  var currentStory = undefined;
+  // make a copy of stories to later edit them while keeping original tiles intact
+  storiesCopy = JSON.parse(JSON.stringify(stories));
+
+  for (let story of storiesCopy) {
+    if(story.Name == req.params.name) {
+      currentStory = story;
+    }
+  }
+
+  if(currentStory == undefined) {
+    console.log("Forged story name - "+req.params.name);
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"server error"});
+    return;
+  }
+
+  // Did the player ever play this story?
+  newStory = {};
+  for (let playerStory of currentPlayer.stories) {
+    if(playerStory.name == req.params.name) {
+      newStory = playerStory;
+    }
+  }
+  if(newStory.name == undefined) {
+    // New story for user. Reject the request.
+    console.log("Too early unlock request - "+username+" - "+req.params.name+" - "+req.params.code);
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"request denied"});
+    return;
+  } else {
+
+    // Known story for user. Is the provided code valid?
+    var entry = currentStory.Stuff.find(entry => entry.code === req.params.code);
+    if(entry != undefined) {
+      // add item key to player's stuff (without duplicates)
+      const key = entry.key;
+      newStory.stuff = [...new Set(newStory.stuff.concat(key))]
+
+      // return item name and description
+      const {name, description} = entry;
+      res.setHeader("Content-Type", "application/json");
+      res.send(JSON.stringify({name, description}));
+      return;
+    
+    } else {
+      entry = {};
+      res.setHeader("Content-Type", "application/json");
+      res.send(entry);
+      return;
     }
   }
 })
@@ -725,16 +892,15 @@ function scramble(story, currentTileId) {
   story.tilemap = [];
   var newArray = [];
   var mapNewArray = [];
+  
+  var filteredArray = [];
 
   var array = story.tile.choices;
 
   if(array) {
 
-//console.log(story.stuff);
-//console.log(story.tile.choices);
-
-
-    const filteredArray = story.tile.choices.map(entry => {
+    // filter-out invalid choices for user (based on the current user's stuff)
+    filteredArray = story.tile.choices.map(entry => {
       if (!entry.hasOwnProperty('requires')) {
         return entry;  // no item required, keep the entry
       }
@@ -781,8 +947,30 @@ function scramble(story, currentTileId) {
   var mapArray = story.tile['map'];
 
   if(mapArray) {
-    // we purge the options which should not be visible
-    //TODO
+
+    // filter-out invalid choices for user (based on the current user's stuff)
+    filteredArray = story.tile['map'].map(entry => {
+      if (!entry.hasOwnProperty('requires')) {
+        return entry;  // no item required, keep the entry
+      }
+      if (Array.isArray(entry.requires)) {
+        // check if all values in the 'requires' array are contained in my stuff
+        if (entry.requires.every(item => story.stuff.includes(item))) {
+          return entry;  // keep the entry
+        }
+      } else {
+        // 'requires' is a single value, check if it is contained in myStuffArray
+        if (story.stuff.includes(entry.requires)) {
+          return entry;  // keep the entry
+        }
+      }
+
+      // 'requires' criteria not met, drop the entry
+      return null;
+    });
+
+    // remove null elements from the array
+    mapArray = filteredArray.filter(entry => entry !== null);
 
     // we create a map to later retrieve the original to_tile values
     mapNewArray = mapArray.map(obj => ({
@@ -802,6 +990,7 @@ function scramble(story, currentTileId) {
   // concatenate both 'choices' and 'map' arrays together
   story.tilemap = newArray.concat(mapNewArray);
 
+  // add a scrambled id to the current tile id to manage page refresh
   story.tile.scrambledId = currentTileId;
   
   return story;
