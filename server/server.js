@@ -787,7 +787,7 @@ app.get('/story/:name/:tileId', function (req, res) {
     // update player's stuff
     newStory.stuff = currentStuff;
     // store a description of the current player's stuff in the current tile
-    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key)).map(item => ({ name: item.name, description: item.description }));
+    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key) && item.name !== undefined).map(item => ({ name: item.name, description: item.description }));
 
     newStory = scramble(newStory, req.params.tileId);
     
