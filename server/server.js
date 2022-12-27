@@ -534,6 +534,13 @@ debug = tile;
             } else {
               document.getElementById("stuff").style.display = "none";
             }
+            
+            // code
+            if (tile.code == true) {
+              document.getElementById("code").style.display = "block";
+            } else {
+              document.getElementById("code").style.display = "none";
+            }
           }
         };
 
@@ -656,11 +663,25 @@ app.get('/story/:name/:tileId', function (req, res) {
     newStory.name = req.params.name;
     newStory.stuff = [];
     newStory.achievements = [];
+
+    // We return (one of) the tile(s) corresponding to tileID "1"
+    let foundTiles = [];
     for (let tile of currentStory.Tiles) {
       if(tile.id == "1") {
-        newStory.tile = tile;
+        foundTiles.push(tile);
       }
     }
+
+    if (foundTiles.length > 1) {
+      // Generate a random number between 0 and the length of the array
+      let randomIndex = Math.floor(Math.random() * foundTiles.length);
+      // Assign a random tile from the array to newStory.tile
+      newStory.tile = foundTiles[randomIndex];
+    } else {
+      // If only one or no tiles were found, assign the first (or only) tile in the array to newStory.tile
+      newStory.tile = foundTiles[0];
+    }
+
     // does the story use item code(s) ?
     if(currentStory.Stuff.some(entry => entry.hasOwnProperty('code'))) {
       newStory.tile.code = true;
@@ -745,12 +766,22 @@ app.get('/story/:name/:tileId', function (req, res) {
       currentStuff = currentStuff.filter(x => !usedItemArray.includes(x));
     }
     
-    // We return the tile corresponding to element.to_tile
-
+    // We return (one of) the tile(s) corresponding to element.to_tile
+    let foundTiles = [];
     for (let tile of currentStory.Tiles) {
       if(tile.id == element.to_tile) {
-        newStory.tile = tile;
+        foundTiles.push(tile);
       }
+    }
+
+    if (foundTiles.length > 1) {
+      // Generate a random number between 0 and the length of the array
+      let randomIndex = Math.floor(Math.random() * foundTiles.length);
+      // Assign a random tile from the array to newStory.tile
+      newStory.tile = foundTiles[randomIndex];
+    } else {
+      // If only one or no tiles were found, assign the first (or only) tile in the array to newStory.tile
+      newStory.tile = foundTiles[0];
     }
 
     // update player's stuff
