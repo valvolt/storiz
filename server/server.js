@@ -385,7 +385,6 @@ th:first-child {
             row.innerHTML = "<td>"+item.name+"</td><td>"+item.description+"</td>";
 
             const table = document.getElementById('stuff').querySelector('table');
-console.log(table.rows.length);
             
             // if the table is empty, create one
             if(table.rows.length == 0) {
@@ -505,6 +504,11 @@ debug = tile;
               }
             } else {
               imgElement.setAttribute('usemap', '#clickable');
+              
+              // cleanup
+              while (mapElement.hasChildNodes()) {
+                mapElement.removeChild(mapElement.firstChild);
+              }
 
               tile.map.forEach(area => {
                 const areaElement = document.createElement('area');
@@ -670,6 +674,7 @@ app.get('/story/:name/:tileId', function (req, res) {
     var newTile = newStory.tile;
     res.setHeader("Content-Type", "application/json");
     res.send(newTile);
+    return;
 
   } else {
     // Known story for user. Is the requested tileID valid?
@@ -696,11 +701,11 @@ app.get('/story/:name/:tileId', function (req, res) {
     // retrieve the items obtained when performing the choice
     // search in 'choices', if exists
     searchArray = newStory.tile.choices;
-    var found = ""
+    var found = undefined;
     if (searchArray != undefined) {
       found = newStory.tile.choices.find(entry => entry.to_tile === req.params.tileId);
     }
-    if (found == "") {
+    if (found == undefined) {
       // search in 'map', if exists
       searchArray = newStory.tile['map'];
       if (searchArray != undefined) {
@@ -710,7 +715,6 @@ app.get('/story/:name/:tileId', function (req, res) {
 
     // 'found' contains the choice entry.
     // Did we obtain an item?
-console.log(found);
     var newItems = found.item;
     if (newItems != undefined) {
       // add item(s) to the player's stuff
@@ -934,13 +938,30 @@ function scramble(story, currentTileId) {
       to_tile: obj.to_tile,
       scrambled_to_tile: uuid.v4()
     }));
-  
-    // and we scramble the original to_tile values
+
+
+
+    // work on a copy (as we will edit it)
+    const arrayCopy = [...newArray];
+
     for (let i = 0; i < array.length; i++) {
       const elem = array[i];
-      const newElem = newArray.find(obj => obj.to_tile === elem.to_tile);
+      const newElemIndex = arrayCopy.findIndex(obj => obj.to_tile === elem.to_tile);
+      const newElem = arrayCopy[newElemIndex];
       elem.to_tile = newElem.scrambled_to_tile;
+      // remove element, to handle cases where multiple choices lead to the same tile id
+      arrayCopy.splice(newElemIndex, 1);
     }
+
+
+
+  
+//    // and we scramble the original to_tile values
+//    for (let i = 0; i < array.length; i++) {
+//      const elem = array[i];
+//      const newElem = newArray.find(obj => obj.to_tile === elem.to_tile);
+//      elem.to_tile = newElem.scrambled_to_tile;
+//    }
     story.tile.choices = array;
   }
 
@@ -977,13 +998,19 @@ function scramble(story, currentTileId) {
       to_tile: obj.to_tile,
       scrambled_to_tile: uuid.v4()
     }));
-  
-    // and we scramble the original to_tile values
+
+    // work on a copy (as we will edit it)
+    const mapNewArrayCopy = [...mapNewArray];
+
     for (let i = 0; i < mapArray.length; i++) {
       const elem = mapArray[i];
-      const newElem = mapNewArray.find(obj => obj.to_tile === elem.to_tile);
+      const newElemIndex = mapNewArrayCopy.findIndex(obj => obj.to_tile === elem.to_tile);
+      const newElem = mapNewArrayCopy[newElemIndex];
       elem.to_tile = newElem.scrambled_to_tile;
+      // remove element, to handle cases where multiple choices lead to the same tile id
+      mapNewArrayCopy.splice(newElemIndex, 1);
     }
+  
     story.tile['map'] = mapArray;
   }
 
