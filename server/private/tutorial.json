@@ -177,13 +177,14 @@
     {
       "id": "4",
       "title": "Storiz: clickable images",
-      "text": "An image on which you can click is called an image map. Its zones work as (extra) choices and are defined with the \"map\" element. You can decide to have only choices, or only a map, or both for your tile. A clickable picture will always appear on the top layer with a height of 300 pixels, as well as in the background.<br/><br/><pre>  \"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.png\",<br/>      \"map\": [<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"373,253,163,134,71,62,179,99,375,213\",<br/>          \"to_tile\": \"3\"<br/>        },<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"18,299,151,233,111,158,3,207,3,297\",<br/>          \"to_tile\": \"4\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>Each clickable zone is composed of a shape, coordinates, and a to_tile.<br/>- The \"to_tile\" defines the target tile id, like for a choice.<br/>- The \"shape\" is the shape of the zone which can be clicked, and the \"coords\" corresponds to the related coordinates.<br/><br/>To create an image map, you have to do the following:<br/>- First, resize the picture so that its height is exactly 300 pixels<br/>- Upload your image to <a target=\"new\" href=\"https://www.image-map.net/\">image-map.net</a><br/>- Edit your clickable zones on the website, then click \"show me the code\"<br/>- Copy the \"shape\" and \"coords\" values to your map element<br/><br/>Congratulations, you have created a clickable picture ! Click on the left flower to go back to the main menu.",
+      "text": "An image on which you can click is called an image map. Its zones work as (extra) choices and are defined with the \"map\" element. You can decide to have only choices, or only a map, or both for your tile.<br/><br/><pre>  \"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"my_folder/picture.png\",<br/>      \"map\": [<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"373,253,163,134,71,62,179,99,375,213\",<br/>          \"to_tile\": \"3\",<br/>          \"hint\": \"pointer\"<br/>        },<br/>        {<br/>          \"shape\": \"poly\",<br/>          \"coords\": \"18,299,151,233,111,158,3,207,3,297\",<br/>          \"to_tile\": \"4\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>Each clickable zone is composed of a shape, coordinates, an optional hint, and a to_tile.<br/>- The \"to_tile\" defines the target tile id, like for a choice.<br/>- The \"shape\" is the shape of the zone which can be clicked, and the \"coords\" corresponds to the related coordinates.<br/>- The \"hint\" is optional, and defines how the map area will look like. The default hint value is \"pointer\": the mouse will change to a hand when hovering over a clickable element. The other two possible values are \"invisible\", which won't change the mouse pointer, and \"reveal\", which will highlight the clickable area.<br/><br/>To create an image map, you have to do the following:<br/>- Upload your image to <a target=\"new\" href=\"https://www.image-map.net/\">image-map.net</a><br/>- Edit your clickable zones on the website, then click \"show me the code\"<br/>- Copy the \"shape\" and \"coords\" values to your map element<br/><br/>Congratulations, you have created a clickable picture ! Click on the left flower to go back to the main menu.",
       "picture": "/tutorial/4.jpg",
       "map": [
         {
           "shape": "poly",
           "coords": "42,98,37,75,50,57,81,59,134,34,151,45,162,82,179,101,202,107,182,115,197,167,158,169,143,206,87,215,50,229,27,221,20,203,36,181,38,167,60,156,50,145,52,134,70,125,73,118,10,111",
-          "to_tile": "1"
+          "to_tile": "1",
+          "hint": "pointer"
         }
       ]
     },
@@ -314,37 +315,43 @@
           "shape": "circle",
           "coords": "82,97,27",
           "to_tile": "clues",
-          "item": "aflower"
+          "item": "aflower",
+          "hint": "reveal"
         },
         {
           "shape": "circle",
           "coords": "184,185,23",
           "to_tile": "clues",
-          "item": "aflower2"
+          "item": "aflower2",
+          "hint": "reveal"
         },
         {
           "shape": "circle",
           "coords": "91,227,31",
           "to_tile": "clues",
-          "item": "aflower3"
+          "item": "aflower3",
+          "hint": "reveal"
         },
         {
           "shape": "circle",
           "coords": "382,188,30",
           "to_tile": "clues",
-          "item": "aflower4"
+          "item": "aflower4",
+          "hint": "reveal"
         },
         {
           "shape": "circle",
           "coords": "159,38,32",
           "to_tile": "clues",
-          "item": "aflower5"
+          "item": "aflower5",
+          "hint": "reveal"
         },
         {
           "shape": "circle",
           "coords": "363,63,42",
           "to_tile": "clues",
-          "item": "aflower6"
+          "item": "aflower6",
+          "hint": "reveal"
         }
       ],
       "choices": [

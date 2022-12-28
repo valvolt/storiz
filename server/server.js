@@ -208,10 +208,12 @@ app.get('/story/:name', function (req, res) {
         text-align: center;
         height: auto
       }
+
       #choices button {
         display: block;
         margin-top: 10px;
       }
+    
       #background {
         position: fixed;
         top: 0;
@@ -235,51 +237,42 @@ app.get('/story/:name', function (req, res) {
         overflow: scroll;
       }
 
+      #stuff {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #ddd;
+      }
+      tr:nth-child(odd) {
+        background-color: #ccc;
+      }
+      td:first-child,
+      th:first-child {
+        width: 30%;
+      }
 
-
-#stuff {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  background-color: #333;
-  color: #fff;
-  font-weight: bold;
-}
-
-tr:nth-child(even) {
-  background-color: #ddd;
-}
-
-tr:nth-child(odd) {
-  background-color: #ccc;
-}
-
-td:first-child,
-th:first-child {
-  width: 30%;
-}
-
-#code form {
-  display: flex;
-  width: 100%;
-}
-
-#code input[type="text"] {
-  flex: 1;
-}
-
-#code input[type="submit"] {
-  margin-left: auto;
-}
+      #code form {
+        display: flex;
+        width: 100%;
+      }
+      #code input[type="text"] {
+        flex: 1;
+      }
+      #code input[type="submit"] {
+        margin-left: auto;
+      }
 
     </style>
   </head>
@@ -294,6 +287,9 @@ th:first-child {
           <div id="picture">
             <img src="" id="img">
             <map name="clickable" id="map"></map>
+          </div>
+          <div id="reveal">
+            <svg id="svg"></svg>
           </div>
           <div id="video">
             <video autoplay controls>
@@ -361,6 +357,108 @@ th:first-child {
     unlockItem(event.target.form.code.value);
   });
 
+
+function removeOverlay() {
+
+  svgElement = document.getElementById("svg");
+  svgElement.innerHTML = "";
+
+  document.getElementById("reveal").style.display = "none";
+}
+
+
+function generateOverlay() {
+
+  document.getElementById("reveal").style.display = "block";
+
+  var imgElement = document.getElementById("img");
+  var svgElement = document.getElementById("svg");
+  var mapElement = document.getElementById("map");
+  
+
+  // Set the SVG's size and position to match the img element
+  svgElement.style.position = "absolute";
+  svgElement.style.left = imgElement.offsetLeft + "px";
+  svgElement.style.top = imgElement.offsetTop + "px";
+  svgElement.setAttribute("width", imgElement.offsetWidth);
+  svgElement.setAttribute("height", imgElement.offsetHeight);
+  svgElement.style.pointerEvents = "none";
+
+  // Drop all existing children before inserting the new ones
+  svgElement.innerHTML = "";
+
+  // loop over all <area> elements which have the 'reveal' hint set
+  var areas = mapElement.getElementsByTagName("area");
+
+  // Loop over each area element
+  for (var i = 0; i < areas.length; i++) {
+    var area = areas[i];
+
+    // Check the value of the hint property
+    if (area.getAttribute("hint") === "reveal") {
+      // let's create an SVG element covering this area
+      if (area.shape == "poly") {
+        var polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.setAttribute('points', area.coords);
+        polygon.setAttribute('style', 'fill: rgba(255, 0, 0, 0.5); stroke: purple; stroke-width: 1;');
+        polygon.style.pointerEvents = "none";
+        svgElement.appendChild(polygon);
+      } else if (area.shape == "rect") {
+
+        // Split the coords attribute into an array
+        var coords = area.coords.split(",");
+
+        // Extract the top-left and bottom-right coordinates from the array
+        var x1 = coords[0];
+        var y1 = coords[1];
+        var x2 = coords[2];
+        var y2 = coords[3];
+
+        // Calculate the width and height of the rectangle
+        var width = x2 - x1;
+        var height = y2 - y1;
+
+        // Create the rectangle element
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+
+        // Set the rectangle's size and position
+        rect.setAttribute("x", x1);
+        rect.setAttribute("y", y1);
+        rect.setAttribute("width", width);
+        rect.setAttribute("height", height);
+
+        rect.setAttribute('style', 'fill: rgba(255, 0, 0, 0.5); stroke: purple; stroke-width: 1;');
+        rect.style.pointerEvents = "none";
+
+        // Append the rectangle to the SVG element
+        svgElement.appendChild(rect);
+      } else if (area.shape == "circle") {
+
+        // Split the coords attribute into an array
+        var coords = area.coords.split(",");
+
+        // Extract the center coordinates and radius from the array
+        var cx = coords[0];
+        var cy = coords[1];
+        var r = coords[2];
+
+        // Create the circle element
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        // Set the circle's size and position
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("r", r);
+
+        circle.setAttribute('style', 'fill: rgba(255, 0, 0, 0.5); stroke: purple; stroke-width: 1;');
+        circle.style.pointerEvents = "none";
+
+        // Append the circle to the SVG element
+        svgElement.appendChild(circle);
+      }
+    }
+  }
+}
 
       function unlockItem(code) {
         var xhttp = new XMLHttpRequest();
@@ -492,6 +590,7 @@ debug = tile;
             }
 
             // map
+            removeOverlay();
             imgElement = document.getElementById("img");
             window.addEventListener('resize', adjustCoords);
             imgElement.addEventListener('load', adjustCoords);
@@ -515,8 +614,18 @@ debug = tile;
                 areaElement.setAttribute('shape', area.shape);
                 areaElement.setAttribute('origcoords', area.coords);
                 areaElement.setAttribute('coords', area.coords);
-                areaElement.setAttribute('href', "#");
                 areaElement.setAttribute('to_tile', area.to_tile);
+                if (area.hint == undefined) {
+                  areaElement.style.cursor = 'pointer';
+                  areaElement.setAttribute('hint', "pointer");
+                } else {
+                  areaElement.setAttribute('hint', area.hint);
+                  if (area.hint == "invisible") {
+                    areaElement.style.cursor = 'default';
+                  } else {
+                    areaElement.style.cursor = 'pointer';
+                  }
+                }
                 mapElement.appendChild(areaElement);
               });
             }
@@ -578,6 +687,11 @@ debug = tile;
 
             // Stores new coords
             areaElements[i].coords = newCoords;
+            
+            // Adjust overlay if necessary
+            if(areaElements[i].getAttribute("hint") == "reveal") {
+              generateOverlay();
+            }
           }
         }
       }
