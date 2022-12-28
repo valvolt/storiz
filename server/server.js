@@ -87,7 +87,8 @@ app.post('/register', function (req, res) {
   players.push(player);
   
   // log user in (session valid for 4 hours)
-  res.cookie('SESSION',req.body.username, { maxAge: 14400000, httpOnly: true });
+  res.cookie('SESSION', req.body.username, { maxAge: 14400000, httpOnly: true });
+
   res.redirect('/');
 })
 
@@ -98,7 +99,7 @@ app.post('/login', function (req, res) {
   for (let player of players) {
     if(player.username == req.body.username) {
       // user already exist, logging in
-        res.cookie('SESSION',req.body.username, { maxAge: 900000, httpOnly: true });
+        res.cookie('SESSION', req.body.username, { maxAge: 14400000, httpOnly: true });
         res.redirect('/');
         return;
     }
@@ -194,6 +195,14 @@ app.get('/story/:name', function (req, res) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <title id='title'>...</title>
     <style>
+      #title2 {
+        font-size: 32px;
+        text-align: center;
+        font-family: PoynterGothicText;
+        font-style: normal;
+        font-weight: bold;
+      }
+
       img {
         width: 40vw;
         height: auto
@@ -274,6 +283,22 @@ app.get('/story/:name', function (req, res) {
         margin-left: auto;
       }
 
+      a {
+        text-transform: uppercase;
+      }
+      a:link {
+        text-decoration: underline;
+      }
+      a:visited {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      a:active {
+        text-decoration: underline;
+      }
+
     </style>
   </head>
   <body>
@@ -284,6 +309,7 @@ app.get('/story/:name', function (req, res) {
       </header>
       <div id="content">
         <main>
+          <div id="title2"></div>
           <div id="picture">
             <img src="" id="img">
             <map name="clickable" id="map"></map>
@@ -312,7 +338,7 @@ app.get('/story/:name', function (req, res) {
           </div>
         </main>
       <footer>
-        <p>Copyright 2022</p>
+        <p>Powered by <a href="http://github.com/valvolt/storiz">Storiz</a></p>
       </footer>
       </div>
     </div>
@@ -532,15 +558,13 @@ debug = tile;
             if (tile.picture) {
               document.getElementById("background").style.backgroundImage = "url(" + tile.picture + ")";
             } else {
-              document.getElementById("background").style.backgroundImage = none;
+              document.getElementById("background").style.backgroundImage = "url(/system/blur.png)";
+              document.getElementById("picture").style.display = "none";
             }
-
 
             if (tile.picture && !tile.video) {
               document.getElementById("picture").style.display = "block";
               document.getElementById("img").src = tile.picture;
-            } else {
-              document.getElementById("picture").style.display = "none";
             }
 
             // video
@@ -555,9 +579,12 @@ debug = tile;
             // title
             if (tile.title == undefined) {
               document.getElementById("title").style.display = "none";
+              document.getElementById("title2").style.display = "none";
             } else {
               document.getElementById("title").innerHTML = tile.title;
               document.getElementById("title").style.display = "block";
+              document.getElementById("title2").innerHTML = tile.title;
+              document.getElementById("title2").style.display = "block";
             }
 
             // text
