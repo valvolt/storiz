@@ -263,38 +263,6 @@ ul {
   text-transform: uppercase;
 }
 
-a {
-  text-transform: uppercase;
-}
-
-a:link {
-  text-decoration: none;
-}
-
-a:visited {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:active {
-  text-decoration: underline;
-}
-
-#credits {
-  z-index:2;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  text-align: center;
-  display: none;
-  border: 3px solid black;
-  background: white;
-}
-
 .hex-container {
   float: left;
   width: 110px; 
@@ -418,11 +386,5 @@ a:active {
   height: 100%;
   background: rgba(255,255,255,1) url("/system/grid.png") no-repeat fixed center;
   background-size: cover;
-}
-
-body {
-  background-image: url("system/blur.png");
-  background-size: auto;
-  background-repeat: no-repeat;
 }
 

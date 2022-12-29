@@ -39,7 +39,6 @@ video {
   z-index: -2;
 }
 #content {
-  background-color: #ccc;
   padding: 10px;
   position: absolute;
   top: 0;
@@ -102,5 +101,34 @@ a:hover {
 }
 a:active {
   text-decoration: underline;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#github {
+  align-self: flex-start;
+}
+
+#credits {
+  align-self: flex-end;
+}
+#creditroll {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 25%;
+  left: 15%;
+  right: 15%;
+  bottom: 25%;
+  overflow: auto;
+}
+
+#credits2 {
+  text-align: right;
 }
 

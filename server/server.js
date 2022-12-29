@@ -206,7 +206,7 @@ app.get('/story/:name', function (req, res) {
       <header>
         <h1 id="title"></h1>
       </header>
-      <div id="content">
+      <div id="content" class="banner">
         <main>
           <div id="title2"></div>
           <div id="picture">
@@ -237,9 +237,14 @@ app.get('/story/:name', function (req, res) {
           </div>
         </main>
       <footer>
-        <p>Powered by <a href="http://github.com/valvolt/storiz">Storiz</a></p>
+        <div id="github">Powered by <a href="http://github.com/valvolt/storiz">Storiz</a></div>
+        <div id="credits"><a href="#" id="toggle-credits">Show credits</a></div>
       </footer>
       </div>
+    </div>
+    <div id="creditroll" class="banner">
+      <div id="creditcontent"></div>
+      <div id="credits2"><a href="#" id="toggle-credits2">Hide credits</a></div>
     </div>
 
     <script>
@@ -266,8 +271,6 @@ app.get('/story/:name', function (req, res) {
         }
       }
 
-
-
   const mapElement = document.getElementById("map");
 
   mapElement.addEventListener('click', function(event) {
@@ -281,6 +284,42 @@ app.get('/story/:name', function (req, res) {
     event.preventDefault();
     unlockItem(event.target.form.code.value);
   });
+
+  function toggleCredits(event) {
+    event.preventDefault();
+    const content = document.getElementById('main');
+    const credits = document.getElementById('creditroll');
+    if (credits.style.display === "none") {
+      // hide main content
+      content.style.display = "none";
+      // show credits
+      credits.style.display = "block";
+    } else {
+      // show main content
+      content.style.display = "block";
+      // hide credits
+      credits.style.display = "none";
+    }  
+  }
+
+  document.getElementById('toggle-credits').addEventListener('click', toggleCredits);
+  document.getElementById('toggle-credits2').addEventListener('click', toggleCredits);
+
+  const credits = document.getElementById('creditroll');
+
+  function scrollCredits() {
+    const totalHeight = credits.scrollHeight;
+    const currentPosition = credits.scrollTop;
+    const newPosition = currentPosition + 1;
+    credits.scrollTo(0, newPosition);
+    // If the new position is equal to or greater than the total height, reset the scroll position to 0
+    if (newPosition >= totalHeight) {
+     credits.scrollTo(0, 0);
+    } 
+  }
+
+  setInterval(scrollCredits, 50); // Scroll the credits every 50 milliseconds
+
 
 
 function removeOverlay() {
@@ -629,7 +668,15 @@ debug = tile;
                 break;
             }
 
-            
+            // credits
+            document.getElementById("creditroll").style.display = "none";
+            if (tile.credits != undefined) {
+              document.getElementById("creditcontent").innerHTML = tile.credits;
+              document.getElementById("credits").style.display = "block";
+            } else {
+              document.getElementById("credits").style.display = "none";
+            }
+
           }
         };
 
@@ -781,6 +828,11 @@ app.get('/story/:name/:tileId', function (req, res) {
       newStory.tile.code = true;
     }
     
+    // Push the credits to the tile
+    if(currentStory.Credits != undefined) {
+      newStory.tile.credits = currentStory.Credits;
+    }
+
     currentPlayer.stories.push(scramble(newStory, "1"));
     // store updated player in players
     players.push(currentPlayer);
@@ -888,6 +940,11 @@ app.get('/story/:name/:tileId', function (req, res) {
     // Shall we enable the Code field?
     if(currentStory.Stuff.some(entry => entry.hasOwnProperty('code'))) {
       newStory.tile.code = true;
+    }
+
+    // Push the credits to the tile
+    if(currentStory.Credits != undefined) {
+      newStory.tile.credits = currentStory.Credits;
     }
 
     // we keep only the current tile of the current story in memory

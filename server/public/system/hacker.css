@@ -15,7 +15,7 @@ html, body {
   color: lime;
 }
 
-#content {
+.banner {
   background-color: black;
 }
 
