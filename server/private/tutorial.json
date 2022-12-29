@@ -658,7 +658,7 @@
     {
       "id": "credits",
       "title": "Storiz: Credits",
-      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show/Hide Credits\" link above to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show Credits\" link below to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "/tutorial/7.jpg",
       "choices": [
         {

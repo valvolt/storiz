@@ -911,7 +911,12 @@ app.get('/story/:name/:tileId', function (req, res) {
       }
       currentStuff = currentStuff.filter(x => !usedItemArray.includes(x));
     }
-    
+
+    // update player's stuff
+    newStory.stuff = currentStuff;
+    // store a description of the current player's stuff in the current tile
+    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key) && item.name !== undefined).map(item => ({ name: item.name, description: item.description }));
+
     // We return (one of) the tile(s) corresponding to element.to_tile
     let foundTiles = [];
     for (let tile of currentStory.Tiles) {
@@ -930,10 +935,28 @@ app.get('/story/:name/:tileId', function (req, res) {
       newStory.tile = foundTiles[0];
     }
 
-    // update player's stuff
-    newStory.stuff = currentStuff;
-    // store a description of the current player's stuff in the current tile
-    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key) && item.name !== undefined).map(item => ({ name: item.name, description: item.description }));
+    // Achievements
+    var currentAchievements = newStory.achievements;
+    // retrieve the achievements obtained when performing the choice
+    newAchievements = newStory.tile.achievement;
+    
+    if (newAchievements != undefined) {
+      // add achievement(s) to the player's achievement list
+      var newAchievementsArray = [];
+      if (Array.isArray(newAchievements) == false) {
+        // newAchievements can either contain a single element or an array.
+        // we make sure it's an array in all cases
+        newAchievementsArray.push(newAchievements);
+      } else {
+        newAchievementsArray = newAchievements;
+      }
+      // store, without duplicates
+      currentAchievements = [...new Set(currentAchievements.concat(newAchievementsArray))];
+    }
+
+    // update player's achievements
+    newStory.achievements = currentAchievements;
+
 
     newStory = scramble(newStory, req.params.tileId);
     
