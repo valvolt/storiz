@@ -1,0 +1,113 @@
+{
+  "Name": "sample",
+  "Credits": "<b>Bold credits</b>",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "xxx",
+      "text": "This <b>sample</b> is not supposed to be played, but as a reminder of the different keywords supported by Storiz. Put your .json files in the /server/private folder.",
+      "sound": "/folder/sound.mp3",
+      "music": "/folder/music.mp3",
+      "video": "/folder/video.mp4",
+      "picture": "/folder/picture.jpg",
+      "mood": "hacker",
+      "achievement": "badending",
+      "map": [
+        {
+          "shape": "poly",
+          "coords": "373,253,163,134,71,62,179,99,375,213",
+          "to_tile": "3",
+          "item": "my_item_1",
+          "uses": "my_item_2",
+          "requires": "my_item_3",
+          "hint": "invisible"
+        },
+        {
+          "shape": "rect",
+          "coords": "34,44,270,350",
+          "to_tile": "4",
+          "hint": "reveal"
+        },
+        {
+          "shape": "circle",
+          "coords": "337,300,44",
+          "to_tile": "5"
+        }
+      ],
+      "choices": [
+        {
+          "text": "button text",
+          "to_tile": "2",
+          "item": "my_item_2",
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "first random tile 2",
+      "text": "fifty percent chance this appears as tile 2",
+      "picture": "/folder/picture2a.jpg",
+      "choices": [
+        {
+          "text": "xxx",
+          "requires": "my_item_1",
+          "disable": "grey",
+          "uses": ["my_item_1", "my_item_2"],
+          "to_tile": "3"
+        },
+        {
+          "text": "yyy",
+          "requires": ["my_item_1", "my_item_2"],
+          "disable": "invisible",
+          "uses": "my_item_1",
+          "to_tile": "4"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "second random tile 2",
+      "text": "fifty percent chance this appears as tile 2",
+      "picture": "/folder/picture2b.jpg",
+      "choices": [
+        {
+          "text": "zzz",
+          "to_tile": "3"
+        }
+      ]
+    }
+  ],
+  "Stuff": [
+    {
+      "key": "my_item_1",
+      "name": "Name of item",
+      "description": "Description of item"
+    },
+    {
+      "key": "my_item_2",
+      "name": "Name of item",
+      "description": "Description of item"
+    }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "badending",
+      "name": "Ouch",
+      "description": "This bad ending is worth a bronze badge"
+    },
+    {
+      "trophy": "silver",
+      "key": "goodending",
+      "name": "Nice",
+      "description": "This good ending is worth a silver badge"
+    },
+    {
+      "trophy": "gold",
+      "key": "goldenending",
+      "name": "Wow !",
+      "description": "The best ending nets you a gold badge"
+    }
+  ]
+}
+
