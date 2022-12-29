@@ -448,9 +448,14 @@
     {
       "id": "mood",
       "title": "Storiz: Mood",
-      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"cold\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
       "picture": "/tutorial/7.jpg",
+      "mood": "none",
       "choices": [
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood-cold"
+        },
         {
           "text": "Show me the \"hot\" mood",
           "to_tile": "mood-hot"
@@ -458,6 +463,43 @@
         {
           "text": "Show me the \"gritty\" mood",
           "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"metal\" mood",
+          "to_tile": "mood-metal"
+        },
+        {
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
+        },
+        {
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "mood-cold",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "/tutorial/7.jpg",
+      "mood": "cold",
+      "choices": [
+        {
+          "text": "Show me the default mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Show me the \"hot\" mood",
+          "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"gritty\" mood",
+          "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"metal\" mood",
+          "to_tile": "mood-metal"
         },
         {
           "text": "Show me the \"hacker\" mood",
@@ -472,21 +514,29 @@
     {
       "id": "mood-hot",
       "title": "Storiz: Mood",
-      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
       "picture": "/tutorial/7.jpg",
       "mood": "hot",
       "choices": [
+        {
+          "text": "Show me the default mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood-cold"
+        },
         {
           "text": "Show me the \"gritty\" mood",
           "to_tile": "mood-gritty"
         },
         {
-          "text": "Show me the \"hacker\" mood",
-          "to_tile": "mood-hacker"
+          "text": "Show me the \"metal\" mood",
+          "to_tile": "mood-metal"
         },
         {
-          "text": "Show me the \"cold\" mood",
-          "to_tile": "mood"
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
         },
         {
           "text": "Next: Name",
@@ -497,21 +547,62 @@
     {
       "id": "mood-gritty",
       "title": "Storiz: Mood",
-      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"gritty\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
       "picture": "/tutorial/7.jpg",
       "mood": "gritty",
       "choices": [
         {
+          "text": "Show me the default mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood-cold"
+        },
+        {
           "text": "Show me the \"hot\" mood",
           "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"metal\" mood",
+          "to_tile": "mood-metal"
         },
         {
           "text": "Show me the \"hacker\" mood",
           "to_tile": "mood-hacker"
         },
         {
-          "text": "Show me the \"cold\" mood",
+          "text": "Next: Name",
+          "to_tile": "name"
+        }
+      ]
+    },
+    {
+      "id": "mood-metal",
+      "title": "Storiz: Mood",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "picture": "/tutorial/7.jpg",
+      "mood": "metal",
+      "choices": [
+        {
+          "text": "Show me the default mood",
           "to_tile": "mood"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood-cold"
+        },
+        {
+          "text": "Show me the \"hot\" mood",
+          "to_tile": "mood-hot"
+        },
+        {
+          "text": "Show me the \"gritty\" mood",
+          "to_tile": "mood-gritty"
+        },
+        {
+          "text": "Show me the \"hacker\" mood",
+          "to_tile": "mood-hacker"
         },
         {
           "text": "Next: Name",
@@ -522,10 +613,18 @@
     {
       "id": "mood-hacker",
       "title": "Storiz: Mood",
-      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"cold\". Available moods are: \"cold\", \"hot\", \"gritty\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hacker\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
+      "text": "Each tile can contain a \"mood\" value, which will affect the overall rendering of the tile. By default, the mood style is \"none\". Available moods are: \"none\", \"cold\", \"hot\", \"gritty\", \"metal\" and \"hacker\". Play with the mood to shift the tone as the story progresses.<br/><br/><pre>\"Tiles\": [<br/>    {<br/>      \"id\": \"1\",<br/>      \"title\": \"my first tile\",<br/>      \"text\": \"my tile text\",<br/>      \"picture\": \"/my_story/picture.jpg\",<br/>      <b>\"mood\": \"hot\",</b><br/>      \"choices\": [<br/>        {<br/>          \"text\": \"first choice\",<br/>          \"to_tile\": \"2\"<br/>        },<br/>        {<br/>          \"text\": \"second choice\",<br/>          \"to_tile\": \"3\"<br/>        }<br/>      ]<br/>    }<br/>  ]</pre><br/><br/>",
       "picture": "/tutorial/7.jpg",
       "mood": "hacker",
       "choices": [
+        {
+          "text": "Show me the default mood",
+          "to_tile": "mood"
+        },
+        {
+          "text": "Show me the \"cold\" mood",
+          "to_tile": "mood-cold"
+        },
         {
           "text": "Show me the \"hot\" mood",
           "to_tile": "mood-hot"
@@ -535,8 +634,8 @@
           "to_tile": "mood-gritty"
         },
         {
-          "text": "Show me the \"cold\" mood",
-          "to_tile": "mood"
+          "text": "Show me the \"metal\" mood",
+          "to_tile": "mood-metal"
         },
         {
           "text": "Next: Name",

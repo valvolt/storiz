@@ -1,0 +1,50 @@
+html, body {
+  color: green;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+#title2 {
+  font-size: 32px;
+  text-align: center;
+  font-family: monospace;
+  font-style: normal;
+  font-weight: bold;
+  color: lime;
+}
+
+#content {
+  background-color: black;
+}
+
+th {
+  background-color: lime;
+  color: black;
+  font-weight: bold;
+}
+tr:nth-child(even) {
+  background-color: #0f0;
+}
+tr:nth-child(odd) {
+  background-color: #00f;
+}
+
+a {
+  text-transform: uppercase;
+  color: lime;
+}
+a:link {
+  text-decoration: underline;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:active {
+  text-decoration: underline;
+}
+

@@ -191,115 +191,14 @@ app.get('/story/:name', function (req, res) {
     <meta charset="utf-8">
     <meta name="description" content="A dynamic story game with branching paths and multiple choices">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/system/global.css">
+    <link rel="stylesheet" href="/system/none.css">
+    <link rel="stylesheet" href="/system/cold.css">
+    <link rel="stylesheet" href="/system/hot.css">
+    <link rel="stylesheet" href="/system/gritty.css">
+    <link rel="stylesheet" href="/system/metal.css">
+    <link rel="stylesheet" href="/system/hacker.css">
     <title id='title'>...</title>
-    <style>
-      #title2 {
-        font-size: 32px;
-        text-align: center;
-        font-family: PoynterGothicText;
-        font-style: normal;
-        font-weight: bold;
-      }
-
-      img {
-        width: 40vw;
-        height: auto
-      }
-      video {
-        width: 100%
-      }
-      #picture,
-      #video {
-        display: none;
-        margin: 0 auto;
-        text-align: center;
-        height: auto
-      }
-
-      #choices button {
-        display: block;
-        margin-top: 10px;
-      }
-    
-      #background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        filter: blur(10px);
-        z-index: -2;
-      }
-      #content {
-        background-color: #ccc;
-        padding: 10px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left:  calc(5%);
-        right: 0;
-        width: calc(100% - 10%);
-        z-index: -1;
-        overflow: scroll;
-      }
-
-      #stuff {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      th {
-        background-color: #333;
-        color: #fff;
-        font-weight: bold;
-      }
-      tr:nth-child(even) {
-        background-color: #ddd;
-      }
-      tr:nth-child(odd) {
-        background-color: #ccc;
-      }
-      td:first-child,
-      th:first-child {
-        width: 30%;
-      }
-
-      #code form {
-        display: flex;
-        width: 100%;
-      }
-      #code input[type="text"] {
-        flex: 1;
-      }
-      #code input[type="submit"] {
-        margin-left: auto;
-      }
-
-      a {
-        text-transform: uppercase;
-      }
-      a:link {
-        text-decoration: underline;
-      }
-      a:visited {
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      a:active {
-        text-decoration: underline;
-      }
-
-    </style>
   </head>
   <body>
     <div id="background"></div>
@@ -557,18 +456,16 @@ debug = tile;
             // picture
             if (tile.picture) {
               document.getElementById("background").style.backgroundImage = "url(" + tile.picture + ")";
+              document.getElementById("picture").style.display = "block";
+              document.getElementById("img").src = tile.picture;
             } else {
               document.getElementById("background").style.backgroundImage = "url(/system/blur.png)";
               document.getElementById("picture").style.display = "none";
             }
 
-            if (tile.picture && !tile.video) {
-              document.getElementById("picture").style.display = "block";
-              document.getElementById("img").src = tile.picture;
-            }
-
             // video
             if (tile.video) {
+              document.getElementById("picture").style.display = "none";
               document.getElementById("video").style.display = "block";
               document.getElementById("video").firstElementChild.src = tile.video;
               document.getElementById("video").firstElementChild.type = "video/mp4";
@@ -677,6 +574,62 @@ debug = tile;
             } else {
               document.getElementById("code").style.display = "none";
             }
+            
+            // mood
+            switch (tile.mood) {
+              case "cold":
+                document.querySelector("link[href='/system/none.css']").disabled = true;
+                document.querySelector("link[href='/system/cold.css']").disabled = false;
+                document.querySelector("link[href='/system/hot.css']").disabled = true;
+                document.querySelector("link[href='/system/gritty.css']").disabled = true;
+                document.querySelector("link[href='/system/metal.css']").disabled = true;
+                document.querySelector("link[href='/system/hacker.css']").disabled = true;
+                break;
+              case "hot":
+                document.querySelector("link[href='/system/none.css']").disabled = true;
+                document.querySelector("link[href='/system/cold.css']").disabled = true;
+                document.querySelector("link[href='/system/hot.css']").disabled = false;
+                document.querySelector("link[href='/system/gritty.css']").disabled = true;
+                document.querySelector("link[href='/system/metal.css']").disabled = true;
+                document.querySelector("link[href='/system/hacker.css']").disabled = true;
+                break;
+              case "gritty":
+                document.querySelector("link[href='/system/none.css']").disabled = true;
+                document.querySelector("link[href='/system/cold.css']").disabled = true;
+                document.querySelector("link[href='/system/hot.css']").disabled = true;
+                document.querySelector("link[href='/system/gritty.css']").disabled = false;
+                document.querySelector("link[href='/system/metal.css']").disabled = true;
+                document.querySelector("link[href='/system/hacker.css']").disabled = true;
+                break;
+              case "metal":
+                document.querySelector("link[href='/system/none.css']").disabled = true;
+                document.querySelector("link[href='/system/cold.css']").disabled = true;
+                document.querySelector("link[href='/system/hot.css']").disabled = true;
+                document.querySelector("link[href='/system/gritty.css']").disabled = true;
+                document.querySelector("link[href='/system/metal.css']").disabled = false;
+                document.querySelector("link[href='/system/hacker.css']").disabled = true;
+                break;
+              case "hacker":
+                document.querySelector("link[href='/system/none.css']").disabled = true;
+                document.querySelector("link[href='/system/cold.css']").disabled = true;
+                document.querySelector("link[href='/system/hot.css']").disabled = true;
+                document.querySelector("link[href='/system/gritty.css']").disabled = true;
+                document.querySelector("link[href='/system/metal.css']").disabled = true;
+                document.querySelector("link[href='/system/hacker.css']").disabled = false;
+                break;
+              case "none":
+              default:
+                // if mood is undefined
+                document.querySelector("link[href='/system/none.css']").disabled = false;
+                document.querySelector("link[href='/system/cold.css']").disabled = true;
+                document.querySelector("link[href='/system/hot.css']").disabled = true;
+                document.querySelector("link[href='/system/gritty.css']").disabled = true;
+                document.querySelector("link[href='/system/metal.css']").disabled = true;
+                document.querySelector("link[href='/system/hacker.css']").disabled = true;
+                break;
+            }
+
+            
           }
         };
 
@@ -1125,15 +1078,6 @@ function scramble(story, currentTileId) {
       arrayCopy.splice(newElemIndex, 1);
     }
 
-
-
-  
-//    // and we scramble the original to_tile values
-//    for (let i = 0; i < array.length; i++) {
-//      const elem = array[i];
-//      const newElem = newArray.find(obj => obj.to_tile === elem.to_tile);
-//      elem.to_tile = newElem.scrambled_to_tile;
-//    }
     story.tile.choices = array;
   }
 

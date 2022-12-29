@@ -1,0 +1,43 @@
+html, body {
+  color: black;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: normal;
+  background-color: #ff6f00;
+}
+
+#title2 {
+  font-size: 32px;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  color: #ffc400;
+}
+
+#content {
+  background-color: #ffd54f;
+}
+
+th {
+  background-color: #ff6f00;
+  color: #fff;
+  font-weight: bold;
+}
+tr:nth-child(even) {
+  background-color: #ffd54f;
+}
+tr:nth-child(odd) {
+  background-color: #ffb74d;
+}
+
+a {
+  color: #ffc400;
+  text-decoration: none;
+}
+a:hover {
+  color: #ff6f00;
+  text-decoration: underline
+}
+
