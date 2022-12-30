@@ -2,7 +2,7 @@ FROM node:latest
 
 RUN git clone https://github.com/valvolt/storiz
 WORKDIR /storiz/server
-USER node
 RUN npm install
+USER node
 ENTRYPOINT ["node","server.js"]
 
