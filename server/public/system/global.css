@@ -116,7 +116,7 @@ footer {
 #credits {
   align-self: flex-end;
 }
-#creditroll {
+.creditroll {
   display: block;
   align-items: center;
   justify-content: center;
@@ -126,6 +126,7 @@ footer {
   right: 15%;
   bottom: 25%;
   overflow: auto;
+  text-align: center;
 }
 
 #credits2 {

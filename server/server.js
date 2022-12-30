@@ -36,34 +36,142 @@ const privateDir = './private/';
 var stories = []
 var players = []
 
-// Main page
-//
-// If user is not authenticated, prompt user for login
-// If user is authenticated, prompt for story choice
+const homepage1 = `
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="description" content="A dynamic story game with branching paths and multiple choices">
+      <link rel="icon" type="image/x-icon" href="/favicon.ico">
+      <link rel="stylesheet" href="/system/global.css">
+      <link rel="stylesheet" href="/system/none.css">
+    </head>
+  <body>
+    <h1 id="title2">Storiz</h1>`
+const homepage2 = "</body></html>"
 
+// Main page
 app.get('/', function (req, res) {
 
-  var user = "";
-  if(req.cookies.SESSION != undefined) {
-    user = req.cookies.SESSION;
-  }
+  const welcome = `
+    <style>
+      .buttons {
+        text-align: center; /* Center the buttons horizontally */
+      }
+
+      button {
+        width: 200px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #333333;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 20px 0; /* Add some margin to the buttons */
+      }
+
+      button:hover {
+        background-color: #666666;
+      }
+
+      button:active {
+        background-color: #999999;
+      }
+    </style>
+    
+    <script>
+      function newGameOp() {
+        window.location.href = '/newgame';
+      }
+
+      function continueOp() {
+        window.location.href = '/resume';
+      }
+    </script>
+
+    <div id="newgame" class="buttons">
+      <button id="new-game-button" onclick="newGameOp()">New Game</button>
+    </div>
+    <div id="continue" class="buttons">
+      <button id="continue-button" onclick="continueOp()">Continue</button>
+    </div>
+  `
   
-  const homepage1 = "<html><head></head><body><h1>Storiz</h1>"
-  const homepage2 = "</body></html>"
-  var loggedIn = "<h2>Welcome, "+user+"</h2><a href='/stories'>Select story</a>"
-  const loggedOut = "<form method='POST' action='/login'><input name='username'/><button type='submit'>Login</button></form><a href='/register'>Register</a>"
+  res.setHeader("Content-Type", "text/html");
+  res.send(homepage1+welcome+homepage2);
+})
+
+app.get('/resume', function (req, res) {
+
+  const resumeForm = `
+    <style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#title2 {
+  margin: 16px 0;
+}
+
+div {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[name="username"] {
+  width: 200px;
+  height: 32px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+button[type="submit"] {
+  width: 120px;
+  height: 32px;
+  font-size: 16px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+      button[type="submit"]:hover {
+        background-color: #666666;
+      }
+
+      button[type="submit"]:active {
+        background-color: #999999;
+      }
+    
+    </style>
+    
+    <div>Welcome back. Please enter your code:<form method='POST' action='/resume'><input name='username'/><button type='submit'>Submit</button></form></div>`
 
   res.setHeader("Content-Type", "text/html");
-  if (user == "") {
-    res.send(homepage1+loggedOut+homepage2);
-  } else {
-    res.send(homepage1+loggedIn+homepage2);
-  }
+  res.send(homepage1+resumeForm+homepage2);
 
 })
 
+
 // Register new user
-app.get('/register', function (req, res) {
+app.get('/registerXYZ', function (req, res) {
 
   const registerpage = "<html><head></head><body><h1>Storiz</h1><form method='POST' action='/register'><input name='username'/><button type='submit'>Register</button></form></body></html>"
 
@@ -71,42 +179,36 @@ app.get('/register', function (req, res) {
   res.send(registerpage);
 })
 
-app.post('/register', function (req, res) {
-  // check if user already exists
-  for (let player of players) {
-    if(player.username == req.body.username) {
-      // user already exists, sending error message
-      res.send({"error":"User already exists"});
-      return;
-    }
-  }
-  // create user
+app.get('/newgame', function (req, res) {
+  // create user (autologin)
+  userid = uuid.v4();
   var player = {};
-  player.username = req.body.username;
+  player.username = userid;
   player.stories = [];
   players.push(player);
   
-  // log user in (session valid for 4 hours)
-  res.cookie('SESSION', req.body.username, { maxAge: 14400000, httpOnly: true });
+  // auto log user in
+  res.cookie('SESSION', userid, { httpOnly: true });
 
-  res.redirect('/');
+  // redirect to story list
+  res.redirect('/stories');
 })
 
 
-// Logs user in
-app.post('/login', function (req, res) {
+// Logs user returning in
+app.post('/resume', function (req, res) {
   // Does the user exist?
   for (let player of players) {
     if(player.username == req.body.username) {
       // user already exist, logging in
-        res.cookie('SESSION', req.body.username, { maxAge: 14400000, httpOnly: true });
-        res.redirect('/');
+        res.cookie('SESSION', req.body.username, { httpOnly: true });
+        res.redirect('/stories');
         return;
     }
   }
   // user does not exist, sending error message
   res.setHeader("Content-Type", "application/json");
-  res.send({"error":"Bad username or password"});
+  res.send({"error":"Invalid code"});
 })
 
 
@@ -236,15 +338,26 @@ app.get('/story/:name', function (req, res) {
             </form>
           </div>
         </main>
+        <hr>
       <footer>
         <div id="github">Powered by <a href="http://github.com/valvolt/storiz">Storiz</a></div>
-        <div id="credits"><a href="#" id="toggle-credits">Show credits</a></div>
+        <div id="profile"><a href="#" id="toggle-profile">My Profile</a></div>
+        <div id="credits"><a href="#" id="toggle-credits">Credits</a></div>
       </footer>
       </div>
     </div>
-    <div id="creditroll" class="banner">
+    <div id="creditroll" class="banner creditroll">
       <div id="creditcontent"></div>
-      <div id="credits2"><a href="#" id="toggle-credits2">Hide credits</a></div>
+      <div id="credits2"><a href="#" id="toggle-credits2">Close</a></div>
+    </div>
+    <div id="myprofile" class="banner creditroll">
+      <div id="profilecontent">
+        My Continue code: <input type="text" id="usercode" value="`+username+`" readonly>
+        <button onclick="copyToClipboard('usercode')">Copy</button>
+        My trophies
+        <div id="achievements"></div>
+      </div>
+      <div id="profile2"><a href="#" id="toggle-profile2">Close</a></div>
     </div>
 
     <script>
@@ -270,6 +383,17 @@ app.get('/story/:name', function (req, res) {
           }
         }
       }
+
+  function copyToClipboard(elementId) {
+    // Get the text field
+    var textField = document.getElementById(elementId);
+
+    // Select the text field's content
+    textField.select();
+
+    // Copy the selected text to the clipboard
+    document.execCommand('copy');
+  }
 
   const mapElement = document.getElementById("map");
 
@@ -320,6 +444,25 @@ app.get('/story/:name', function (req, res) {
 
   setInterval(scrollCredits, 50); // Scroll the credits every 50 milliseconds
 
+  function toggleProfile(event) {
+    event.preventDefault();
+    const content = document.getElementById('main');
+    const profile = document.getElementById('myprofile');
+    if (profile.style.display === "none") {
+      // hide main content
+      content.style.display = "none";
+      // show credits
+      profile.style.display = "block";
+    } else {
+      // show main content
+      content.style.display = "block";
+      // hide credits
+      profile.style.display = "none";
+    }  
+  }
+
+  document.getElementById('toggle-profile').addEventListener('click', toggleProfile);
+  document.getElementById('toggle-profile2').addEventListener('click', toggleProfile);
 
 
 function removeOverlay() {
@@ -593,6 +736,27 @@ debug = tile;
               });
             }
             
+            // ending
+            if (tile.choices.length === 0 && tile.map == undefined) {
+              // no choice offered to the player, we add default restart options
+              document.getElementById("choices").innerHTML = "";
+              // restart story
+              var button = document.createElement("button");
+              button.innerHTML = "Try Again";
+              button.onclick = function() {
+                processTile("1");
+              };
+              document.getElementById("choices").appendChild(button);
+              // story menu
+              var button = document.createElement("button");
+              button.innerHTML = "Main menu";
+              button.onclick = function() {
+                window.location="/stories";
+              };
+              document.getElementById("choices").appendChild(button);
+              document.getElementById("choices").style.display = "block";
+            }
+
             // stuff
             if (Array.isArray(tile.stuff) && tile.stuff.length > 0) {
               document.getElementById("stuff").style.display = "block";
@@ -676,7 +840,9 @@ debug = tile;
             } else {
               document.getElementById("credits").style.display = "none";
             }
-
+            
+            // profile
+            document.getElementById("myprofile").style.display = "none";
           }
         };
 
