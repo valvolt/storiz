@@ -1,3 +1,7 @@
+body {
+  background-image: url('/system/blur.png');
+}
+
 html, body {
   color: black;
   font-family: Verdana,sans-serif;

@@ -184,6 +184,7 @@ app.get('/newgame', function (req, res) {
   userid = uuid.v4();
   var player = {};
   player.username = userid;
+  player.screenname = "Anonymous";
   player.stories = [];
   players.push(player);
   
@@ -209,6 +210,39 @@ app.post('/resume', function (req, res) {
   // user does not exist, sending error message
   res.setHeader("Content-Type", "application/json");
   res.send({"error":"Invalid code"});
+})
+
+
+// Updates screen name
+app.post('/rename', function (req, res) {
+  // Get player
+  var username = "";
+  if(req.cookies.SESSION != undefined) {
+    username = req.cookies.SESSION;
+  } else {
+    // If no user is logged-in, propose to log in
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"please log in"});
+    return;
+  }
+
+  // Does the player exist?
+  var currentPlayer = undefined
+  for (let player of players) {
+    if(player.username == username) {
+      // save new screenname
+      player.screenname = req.body.screenname;
+      res.setHeader("Content-Type", "application/json");
+      res.send({"ok":"Screen name updated"});
+      return;
+    }
+  }
+  if (currentPlayer == undefined) {
+    console.log("Forged SESSION cookie - "+req.cookies.SESSION);
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"server error"});
+    return;
+  }
 })
 
 
@@ -341,7 +375,7 @@ app.get('/story/:name', function (req, res) {
         <hr>
       <footer>
         <div id="github">Powered by <a href="http://github.com/valvolt/storiz">Storiz</a></div>
-        <div id="profile"><a href="#" id="toggle-profile">My Profile</a></div>
+        <div id="profile"><a href="/myprofile">My Profile (`+currentPlayer.screenname+`)</a></div>
         <div id="credits"><a href="#" id="toggle-credits">Credits</a></div>
       </footer>
       </div>
@@ -349,15 +383,6 @@ app.get('/story/:name', function (req, res) {
     <div id="creditroll" class="banner creditroll">
       <div id="creditcontent"></div>
       <div id="credits2"><a href="#" id="toggle-credits2">Close</a></div>
-    </div>
-    <div id="myprofile" class="banner creditroll">
-      <div id="profilecontent">
-        My Continue code: <input type="text" id="usercode" value="`+username+`" readonly>
-        <button onclick="copyToClipboard('usercode')">Copy</button>
-        My trophies
-        <div id="achievements"></div>
-      </div>
-      <div id="profile2"><a href="#" id="toggle-profile2">Close</a></div>
     </div>
 
     <script>
@@ -443,27 +468,6 @@ app.get('/story/:name', function (req, res) {
   }
 
   setInterval(scrollCredits, 50); // Scroll the credits every 50 milliseconds
-
-  function toggleProfile(event) {
-    event.preventDefault();
-    const content = document.getElementById('main');
-    const profile = document.getElementById('myprofile');
-    if (profile.style.display === "none") {
-      // hide main content
-      content.style.display = "none";
-      // show credits
-      profile.style.display = "block";
-    } else {
-      // show main content
-      content.style.display = "block";
-      // hide credits
-      profile.style.display = "none";
-    }  
-  }
-
-  document.getElementById('toggle-profile').addEventListener('click', toggleProfile);
-  document.getElementById('toggle-profile2').addEventListener('click', toggleProfile);
-
 
 function removeOverlay() {
 
@@ -907,6 +911,117 @@ var debug = ""
   res.send(canvas);
 })
 
+
+
+// displays user profile
+app.get('/myprofile', function (req, res) {
+
+const profilepage1 = `
+     <style>
+       img {
+         height: 50px;
+         width: auto;
+       }
+       
+       td,
+       th {
+         text-align: center;
+       }
+     </style>
+    <div id="myprofile" class="banner creditroll">
+      <div id="profilecontent">
+        My Continue code: <input type="text" id="usercode" value="`+req.cookies.SESSION+`" readonly>
+        <button onclick="copyToClipboard('usercode')">Copy</button>`
+
+var screenname = ""
+var achievements = ""
+
+const profilepage2 = `</div>
+      <div id="profile2"><a href="/stories">Main menu</a></div>
+    </div>
+`
+  // Get player
+  var username = "";
+  if(req.cookies.SESSION != undefined) {
+    username = req.cookies.SESSION;
+  } else {
+    // If no user is logged-in, propose to log in
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"please log in"});
+    return;
+  }
+
+  // Does the player exist?
+  var currentPlayer = undefined
+  for (let player of players) {
+    if(player.username == username) {
+      currentPlayer = player;
+    }
+  }
+  if (currentPlayer == undefined) {
+    console.log("Forged SESSION cookie - "+req.cookies.SESSION);
+    res.setHeader("Content-Type", "application/json");
+    res.send({"error":"server error"});
+    return;
+  }
+
+  // Screen name
+  screenname = `
+    <script>
+    function saveScreenname(newname) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/rename', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          alert("New screenname saved");
+        }
+      };
+      xhr.send('screenname=' + encodeURIComponent(newname));
+    }
+    </script>
+    <div>
+      My screen name: <input type="text" id="screenname" value="`+currentPlayer.screenname+`" >
+      <button onclick="saveScreenname(document.getElementById('screenname').value)">Save</button>
+    </div>
+  `
+
+  // Loop over achievements
+  currentPlayer.stories.forEach(function(story) {
+    // Retrieve list of achievements for story
+    if (story.achievements.length > 0) {
+      var achievementTable = "<label>"+story.name+"</label><table><tr><th>#</th><th>Name</th><th>Description</th></tr>";
+      story.achievements.forEach(function(achievementKey) {
+        // fetch trophy, name and description
+        for (let i = 0; i < stories.length; i++) {
+          if (stories[i].Name === story.name) {
+            let achievements = stories[i].Achievements;
+            for (let j = 0; j < achievements.length; j++) {
+              if (achievements[j].key === achievementKey) {
+console.log(achievements[j].trophy)              
+                achievementTable = achievementTable + "<tr><td><img src=\"/system/"+achievements[j].trophy+".png\"></td><td>"+achievements[j].name+"</td><td>"+achievements[j].description+"</td></tr>";
+              }
+            }
+          }
+        }
+      })
+      achievements = achievements + achievementTable + "</table>";
+    }
+  });
+
+  res.setHeader("Content-Type", "text/html");
+  res.send(homepage1+profilepage1+screenname+achievements+profilepage2+homepage2);
+
+})
+
+
+
+
+
+
+
+
+
 // returns the content of the specified tile, for the specified story, for the currently logged-in user
 app.get('/story/:name/:tileId', function (req, res) {
 
@@ -1246,13 +1361,6 @@ var server = app.listen(8000, async function () {
   var port = server.address().port
 
   await loadAllStories()
-
-  // TODO: remove this
-  // DEBUG: create admin user (to avoid having to re-register each time)
-  var player = {};
-  player.username = "admin";
-  player.stories = [];
-  players.push(player);
 
   console.log("Storiz2 server listening at http://%s:%s", host, port)
 })
