@@ -1,0 +1,710 @@
+{
+  "Name": "D3mons",
+  "Description": "Courte histoire de hacker post-apo.",
+  "Credits": "<p>Histoire originale: <b>Cédric Hebert</b></p><br/><br/>Cette histoire utilise les superbes images et musiques libres suivantes, allez y jeter un oeil !<br/><p>Images: <a href=\"https://pixabay.com/fr/users/wendelin_jacober-10086047/\">Wendelin_Jacober</a></p>Musiques:</p><p>Auteur: <a href=\"https://kaiengel.bandcamp.com\">Kai Engel</a><br />Track: <b> Run</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=494\">Télécharger gratuitement Kai Engel -  Run</a></p><p>Auteur: <a href=\"https://soundcloud.com/ghostrifter-official\">Ghostrifter</a><br />Track: <b> Midnight Stroll</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by-sa/3.0/deed.fr\">https://creativecommons.org/licenses/by-sa/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=522\">Télécharger gratuitement Ghostrifter -  Midnight Stroll</a></p><p>Auteur: <a href=\"https://creo.bandcamp.com\">Creo</a><br />Track: <b> Showdown</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=500\">Télécharger gratuitement Creo -  Showdown</a></p><p>Auteur: <a href=\"https://ottohalmen.bandcamp.com/album/ottos-creative-commons-tracks\">Otto Halmen</a><br />Track: <b> Airship Thunderchild</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=482\">Télécharger gratuitement Otto Halmen -  Airship Thunderchild</a></p><p>Sons: https://lasonotheque.org/detail-0303-grincement-de-portail-en-metal-1.html</p>",
+  "Tiles": [
+    {
+      "id": "1",
+      "title": "Réveil brutal",
+      "sound": "",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3696230_1280.jpg",
+      "text": "Vous avez l'impression de vous réveiller. Mais pas le temps de se poser de questions. Cet individu vous a repéré et il semble bien décidé de s'occuper de vous.",
+      "choices": [
+        {
+          "text": "Je fuis ! N'importe où sera mieux qu'ici. On posera des questions plus tard.",
+          "to_tile": "2",
+          "item": ["indemne", "fatigue"]
+        },
+        {
+          "text": "Je reste sur place et je bande mes muscles. Je vais le massacrer.",
+          "to_tile": "3",
+          "item": "blessure"
+        },
+        {
+          "text": "Je la joue cool. On va faire ami-ami.",
+          "to_tile": "4",
+          "item": "indemne"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Reprendre... son souffle...",
+      "text": "L'homme au masque se mets à courir après vous ! Après quelques minutes qui semblent des heures, il semble qu'il ait lâché l'affaire. Mais vous êtes à bout de souffle.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/atom-3669817_1280.jpg",
+      "choices": [
+        {
+          "text": "Je pousse jusqu'à ce bâtiment au loin. On se reposera plus tard.",
+          "to_tile": "5"
+        },
+        {
+          "text": "Mieux vaut marcher et prendre le temps de réfléchir.",
+          "to_tile": "6"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "C'est quoi ce monstre ?!",
+      "text": "Arrivé à une distance de un mètre, l'individu s'arrête un instant, comme s'il cherchait à mieux vous observer. Puis l'instant d'après, il se jette sur vous. Étant prêt, vous lui envoyez votre poing au visage, ce qui vous apprend deux choses. Premièrement, vos bras sont maigres - vous souffrez probablement de malnutrition. Deuxièmement, votre adversaire semble ne pas ressentir la moindre douleur.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3696230_1280.jpg",
+      "choices": [
+        {
+          "text": "Ok, on prend la fuite.",
+          "to_tile": "2",
+          "item": "fatigue"
+        },
+        {
+          "text": "Je préfère abandonner et me rendre.",
+          "to_tile": "7"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "J'aurais dû m'en douter...",
+      "text": "Arrivé à une distance de un mètre, l'individu s'arrête un instant, comme s'il cherchait à mieux vous observer. Vous en profitez pour lui lancer un \"Salut, comment va?\"<br>L'instant d'après, il se jette sur vous.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3696230_1280.jpg",
+      "choices": [
+        {
+          "text": "Oups",
+          "to_tile": "7"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "À l'abri ?",
+      "text": "Cette fois vous êtes sûr d'avoir semé votre adversaire. Mais vous n'êtes pas beaucoup avancé. Dans votre dernier souvenir, vous étiez tranquillement en train de travailler sur votre projet de drone, depuis votre résidence luxueuse du bord de mer. Vous étiez en plein appel télépathique avec votre collègue Jef...",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/atom-3669815_1280.jpg",
+      "choices": [
+        {
+          "text": "Il est temps d'appeler Jef (et de souffler un peu)",
+          "to_tile": "8",
+          "uses": "fatigue",
+          "item": "ibrain"
+        },
+        {
+          "text": "Je fouille le bâtiment",
+          "to_tile": "9",
+          "uses": "fatigue",
+          "item": "nobrain"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "title": "C'est pas vrai !?",
+      "text": "D'une manière ou d'une autre, le type au masque vous a retrouvé ! Arrivé à une distance de un mètre, l'individu s'arrête un instant, comme s'il cherchait à mieux vous observer, mais vous êtes trop épuisé pour fuir. L'instant d'après, il se jette sur vous.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711289_1280.jpg",
+      "choices": [
+        {
+          "text": "Je serre les dents",
+          "to_tile": "7"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Game over",
+      "text": "Vous vous réveillez attaché à une chaise. Ce n'était donc pas un rêve, vous êtes bel et bien prisonnier de ce qui ressemble à une ville fantôme...<br>L'individu se tourne vers vous, il a dans les mains une sorte de couronne de métal reliée via des fils électriques à ce qui ressemble à une batterie de voiture. Votre sang se glace alors qu'il pose le cerclet sur votre tête. Puis tout devient noir.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/atom-3669812_1280.jpg",
+      "achievement": "badending",
+      "choices": [
+        {
+          "text": "Recommencer face à Jen",
+          "to_tile": "12",
+          "requires": "jen",
+          "disable": "invisible",
+          "item": "no-friends",
+          "uses": ["friends","zan","qotd","irc"]
+        },
+        {
+          "text": "Recommencer face à Zan",
+          "to_tile": "23",
+          "requires": "zan",
+          "disable": "invisible",
+          "item": ["no-qotd","no-irc"],
+          "uses": ["qotd","irc"]
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Pas de réseau",
+      "text": "Instinctivement, vous mettez deux doigts à votre tempe, en visualisant Jef. Aucune réponse. Maintenant que vous vous souvenez l'existence de votre implant cérébral, vous cherchez à vous connecter à n'importe quel service Internet. Sans succès. Soit le réseau est mort, soit votre puce est défectueuse.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/atom-3669815_1280.jpg",
+      "choices": [
+        {
+          "text": "Essayons de trouver quelque-chose d'utile",
+          "to_tile": "9"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "title": "Seul au monde ?",
+      "text": "Après avoir passé près de deux heures à parcourir les moindres recoins du bâtiment, vous n'êtes pas parvenu à mettre la main sur la moindre information utile. Vous avez retourné toutes sortes de questions dans votre tête: quel est cet endroit ? Pourquoi est-il désert ? Qui était ce type, dehors, va t'il finir par entrer ? ...quand soudain...",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Qui est là ? Montrez-vous !",
+          "to_tile": "10",
+          "requires": "blessure",
+          "disable": "invisible"
+        },
+        {
+          "text": "Qui est là ? Montrez-vous !",
+          "to_tile": "11",
+          "requires": "indemne",
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Ami ou ennemi ?",
+      "text": "Une silhouette se détache du mur du fond. D'abord floue, elle devient semi-opaque, puis se stabilise. Vous avez devant vous une personne recouverte des pieds à la tête d'un vêtement ample et noir à capuche et recouvert d'une cape. Instinctivement, vous faites un pas en arrière, protégeant votre poignet.<br>- Cette blessure a l'air véridique, dit la silhouette d'une voix de jeune femme. Je vais te laisser le bénéfice du doute et prétendre croire que tu n'as pas fait semblant de ne pas me voir.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
+          "to_tile": "12",
+          "requires": "ibrain",
+          "disable": "invisible",
+          "item": ["no-friends","jen"]
+        },
+        {
+          "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
+          "to_tile": "13",
+          "requires": "nobrain",
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Ami ou ennemi ?",
+      "text": "Une voix de jeune femme semble sortir d'un des murs.<br>- Je ne te fais pas confiance, d3mon. Je ne sais pas comment est-ce que tu es parvenu à entrer mais tu n'iras pas plus loin.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
+          "to_tile": "14",
+          "requires": "ibrain",
+          "disable": "invisible"
+        },        {
+          "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
+          "to_tile": "13",
+          "requires": "nobrain",
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Exposition",
+      "text": "- Je m'appelle Jen. Je suis ta seule chance de survie.<br>- Ma seule...<br>- Tais-toi. Nous n'avons pas beaucoup de temps. Bien. Allons droit au but. J'ai zappé ton i-brain. C'est pour cela que tu n'as plus accès au réseau, que tu es parvenu à entrer dans ce bâtiment, que tu ne m'as pas trouvée sous mon camouflage optique... et que tu es conscient de tes actes.<br>Il y a environ trois ans, un virus s'est propagé dans tous les i-brain de la planète et a permis au Puppetmaster de prendre le contrôle d'environ soixante pourcent de tous les humains de cette planète, y compris la totalité des chefs d'état et des personnes influentes. Les quarante pourcent restant étaient ceux trop pauvres pour se payer un i-brain, ainsi que quelques réfractaires au progrès - dont je fais partie.",
+      "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
+      "picture": "/d3mons/chernobyl-3696229_1280.jpg",
+      "choices": [
+        {
+          "text": "Les psyk3rs... victimes d'un virus...",
+          "to_tile": "15"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "title": "En tous cas, pas une amie...",
+      "text": "- Tu m'as tout l'air d'avoir vraiment tout oublié... Bon, laisse tomber, t'expliquer serait une perte de temps. Désolée de t'avoir réveillé, j'ai pensé que tu pourrais faire un bon hack3r mais à l'évidence je me suis trompée.<br>La silhouette redevient floue avant de disparaître.<br>- Eh, partez pas ! J'ai besoin de réponses !<br><br>Mais seul le silence vous répond. Jen ne reviendra pas. Les jours s'égrennent douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711291_1280.jpg"
+    },
+    {
+      "id": "14",
+      "title": "En tous cas, pas une amie...",
+      "text": "La femme ne répond rien. Elle active un mécanisme qui la rend à nouveau peu à peu invisible. Le mot d3mon vous semble familier...<br>Tu me prends pour un psyk3r qui aurait mal tourné, n'est-ce pas ! Mais mon i-brain ne fonctionne plus ; tu veux quoi, de l'argent ? Si tu me ramènes chez moi je te donnerai tout ce que j'ai...<br><br>Votre voix se fera tour à tour suppliante, menacante, compatissante... mais il faut vous rendre à l'évidence: vous êtes de nouveau seul. Les jours finiront pas s'égrenner douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711291_1280.jpg"
+    },
+    {
+      "id": "15",
+      "title": "Exposition",
+      "text": "- Quelle idée de relier les cerveaux directement à Internet ! Les gens n'apprennent jamais, reprend Jen. Le Puppetmaster a gardé ton contrôle durant environ trois ans. Regarde ce qu'il a fait du monde avec son armée de d3mons...<br>- Mais je ne suis plus un d3mon, n'est-ce pas?<br>- Ouais. Grâce à moi.<br>Jen sort de sous ses draperies une sorte d'antenne en forme de tromblon.<br>- Ce truc peut envoyer des ondes électriques à moyenne distance, parfois ca fait griller un i-brain. Je m'en suis servie tout à l'heure, et te voilà.",
+      "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
+      "picture": "/d3mons/chernobyl-3696229_1280.jpg",
+      "choices": [
+        {
+          "text": "Ce type, c'était un d3mon?",
+          "to_tile": "16"
+        },
+        {
+          "text": "On est en sécurité ici?",
+          "to_tile": "17"
+        },
+        {
+          "text": "Et maintenant on fait quoi ?",
+          "to_tile": "18"
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "title": "Exposition",
+      "text": "- Tu as eu de la chance, vous n'étiez que vous deux dans le secteur. Mais son i-brain a résisté. On appelle d3mon les psyk3rs qui ne se contrôlent plus. En gros maintenant tous les psyk3rs sont des d3mons, sauf peut-être le Puppetmaster et encore. Dans cet état tu n'avais plus accès à ton propre corps, comme si tu étais dans le coma. D'ailleurs tu es maigre comme un clou, tu as dû manger juste assez pour survivre. Dans les mains du Puppetmaster, tu es une véritable marionette. Un d3mon peut se faire blesser mais il ne ressent plus la douleur. N'essaie plus jamais d'en affronter un au corps à corps !",
+      "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
+      "picture": "/d3mons/chernobyl-3696229_1280.jpg",
+      "choices": [
+        {
+          "text": "On est en sécurité ici?",
+          "to_tile": "17"
+        },
+        {
+          "text": "Et maintenant on fait quoi ?",
+          "to_tile": "18"
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "title": "Exposition",
+      "text": "- J'ai fait courir un circuit électrique autour du bâtiment. Tant que le générateur tient, personne ne peut passer sans y laisser son i-brain. Enfin je pense. Ca permet de rester à l'abri. Et puis, les d3mons ne peuvent pas me détecter à distance vu que je ne suis pas connectée au réseau. Par contre je ne pense pas que mon camouflage optique puisse les berner bien longtemps. C'est ce qui m'a fait penser que peut-être tu n'étais pas l'un d'eux. C'est pas la première fois qu'ils essaient de me piéger !",
+      "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
+      "picture": "/d3mons/chernobyl-3696229_1280.jpg",
+      "choices": [
+        {
+          "text": "Ce type, c'était un d3mon?",
+          "to_tile": "16"
+        },
+        {
+          "text": "Et maintenant on fait quoi ?",
+          "to_tile": "18",
+          "item": "nmap"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "title": "Psyk3r. D3mon. Hack3r.",
+      "text": "- La vraie question c'est: qu'est-ce que tu peux faire, toi ! ... Écoute-moi bien. Je peux libérer un ou deux pauvres types qui passent dans le rayon d'action de mon appareil, mais ce n'est pas comme ca qu'on va changer la face du monde. Mais toi, tu peux remonter jusqu'au Puppetmaster. En devenant un hack3r.<br><br>Devant votre regard interdit, Jen reprend:<br>- Tu n'as plus accès au réseau mais tu peux te connecter en point à point. Chaque d3mon expose son propre point d'accès.<br>Tout en parlant, elle a sorti un vieux smartphone de sous ses frusques et a commencé à pianoter. Vous réalisez alors qu'elle est en train de téléverser un programme pirate vers votre i-brain.<br>- Et pour exploiter ces points d'accès, tu vas te servir de ceci. C'est un programme de reconnaissance.<br>- Et ce truc fait de moi un hack3r, dites-vous d'un air dubitatif.<br>- Tu as hacké le cerveau de plus de personnes que tu ne peux le croire, quand tu étais un d3mon. J'espère que ton corps retrouvera certains automatismes. De toutes facons on n'a pas le choix. Maintenant sors d'ici, retrouve ton agresseur et débranche-le. Pour cela, utilise nmap et trouve un moyen de le désactiver.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Et si je refuse?",
+          "to_tile": "19"
+        },
+        {
+          "text": "Combien de hack3rs as-tu envoyés avant moi?",
+          "to_tile": "20",
+          "item": "friends",
+          "uses": "no-friends"
+        },
+        {
+          "text": "Ok je vais m'en occuper.",
+          "to_tile": "21",
+          "uses":"blessure",
+          "item":"panse"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "title": "Psyk3r. D3mon. Hack3r.",
+      "text": "- Alors je disparais de ta vie et tu finis par crever de faim et de soif. À moins que ta blessure ne s'infecte avant. C'est l'enfer ici ! Si tu veux survivre il te faut combattre.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Combien de hack3rs as-tu envoyés avant moi?",
+          "to_tile": "20",
+          "item": "friends",
+          "uses": "no-friends"
+        },
+        {
+          "text": "Ok je vais m'en occuper.",
+          "to_tile": "21",
+          "uses":"blessure",
+          "item":"panse"
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "title": "Psyk3r. D3mon. Hack3r.",
+      "text": "Avec toi, ca fait quatre. Je ne sais pas combien ont survécu. J'ai envoyé Mik, un grand noir élancé et introverti. Puis Kat, une adolescence au regard assassin. Enfin, Gil, une femme habillée en ministre. Il y avait beaucoup de d3mons dans le coin à l'époque. Grâce à eux tu as une chance de réussir.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/chernobyl-3711298_1280.jpg",
+      "choices": [
+        {
+          "text": "Et si je refuse?",
+          "to_tile": "19"
+        },
+        {
+          "text": "Ok je vais m'en occuper.",
+          "to_tile": "21",
+          "uses":"blessure",
+          "item":"panse"
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "title": "En route",
+      "text": "- Le type au masque à gaz était à côté de la grande roue, je vais m'y rendre.<br>Contre toute attente, Jen s'approche de vous. Elle sort un bandage de sous son manteau. Vous sentez une réelle émotion dans sa voix lorsqu'elle panse votre poignet.<br>- Mon conseil, c'est de désactiver les d3mons dès que tu en as l'opportunité. N'essaie pas de fouiller dans leur tête, ok?<br>- Ao. C'est mon nom. À plus tard, Jen.",
+      "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
+      "picture": "/d3mons/atom-3669815_1280.jpg",
+      "choices": [
+        {
+          "text": "Il est temps",
+          "to_tile": "22"
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "title": "Sous la grande roue",
+      "text": "Vous n'avez croisé personne depuis que vous êtes sorti du bâtiment. Le stress se fait sérieusement sentir. Où est ce type ? Y en a t'il d'autres ? Il règne un silence de mort... à moins que...",
+      "music": "",
+      "sound": "/d3mons/0303.mp3",
+      "picture": "/d3mons/chernobyl-3711305_1280.jpg",
+      "choices": [
+        {
+          "text": "Je vais voir d'où vient ce bruit",
+          "to_tile": "23",
+          "item": "zan"
+        }
+      ]
+    },
+    {
+      "id": "23",
+      "title": "Fight !",
+      "text": "Votre coeur fait un bond dans votre poitrine alors qu'une plaque d'égoût glisse doucement, laissant apparaître le d3mon. ",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Je l'affronte à mains nues",
+          "to_tile": "24"
+        },
+        {
+          "text": "J'utilise nmap",
+          "to_tile": "25",
+          "item":["no-qotd","no-irc","no-help"]
+        }
+      ]
+    },
+    {
+      "id": "24",
+      "title": "J'aurais dû m'en douter...",
+      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain.<br>L'instant d'après, il se jette sur vous.",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Arg",
+          "to_tile": "7"
+        }
+      ]
+    },
+    {
+      "id": "25",
+      "title": "nmap",
+      "mood": "hacker",
+      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain. Mais vous êtes plus rapide. En un instant, une quantité d'information vous parvient.<br><br>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST<br>Nmap scan report for zan (192.168.9.105)<br>Host is up (0.00012s latency).<br>Not shown: 997 closed ports<br>PORT     STATE SERVICE<br>17/tcp  open  QOTD<br>23/tcp  open  telnet<br>194/tcp  open  internet relay chat<br><br>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br><br>Pas le droit à l'erreur...",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Connexion to QOTD",
+          "to_tile": "26"
+        },
+        {
+          "text": "Connexion to Telnet",
+          "to_tile": "27",
+          "requires": ["no-qotd","no-irc"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Connexion to Telnet",
+          "to_tile": "27",
+          "requires": ["qotd","no-irc"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Connexion to Telnet",
+          "to_tile": "27",
+          "requires": ["no-qotd","irc"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Connexion to Telnet",
+          "to_tile": "29",
+          "requires": ["qotd","irc"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Connexion to IRC",
+          "to_tile": "28"
+        }
+      ]
+    },
+    {
+      "id": "26",
+      "mood": "hacker",
+      "title": "QOTD",
+      "text": "La connexion est immédiate, mais apparemment rien ne se passe. Une idée, vite ! ",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Je tente une commande au hasard",
+          "to_tile": "30",
+          "item": "qotd",
+          "uses": "no-qotd"
+        },
+        {
+          "text": "Je tente autre chose",
+          "to_tile": "25"
+        }
+      ]
+    },
+    {
+      "id": "27",
+      "mood": "hacker",
+      "title": "Telnet",
+      "text": "La connexion est immédiate.<br/><br/>Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ _",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Je tente un shutdown",
+          "to_tile": "31"
+        },
+        {
+          "text": "Je fouille un peu",
+          "to_tile": "32"
+        },
+        {
+          "text": "Je tente autre chose",
+          "to_tile": "25"
+        }
+      ]
+    },
+    {
+      "id": "28",
+      "mood": "hacker",
+      "title": "IRC",
+      "text": "La connexion est immédiate.<br/><br/>-> You have joined the channel #conversation<br/>*** Channel modes: no messages from outside, topic protection<br/><br/>*** Welcome guest, your nickname is set to guest-53642<br/>*** Change your nickname with /nick<br/>&lt;Zan&gt; Vous ! Aidez-moi, je vous en prie !",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Qu'est-ce que je peux faire?",
+          "to_tile": "33",
+          "uses": "no-irc",
+          "item": "irc"
+        },
+        {
+          "text": "Comment faire pour te déconnecter?",
+          "to_tile": "34",
+          "uses": "no-irc",
+          "item": "irc"
+        },
+        {
+          "text": "Je tente autre chose",
+          "to_tile": "25",
+          "uses": ["no-irc","no-help"],
+          "item": ["irc","help"]
+        }
+      ]
+    },
+    {
+      "id": "29",
+      "mood": "hacker",
+      "title": "...",
+      "text": "Alors que vous tentez une nouvelle commande, vous ressentez une violente douleur à l'épaule. Vous avez perdu trop de temps, le d3mon est sur vous ! La connexion est immédiatement rompue. Vous avez juste le temps de voir votre agresseur vous envoyer son poing au visage.",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Nooon !",
+          "to_tile": "7"
+        }
+      ]
+    },
+    {
+      "id": "30",
+      "mood": "hacker",
+      "title": "Quote Of The Day",
+      "text": "hello<br/><br/>\"L'invention de l'i-brain causera notre perte\"<br/>- Jensy Crakow",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "J'essaie encore",
+          "to_tile": "29"
+        },
+        {
+          "text": "Je tente autre chose",
+          "to_tile": "25"
+        }
+      ]
+    },
+    {
+      "id": "31",
+      "mood": "hacker",
+      "title": "Extinction des feux",
+      "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ shutdown now<br/><br/>Broadcast message from zan@localhost.localdomain<br/>(/dev/pts/0) ...<br/><br/>The system is going down for shutdown NOW!<br/>",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Ca a marché ??",
+          "to_tile": "35",
+          "requires": ["no-help","no-friends"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Ca a marché ??",
+          "to_tile": "35",
+          "requires": ["no-help","friends"],
+          "disable": "invisible"
+        },
+        {
+          "text": "Ca a marché ??",
+          "to_tile": "36",
+          "requires": ["help","friends"],
+          "disable": "invisible"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "mood": "hacker",
+      "title": "Telnet",
+      "text": "Trying 192.168.9.105...<br/>Connected to 192.168.9.105.<br/>Escape character is '^]'.<br/>guest@zan:~$ find / -name *.mkv<br/><br/>find: '/home/zan/Documents/souvenirs/secrets': Permission denied<br/>/home/zan/Documents/souvenirs/JoursHeureux.mkv<br/>/home/zan/Documents/souvenirs/TrahisonDeJen.mkv",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Je tente de visionner 'JoursHeureux.mkv'",
+          "to_tile": "29"
+        },
+        {
+          "text": "Je tente de visionner 'TrahisonDeJen.mkv'",
+          "to_tile": "29"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "mood": "hacker",
+      "title": "IRC",
+      "text": "&lt;Zan&gt; Vous ! Aidez-moi, je vous en prie !<br/>&lt;guest-53642&gt; Qu'est-ce que je peux faire?<br/>&lt;Zan&lt; Vous êtes un hack3r?<br/>&lt;guest-53642&gt; Oui<br/>&lt;Zan&gt; Si vous désactivez mon i-brain je vais mourir...<br/>&lt;guest-53642&gt; Il y a une autre solution ?<br/>&lt;Zan&gt; C'est Jen qui vous envoie ?<br/>",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Oui c'est elle",
+          "to_tile": "29"
+        },
+        {
+          "text": "Jen ? Qui ca ?",
+          "to_tile": "29"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "mood": "hacker",
+      "title": "IRC",
+      "text": "Aucune réponse ne vient. Est-ce si étonnant ?",
+      "music": "/d3mons/Creo-Showdown.mp3",
+      "picture": "/d3mons/chernobyl-3711290_1280.jpg",
+      "choices": [
+        {
+          "text": "Je tente autre chose",
+          "to_tile": "25"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "title": "Mission accomplie...",
+      "text": "Tout s'est passé en moins d'une seconde. Le corps de celui qui portait le nom de Zan s'est figé, avant de s'écrouler. Vous vérifiez le pouls de l'ancien psyk3r. Il est mort.<br/>Vous réalisez seulement ce qui vient de se passer. Vous avez affronté et vaincu votre premier d3mon. Votre ancienne vie n'existe plus, désormais votre mission est celle d'un hack3r.<br/>La route sera longue. Trouverez-vous le Puppetmaster? Serez-vous à la hauteur ? Vous reprenez le chemin du repaire de Jen, des questions plein la tête.",
+      "music": "",
+      "sound": "/d3mons/OttoHalmn-OttosCreativeCommonsTracks-01AirshipThunderchild.mp3",
+      "picture": "/d3mons/chernobyl-3711309_1280.jpg",
+      "achievement": "goodending"
+    },
+    {
+      "id": "36",
+      "title": "Mission accomplie ?",
+      "text": "Tout s'est passé en moins d'une seconde. Le corps de celui qui portait le nom de Zan s'est figé, avant de s'écrouler. Vous vérifiez le pouls de l'ancien psyk3r. Il est mort.<br/>Vous réalisez seulement ce qui vient de se passer. Vous avez affronté et vaincu votre premier d3mon. Votre ancienne vie n'existe plus, désormais votre mission est celle d'un hack3r.<br/>La route sera longue. Trouverez-vous le Puppetmaster? Croiserez-vous la route de Mic, de Kat, de Gil ? Vous hésitez à prendre le chemin du repaire de Jen. Peut-on réellement s'en remettre à elle ? Voulait-elle vous éviter des états d'âme quand elle vous a dit de ne pas fouiller dans la tête de Zan, ou a t'elle des choses à cacher ? Vous n'avez pas trop le choix pour le moment, mais vous vous jurez de tirer un jour cette histoire au clair...",
+      "music": "",
+      "sound": "/d3mons/OttoHalmn-OttosCreativeCommonsTracks-01AirshipThunderchild.mp3",
+      "picture": "/d3mons/chernobyl-3711309_1280.jpg",
+      "achievement": "goldenending"
+    }
+ ],
+  "Stuff": [
+    {
+      "key": "fatigue",
+      "name": "Fatigué",
+      "description": "Vous êtes au bord de l'épuisement. Il va falloir prendre le temps de souffler."
+    },
+    {
+      "key": "blessure",
+      "name": "Blessé",
+      "description": "Votre poignet vous fait horriblement mal. Il est peut-être cassé."
+    },
+    {
+      "key": "panse",
+      "name": "Pansé",
+      "description": "Jen a pansé votre poignet blessé. La douleur est plus supportable."
+    },
+    {
+      "key": "ibrain",
+      "name": "I-brain",
+      "description": "Une puce directement reliée à votre cerveau. Déconnectée du réseau."
+    },
+    {
+      "key": "nmap",
+      "name": "Nmap",
+      "description": "Un scanneur de ports. Fonctionne avec un i-brain. Permets de découvrir des points d'entrée."
+    }
+  ],
+  "Achievements": [
+    {
+      "trophy": "bronze",
+      "key": "badending-fr",
+      "name": "Re-connecté",
+      "description": "L'homme au masque à gaz vous a rendu au Puppetmaster"
+    },
+    {
+      "trophy": "silver",
+      "key": "goodending-fr",
+      "name": "Ao-1 D3mons-0",
+      "description": "Vous avez accompli votre première mission de hack3r"
+    },
+    {
+      "trophy": "gold",
+      "key": "goldenending-fr",
+      "name": "Qui est Jen?",
+      "description": "Jen vous cache quelque-chose, vous le savez..."
+    }
+  ]
+}
