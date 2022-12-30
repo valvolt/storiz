@@ -1,5 +1,6 @@
 {
   "Name": "Tutorial",
+  "Description": "How to write your own story.",
   "Credits": "<p>Original story: C&eacute;dric Hebert</p><p>Title:  Calling Out<br/>Author: AERØHEAD<br/>Source: https://www.youtube.com/channel/UCoZbM1a4PKQ6haa2Ap4TSdg<br/>Licence: https://creativecommons.org/licenses/by-sa/3.0/deed.fr<br/>Download (7MB): https://auboutdufil.com/?id=546</p><p>Video: https://www.pexels.com/video/drone-footage-of-the-thick-fog-on-a-mountain-forest-2711145/</p><p>photos https://pixabay.com/fr/users/thuyhabich-6663646/</p>",
   "Tiles": [
     {
@@ -436,7 +437,7 @@
     {
       "id": "7",
       "title": "Storiz: miscellaneous",
-      "text": "Use these elements to polish your story.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "text": "Use these elements to polish your story.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Description\": \"A few lines about the story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "/tutorial/7.jpg",
       "choices": [
         {
@@ -646,7 +647,19 @@
     {
       "id": "name",
       "title": "Storiz: Name",
-      "text": "The \"Name\" of your story will appear in the story menu, along with the description set in the stories.json file.<br/><br/><pre>{<br/>  <b>\"Name\": \"My Story\",</b><br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "text": "The \"Name\" of your story will appear in the story menu, along with its description.<br/><br/><pre>{<br/>  <b>\"Name\": \"My Story\",</b><br/>  \"Description\": \"A few lines about the story\",<br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "picture": "/tutorial/7.jpg",
+      "choices": [
+        {
+          "text": "Next: Description",
+          "to_tile": "description"
+        }
+      ]
+    },
+    {
+      "id": "description",
+      "title": "Storiz: Description",
+      "text": "The \"Description\" of your story will appear in the story menu, along with the story name.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Description\": \"A few lines about the story\",</b><br/>  \"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",<br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "/tutorial/7.jpg",
       "choices": [
         {
@@ -658,7 +671,7 @@
     {
       "id": "credits",
       "title": "Storiz: Credits",
-      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show Credits\" link below to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
+      "text": "The \"Credits\" can contain text as well as HTML tags, like for any \"text\" element. Its purpose is to say something about the story, for example who is its inventor. It is also a good way to credit the people whose pictures, movies and sounds you borrowed for creating your story. Some artists are ok to let you use their work and only ask to be credited in exchange, so please play by their rules.<br/><br/>Click the \"Show Credits\" link below to see the sources used for this tutorial.<br/><br/><pre>{<br/>  \"Name\": \"My Story\",<br/>  \"Description\": \"A few lines about the story\",<br/>  <b>\"Credits\": \"Written by &lt;b&gt;myself&lt;/b&gt;\",</b><br/>  \"Tiles\": [<br/>  ],<br/>  \"Stuff\": [<br/>  ],<br/>  \"Achievements\": [<br/>  ]<br/>}</pre>",
       "picture": "/tutorial/7.jpg",
       "choices": [
         {

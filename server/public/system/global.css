@@ -133,3 +133,100 @@ footer {
   text-align: right;
 }
 
+.hex-container {
+  float: left;
+  width: 110px; 
+  height: 110px;
+}
+
+.hexagon {
+  position: relative;
+  width: 100px; 
+  height: 57.74px;
+  background-color: #333333;
+  color: white;
+  margin: 28.87px 0;
+  font-size: 8px;
+}
+
+.hexagon:before,
+.hexagon:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+}
+
+.hexagon:before {
+  bottom: 100%;
+  border-bottom: 28.87px solid #333333;
+}
+
+.hexagon:after {
+  top: 100%;
+  width: 0;
+  border-top: 28.87px solid #333333;
+}
+
+.hex7 {
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+.hex3 {
+  position:absolute;
+  top: 0px;
+  left: 110px;
+}
+.hex5 {
+  position:absolute;
+  top: 0px;
+  left: 220px;
+}
+.hex10 {
+  position:absolute;
+  top: 0px;
+  left: 330px;
+}
+.hex1 {
+  position:absolute;
+  top: 110px;
+  left: 55px;
+}
+.hex2 {
+  position:absolute;
+  top: 110px;
+  left: 165px;
+}
+.hex9 {
+  position:absolute;
+  top: 110px;
+  left: 275px;
+}
+.hex12 {
+  position:absolute;
+  top: 110px;
+  left: 385px;
+}
+.hex8 {
+  position:absolute;
+  top: 220px;
+  left: 0px;
+}
+.hex4 {
+  position:absolute;
+  top: 220px;
+  left: 110px;
+}
+.hex6 {
+  position:absolute;
+  top: 220px;
+  left: 220px;
+}
+.hex11 {
+  position:absolute;
+  top: 220px;
+  left: 330px;
+}
+

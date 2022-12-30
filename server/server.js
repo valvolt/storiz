@@ -249,11 +249,21 @@ app.post('/rename', function (req, res) {
 // Returns the list of available stories
 app.get('/stories', function (req, res) {
   var list = "";
+
+  const pagelist1 = `
+  <div class="hex-container">
+  `
+  const pagelist2 = `
+    </div>
+  `
+  
+  var i = 0
   for (let story of stories) {
-    list += "<a href='/story/"+story.Name+"'>"+story.Name+"</a>";
+    i = i + 1;
+    list += "<div class=\"hexagon hex"+i+"\"><a href=\"/story/"+story.Name+"\">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+"</p></div>"
   }
   res.setHeader("Content-Type", "text/html");
-  res.send(list);
+  res.send(homepage1+pagelist1+list+pagelist2+homepage2);
 })
 
 // Loads story for player
@@ -741,7 +751,7 @@ debug = tile;
             }
             
             // ending
-            if (tile.choices.length === 0 && tile.map == undefined) {
+            if ((tile.choices == undefined && tile.map == undefined) || (tile.choices.length === 0 && tile.map == undefined)) {
               // no choice offered to the player, we add default restart options
               document.getElementById("choices").innerHTML = "";
               // restart story
@@ -998,8 +1008,7 @@ const profilepage2 = `</div>
             let achievements = stories[i].Achievements;
             for (let j = 0; j < achievements.length; j++) {
               if (achievements[j].key === achievementKey) {
-console.log(achievements[j].trophy)              
-                achievementTable = achievementTable + "<tr><td><img src=\"/system/"+achievements[j].trophy+".png\"></td><td>"+achievements[j].name+"</td><td>"+achievements[j].description+"</td></tr>";
+                achievementTable = achievementTable + "<tr><td><img src=\"/system/"+achievements[j].trophy+".png\" title=\""+achievements[j].trophy+"\"></td><td>"+achievements[j].name+"</td><td>"+achievements[j].description+"</td></tr>";
               }
             }
           }
@@ -1515,6 +1524,8 @@ async function loadStory(filename) {
     const filedata = await fsp.readFile(privateDir+filename,'utf8');
     // we store the content as a json object inside the global stories object
     const story = JSON.parse(filedata)
+    // count and push number of tiles
+    story.NbTiles = story.Tiles.length;
     stories.push(story)
   }
 }
