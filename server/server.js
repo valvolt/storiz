@@ -78,6 +78,16 @@ app.get('/', function (req, res) {
       button:active {
         background-color: #999999;
       }
+      
+      #logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #logo img {
+        width: 20%;
+      }
     </style>
     
     <script>
@@ -89,6 +99,10 @@ app.get('/', function (req, res) {
         window.location.href = '/resume';
       }
     </script>
+
+    <div id="logo">
+      <img src="/system/logo-black.svg"></img>
+    </div>
 
     <div id="newgame" class="buttons">
       <button id="new-game-button" onclick="newGameOp()">New Game</button>
@@ -1365,7 +1379,9 @@ app.get('/unlock/:name/:code', function (req, res) {
 
 
 // Main server
-var server = app.listen(8000, async function () {
+const port = process.env.PORT || 8000;
+
+var server = app.listen(port, async function () {
   var host = server.address().address
   var port = server.address().port
 
