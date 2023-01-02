@@ -1,8 +1,8 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. This v2 version has been rebuilt from the ground up, in javascript.
 
-## Test it on Heroku
-TBD.
+## Test it on AWS
+http://ec2-13-37-105-39.eu-west-3.compute.amazonaws.com
 
 ## User interface
 You are first greeted with a 'New Game' / 'Continue' screen. By clicking 'New Game' a new user is created for you.
