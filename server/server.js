@@ -765,7 +765,7 @@ debug = tile;
             }
             
             // ending
-            if ((tile.choices == undefined && tile.map == undefined) || (tile.choices.length === 0 && tile.map == undefined)) {
+            if ((tile.choices == undefined && tile.map == undefined) || (Array.isArray(tile.stuff) && tile.choices.length === 0 && tile.map == undefined)) {
               // no choice offered to the player, we add default restart options
               document.getElementById("choices").innerHTML = "";
               // restart story
@@ -868,9 +868,6 @@ debug = tile;
             } else {
               document.getElementById("credits").style.display = "none";
             }
-            
-            // profile
-            document.getElementById("myprofile").style.display = "none";
           }
         };
 
@@ -1216,11 +1213,6 @@ app.get('/story/:name/:tileId', function (req, res) {
       currentStuff = currentStuff.filter(x => !usedItemArray.includes(x));
     }
 
-    // update player's stuff
-    newStory.stuff = currentStuff;
-    // store a description of the current player's stuff in the current tile
-    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key) && item.name !== undefined).map(item => ({ name: item.name, description: item.description }));
-
     // We return (one of) the tile(s) corresponding to element.to_tile
     let foundTiles = [];
     for (let tile of currentStory.Tiles) {
@@ -1238,6 +1230,11 @@ app.get('/story/:name/:tileId', function (req, res) {
       // If only one or no tiles were found, assign the first (or only) tile in the array to newStory.tile
       newStory.tile = foundTiles[0];
     }
+
+    // now that we have our return tile, update player's stuff
+    newStory.stuff = currentStuff;
+    // store a description of the current player's stuff in the current tile
+    newStory.tile.stuff = currentStory.Stuff.filter(item => currentStuff.includes(item.key) && item.name !== undefined).map(item => ({ name: item.name, description: item.description }));
 
     // Achievements
     var currentAchievements = newStory.achievements;
