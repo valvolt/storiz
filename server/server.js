@@ -1044,7 +1044,7 @@ const profilepage2 = `</div>
 
 // returns the content of the specified tile, for the specified story, for the currently logged-in user
 app.get('/story/:name/:tileId', function (req, res) {
-
+  
   // Get player
   var username = "";
   if(req.cookies.SESSION != undefined) {
@@ -1056,6 +1056,10 @@ app.get('/story/:name/:tileId', function (req, res) {
     return;
   }
 
+  console.log(username);
+  console.log(players);
+
+  
   // Does the player exist?
   var currentPlayer = undefined
   for (let player of players) {
