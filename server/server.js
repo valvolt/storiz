@@ -10,7 +10,7 @@ var fsp = require('fs').promises;
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(express.static('public'));
+app.use(express.static('server/public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('etag', false);
 
@@ -31,8 +31,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-const publicDir = './public/';
-const privateDir = './private/';
+const publicDir = './server/public/';
+const privateDir = './server/private/';
 var stories = []
 var players = []
 
