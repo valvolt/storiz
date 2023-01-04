@@ -299,6 +299,9 @@ app.get('/story/:name', function (req, res) {
     return;
   }
 
+  console.log("PULLING (/story/:name)");
+  console.log(players);
+  
   // Does the player exist?
   var currentPlayer = undefined
   for (let player of players) {
@@ -1060,9 +1063,8 @@ app.get('/story/:name/:tileId', function (req, res) {
   }
 
   console.log(username);
-  console.log("PULLING PLAYERS");
+  console.log("PULLING (/story/:name/:tileId)");
   console.log(players);
-
   
   // Does the player exist?
   var currentPlayer = undefined
