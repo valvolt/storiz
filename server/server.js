@@ -4,6 +4,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 const uuid = require('uuid');
+const storage = require('node-persist');
 
 var app = express();
 var fsp = require('fs').promises;
@@ -50,7 +51,7 @@ const homepage1 = `
 const homepage2 = "</body></html>"
 
 // Main page
-app.get('/', function (req, res) {
+app.get('/', async function (req, res) {
 
   const welcome = `
     <style>
@@ -116,7 +117,7 @@ app.get('/', function (req, res) {
   res.send(homepage1+welcome+homepage2);
 })
 
-app.get('/resume', function (req, res) {
+app.get('/resume', async function (req, res) {
 
   const resumeForm = `
     <style>
@@ -183,17 +184,7 @@ button[type="submit"] {
 
 })
 
-
-// Register new user
-app.get('/registerXYZ', function (req, res) {
-
-  const registerpage = "<html><head></head><body><h1>Storiz</h1><form method='POST' action='/register'><input name='username'/><button type='submit'>Register</button></form></body></html>"
-
-  res.setHeader("Content-Type", "text/html");
-  res.send(registerpage);
-})
-
-app.get('/newgame', function (req, res) {
+app.get('/newgame', async function (req, res) {
   // create user (autologin)
   userid = uuid.v4();
   var player = {};
@@ -201,9 +192,7 @@ app.get('/newgame', function (req, res) {
   player.screenname = "Anonymous";
   player.stories = [];
   players.push(player);
-
-  console.log("PUSHING PLAYER");
-  console.log(players);
+  await storage.setItem('players',players);
   
   // auto log user in
   res.cookie('SESSION', userid, { httpOnly: true });
@@ -214,7 +203,10 @@ app.get('/newgame', function (req, res) {
 
 
 // Logs user returning in
-app.post('/resume', function (req, res) {
+app.post('/resume', async function (req, res) {
+
+  players = await storage.getItem('players');
+
   // Does the user exist?
   for (let player of players) {
     if(player.username == req.body.username) {
@@ -231,7 +223,10 @@ app.post('/resume', function (req, res) {
 
 
 // Updates screen name
-app.post('/rename', function (req, res) {
+app.post('/rename', async function (req, res) {
+
+  players = await storage.getItem('players');
+
   // Get player
   var username = "";
   if(req.cookies.SESSION != undefined) {
@@ -249,6 +244,12 @@ app.post('/rename', function (req, res) {
     if(player.username == username) {
       // save new screenname
       player.screenname = req.body.screenname;
+      // persist player
+      // remove existing version
+      players = players.filter(aplayer => aplayer.username !== player.username);
+      // add new instance
+      players.push(player);
+      await storage.setItem('players',players);
       res.setHeader("Content-Type", "application/json");
       res.send({"ok":"Screen name updated"});
       return;
@@ -264,7 +265,7 @@ app.post('/rename', function (req, res) {
 
 
 // Returns the list of available stories
-app.get('/stories', function (req, res) {
+app.get('/stories', async function (req, res) {
   var list = "";
 
   const pagelist1 = `
@@ -275,6 +276,8 @@ app.get('/stories', function (req, res) {
   `
   
   var i = 0
+  stories = await storage.getItem('stories');
+  players = await storage.getItem('players');
   for (let story of stories) {
     i = i + 1;
     list += "<div class=\"hexagon hex"+i+"\"><a href=\"/story/"+story.Name+"\">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+"</p></div>"
@@ -286,7 +289,10 @@ app.get('/stories', function (req, res) {
 // Loads story for player
 //
 // Loads the main page canvas, then fetches the user's current Tile content for the current story
-app.get('/story/:name', function (req, res) {
+app.get('/story/:name', async function (req, res) {
+
+  stories = await storage.getItem('stories');
+  players = await storage.getItem('players');
 
   // Get player
   var username = "";
@@ -299,9 +305,6 @@ app.get('/story/:name', function (req, res) {
     return;
   }
 
-  console.log("PULLING (/story/:name)");
-  console.log(players);
-  
   // Does the player exist?
   var currentPlayer = undefined
   for (let player of players) {
@@ -934,6 +937,8 @@ var debug = ""
 </html>
 `
   
+  await storage.setItem('players',players);
+
   res.setHeader("Content-Type", "text/html");
   res.send(canvas);
 })
@@ -941,7 +946,11 @@ var debug = ""
 
 
 // displays user profile
-app.get('/myprofile', function (req, res) {
+app.get('/myprofile', async function (req, res) {
+
+  stories = await storage.getItem('stories');
+  players = await storage.getItem('players');
+
 
 const profilepage1 = `
      <style>
@@ -1049,8 +1058,11 @@ const profilepage2 = `</div>
 
 
 // returns the content of the specified tile, for the specified story, for the currently logged-in user
-app.get('/story/:name/:tileId', function (req, res) {
-  
+app.get('/story/:name/:tileId', async function (req, res) {
+
+  stories = await storage.getItem('stories');
+  players = await storage.getItem('players');
+
   // Get player
   var username = "";
   if(req.cookies.SESSION != undefined) {
@@ -1062,10 +1074,6 @@ app.get('/story/:name/:tileId', function (req, res) {
     return;
   }
 
-  console.log(username);
-  console.log("PULLING (/story/:name/:tileId)");
-  console.log(players);
-  
   // Does the player exist?
   var currentPlayer = undefined
   for (let player of players) {
@@ -1147,6 +1155,8 @@ app.get('/story/:name/:tileId', function (req, res) {
     currentPlayer.stories.push(scramble(newStory, "1"));
     // store updated player in players
     players.push(currentPlayer);
+
+    await storage.setItem('players',players);
 
     // tile 1 is loaded for player, return it
     var newTile = newStory.tile;
@@ -1292,6 +1302,7 @@ app.get('/story/:name/:tileId', function (req, res) {
 
     // store updated player in players
     players.push(currentPlayer);
+    await storage.setItem('players',players);
 
     // requested tile is loaded for player, return it
     var newTile = newStory.tile;
@@ -1302,7 +1313,10 @@ app.get('/story/:name/:tileId', function (req, res) {
 })
 
 // add the item specified by the 'code' value to the user's stuff
-app.get('/unlock/:name/:code', function (req, res) {
+app.get('/unlock/:name/:code', async function (req, res) {
+
+  stories = await storage.getItem('stories');
+  players = await storage.getItem('players');
 
   // Get player
   var username = "";
@@ -1368,6 +1382,20 @@ app.get('/unlock/:name/:code', function (req, res) {
       // add item key to player's stuff (without duplicates)
       const key = entry.key;
       newStory.stuff = [...new Set(newStory.stuff.concat(key))]
+      // persist
+      
+      // we keep only the current tile of the current story in memory
+      // meaning we remove stories which name is the current story name
+
+      const filteredArray = currentPlayer.stories.filter(element => element.name !== newStory.name);
+      // add new tile for story
+      filteredArray.push(newStory);
+      // update player data
+      currentPlayer.stories = filteredArray;
+
+      // store updated player in players
+      players.push(currentPlayer);
+      await storage.setItem('players',players);
 
       // return item name and description
       const {name, description} = entry;
@@ -1392,8 +1420,12 @@ var server = app.listen(port, async function () {
   var host = server.address().address
   var port = server.address().port
 
-  await loadAllStories()
+  await storage.init()
+  await storage.setItem('stories',[]);
+  await storage.setItem('players',[]);
 
+  await loadAllStories()
+  
   console.log("Storiz2 server listening at http://%s:%s", host, port)
 })
 
@@ -1541,6 +1573,8 @@ async function loadAllStories() {
 }
 
 async function loadStory(filename) {
+
+  stories = await storage.getItem('stories');
   // we read only .json files
   if (filename.match(".*json")) {
     console.log("[*] "+filename);
@@ -1550,6 +1584,6 @@ async function loadStory(filename) {
     // count and push number of tiles
     story.NbTiles = story.Tiles.length;
     stories.push(story)
+    await storage.setItem('stories',stories);
   }
 }
-
