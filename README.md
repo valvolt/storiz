@@ -1,8 +1,8 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. This v2 version has been rebuilt from the ground up, in javascript.
 
-## Test it on AWS
-http://ec2-13-37-105-39.eu-west-3.compute.amazonaws.com
+## Test it on Cyclic (slow, but working)
+https://odd-gold-crayfish-hose.cyclic.app/stories
 
 ## User interface
 You are first greeted with a 'New Game' / 'Continue' screen. By clicking 'New Game' a new user is created for you.
@@ -53,6 +53,11 @@ Then on your browser, visit `http://localhost:8000`
 docker run -d -p 8000:8000 valvolt2/storiz:2.0
 ```
 Then on your browser, visit `http://localhost:8000`
+
+### On Cyclic (free hosting)
+Fork this repo
+
+Visit cyclic.sh and follow the steps
 
 ## Create your own stories
 You can add your own stories. For that, you will need to create and store your own .json file into the `server/private/` folder, and store your media files in a subdirectory of `server/public/`.
