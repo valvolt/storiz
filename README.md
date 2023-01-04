@@ -34,9 +34,9 @@ Your progress is saved automatically. Which makes cheating harder :-)
 ### From source
 ```
 git clone https://github.com/valvolt/storiz
-cd storiz/server
+cd storiz
 npm install
-node server.js
+node server/server.js
 ```
 Then on your browser, visit `http://localhost:8000`
 
