@@ -1,8 +1,8 @@
 FROM node:latest
 
 RUN git clone https://github.com/valvolt/storiz
-WORKDIR /storiz/server
+WORKDIR /storiz
 RUN npm install
 USER node
-ENTRYPOINT ["node","server.js"]
+ENTRYPOINT ["node","server/server.js"]
 
