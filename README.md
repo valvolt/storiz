@@ -57,6 +57,7 @@ Then on your browser, visit `http://localhost:8000`
 ### On Cyclic (free hosting)
   - Fork this repo
   - Visit cyclic.sh and follow the steps
+    - If you visit via https://app.cyclic.sh/#/join/valvolt we'll both get +1 app and 10 Credits
 
 ## Create your own stories
 You can add your own stories. For that, you will need to create and store your own .json file into the `server/private/` folder, and store your media files in a subdirectory of `server/public/`.
