@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 const uuid = require('uuid');
 const storage = require('node-persist');
 const AWS = require("aws-sdk");
-const s3 = ""
+var s3 = ""
 
 var app = express();
 var fsp = require('fs').promises;
