@@ -5,6 +5,8 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 const uuid = require('uuid');
 const storage = require('node-persist');
+const AWS = require("aws-sdk");
+const s3 = ""
 
 var app = express();
 var fsp = require('fs').promises;
@@ -1416,6 +1418,8 @@ async function initStorage() {
   if(cyclicStorage == undefined) {
     // persist using node-persist
       await storage.init()
+  } else {
+    s3 = new AWS.S3()
   }
 }
 
