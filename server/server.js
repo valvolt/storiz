@@ -1420,6 +1420,9 @@ var server = app.listen(port, async function () {
   var host = server.address().address
   var port = server.address().port
 
+  // are we running as a serverless server on Cyclic?
+  console.log(process.env.CYCLIC_BUCKET_NAME);
+  
   await storage.init()
   await storage.setItem('stories',[]);
   await storage.setItem('players',[]);
