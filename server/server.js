@@ -201,6 +201,9 @@ app.get('/newgame', function (req, res) {
   player.screenname = "Anonymous";
   player.stories = [];
   players.push(player);
+
+  console.log("PUSHING PLAYER");
+  console.log(players);
   
   // auto log user in
   res.cookie('SESSION', userid, { httpOnly: true });
@@ -1057,6 +1060,7 @@ app.get('/story/:name/:tileId', function (req, res) {
   }
 
   console.log(username);
+  console.log("PULLING PLAYERS");
   console.log(players);
 
   
