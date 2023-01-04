@@ -1430,10 +1430,8 @@ async function persist(where, what) {
     await storage.setItem(where,what);
   } else {
     // persist using S3 bucket
-    console.log(what);
-    console.log(where+"/data.json")
     await s3.putObject({
-                Body: what,
+                Body: JSON.stringify(what),
                 Bucket: cyclicStorage,
                 Key: where+"/data.json",
             }).promise();
@@ -1452,7 +1450,7 @@ async function retrieve(where) {
                 Bucket: cyclicStorage,
                 Key: where+"/data.json",
             }).promise();
-    return my_data;
+    return JSON.parse(my_data.Body);
   }
 }
 
