@@ -192,7 +192,7 @@ app.get('/newgame', async function (req, res) {
   player.screenname = "Anonymous";
   player.stories = [];
   players.push(player);
-  await storage.setItem('players',players);
+  await persist('players', players);
   
   // auto log user in
   res.cookie('SESSION', userid, { httpOnly: true });
@@ -205,7 +205,7 @@ app.get('/newgame', async function (req, res) {
 // Logs user returning in
 app.post('/resume', async function (req, res) {
 
-  players = await storage.getItem('players');
+  players = await retrieve('players');
 
   // Does the user exist?
   for (let player of players) {
@@ -225,7 +225,7 @@ app.post('/resume', async function (req, res) {
 // Updates screen name
 app.post('/rename', async function (req, res) {
 
-  players = await storage.getItem('players');
+  players = await retrieve('players');
 
   // Get player
   var username = "";
@@ -249,7 +249,7 @@ app.post('/rename', async function (req, res) {
       players = players.filter(aplayer => aplayer.username !== player.username);
       // add new instance
       players.push(player);
-      await storage.setItem('players',players);
+      await persist('players', players);
       res.setHeader("Content-Type", "application/json");
       res.send({"ok":"Screen name updated"});
       return;
@@ -276,8 +276,8 @@ app.get('/stories', async function (req, res) {
   `
   
   var i = 0
-  stories = await storage.getItem('stories');
-  players = await storage.getItem('players');
+  stories = await retrieve('stories');
+  players = await retrieve('players');
   for (let story of stories) {
     i = i + 1;
     list += "<div class=\"hexagon hex"+i+"\"><a href=\"/story/"+story.Name+"\">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+"</p></div>"
@@ -291,8 +291,8 @@ app.get('/stories', async function (req, res) {
 // Loads the main page canvas, then fetches the user's current Tile content for the current story
 app.get('/story/:name', async function (req, res) {
 
-  stories = await storage.getItem('stories');
-  players = await storage.getItem('players');
+  stories = await retrieve('stories');
+  players = await retrieve('players');
 
   // Get player
   var username = "";
@@ -936,8 +936,7 @@ var debug = ""
   </body>
 </html>
 `
-  
-  await storage.setItem('players',players);
+  await persist('players', players);
 
   res.setHeader("Content-Type", "text/html");
   res.send(canvas);
@@ -948,8 +947,8 @@ var debug = ""
 // displays user profile
 app.get('/myprofile', async function (req, res) {
 
-  stories = await storage.getItem('stories');
-  players = await storage.getItem('players');
+  stories = await retrieve('stories');
+  players = await retrieve('players');
 
 
 const profilepage1 = `
@@ -1060,8 +1059,8 @@ const profilepage2 = `</div>
 // returns the content of the specified tile, for the specified story, for the currently logged-in user
 app.get('/story/:name/:tileId', async function (req, res) {
 
-  stories = await storage.getItem('stories');
-  players = await storage.getItem('players');
+  stories = await retrieve('stories');
+  players = await retrieve('players');
 
   // Get player
   var username = "";
@@ -1156,7 +1155,7 @@ app.get('/story/:name/:tileId', async function (req, res) {
     // store updated player in players
     players.push(currentPlayer);
 
-    await storage.setItem('players',players);
+    await persist('players', players);
 
     // tile 1 is loaded for player, return it
     var newTile = newStory.tile;
@@ -1302,7 +1301,7 @@ app.get('/story/:name/:tileId', async function (req, res) {
 
     // store updated player in players
     players.push(currentPlayer);
-    await storage.setItem('players',players);
+    await persist('players', players);
 
     // requested tile is loaded for player, return it
     var newTile = newStory.tile;
@@ -1315,8 +1314,8 @@ app.get('/story/:name/:tileId', async function (req, res) {
 // add the item specified by the 'code' value to the user's stuff
 app.get('/unlock/:name/:code', async function (req, res) {
 
-  stories = await storage.getItem('stories');
-  players = await storage.getItem('players');
+  stories = await retrieve('stories');
+  players = await retrieve('players');
 
   // Get player
   var username = "";
@@ -1395,7 +1394,7 @@ app.get('/unlock/:name/:code', async function (req, res) {
 
       // store updated player in players
       players.push(currentPlayer);
-      await storage.setItem('players',players);
+      await persist('players', players);
 
       // return item name and description
       const {name, description} = entry;
@@ -1412,6 +1411,44 @@ app.get('/unlock/:name/:code', async function (req, res) {
   }
 })
 
+async function initStorage() {
+  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
+  if(cyclicStorage == undefined) {
+    // persist using node-persist
+      await storage.init()
+  }
+}
+
+async function persist(where, what) {
+  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
+  if(cyclicStorage == undefined) {
+    // persist using node-persist
+    await storage.setItem(where,what);
+  } else {
+    // persist using S3 bucket
+    await s3.putObject({
+                Body: what,
+                Bucket: cyclicStorage,
+                Key: where+"/data.json",
+            }).promise();
+  }
+}
+
+async function retrieve(where) {
+  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
+  if(cyclicStorage == undefined) {
+    // retrieve using node-persist
+    let my_data = await storage.getItem(where);
+    return my_data;
+  } else {
+    // retrieve from S3 bucket
+    let my_data = await s3.getObject({
+                Bucket: cyclicStorage,
+                Key: where+"/data.json",
+            }).promise();
+    return my_data;
+  }
+}
 
 // Main server
 const port = process.env.PORT || 8000;
@@ -1420,13 +1457,10 @@ var server = app.listen(port, async function () {
   var host = server.address().address
   var port = server.address().port
 
-  // are we running as a serverless server on Cyclic?
-  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
-  console.log(process.env.DOES_NOT_EXIST);
+  await initStorage();
   
-  await storage.init()
-  await storage.setItem('stories',[]);
-  await storage.setItem('players',[]);
+  await persist('stories', []);
+  await persist('players', []);
 
   await loadAllStories()
   
@@ -1578,7 +1612,7 @@ async function loadAllStories() {
 
 async function loadStory(filename) {
 
-  stories = await storage.getItem('stories');
+  stories = await retrieve('stories');
   // we read only .json files
   if (filename.match(".*json")) {
     console.log("[*] "+filename);
@@ -1588,6 +1622,6 @@ async function loadStory(filename) {
     // count and push number of tiles
     story.NbTiles = story.Tiles.length;
     stories.push(story)
-    await storage.setItem('stories',stories);
+    await persist('stories', stories);
   }
 }
