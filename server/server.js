@@ -1294,15 +1294,16 @@ app.get('/story/:name/:tileId', async function (req, res) {
     // we keep only the current tile of the current story in memory
     // meaning we remove stories which name is the current story name
 
-    const filteredArray = currentPlayer.stories.filter(element => element.name !== newStory.name);
+    filteredArray = currentPlayer.stories.filter(element => element.name !== newStory.name);
     // add new tile for story
     filteredArray.push(newStory);
     // update player data
     currentPlayer.stories = filteredArray;
 
     // store updated player in players
-    players.push(currentPlayer);
-    await persist('players', players);
+    filteredArray = players.filter(element => element.username !== currentPlayer.username);
+    filteredArray.push(currentPlayer);
+    await persist('players', filteredArray);
 
     // requested tile is loaded for player, return it
     var newTile = newStory.tile;
