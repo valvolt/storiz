@@ -1,0 +1,1 @@
+This folder is used to store the server's memory. Its content will be used to restore the server's content after a restart.

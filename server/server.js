@@ -4,7 +4,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 const uuid = require('uuid');
-const storage = require('node-persist');
+const fs = require('fs').promises;
 const AWS = require("aws-sdk");
 var s3 = ""
 
@@ -1415,19 +1415,23 @@ app.get('/unlock/:name/:code', async function (req, res) {
 
 async function initStorage() {
   var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
-  if(cyclicStorage == undefined) {
-    // persist using node-persist
-      await storage.init()
-  } else {
+  if(cyclicStorage != undefined) {
     s3 = new AWS.S3()
   }
 }
 
+// persist JSON objects on the filesystem
 async function persist(where, what) {
   var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
   if(cyclicStorage == undefined) {
-    // persist using node-persist
-    await storage.setItem(where,what);
+    // persist on the filesystem
+    filePath = "./persistence/"+where
+    jsonString = JSON.stringify(what, null, 2);
+    try {
+      await fs.writeFile(filePath, jsonString);
+    } catch (error) {
+      console.error(`Error storing content in ${filePath}: ${error.message}`);
+    }
   } else {
     // persist using S3 bucket
     await s3.putObject({
@@ -1438,19 +1442,25 @@ async function persist(where, what) {
   }
 }
 
+// retrieve JSON objects from the filesystem
 async function retrieve(where) {
   var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
   if(cyclicStorage == undefined) {
-    // retrieve using node-persist
-    let my_data = await storage.getItem(where);
-    return my_data;
+    // retrieve from the filesystem
+    filePath = "./persistence/"+where
+    try {
+      const jsonString = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error(`Error reading content from ${filePath}: ${error.message}`);
+    }
   } else {
     // retrieve from S3 bucket
-    let my_data = await s3.getObject({
+    let what = await s3.getObject({
                 Bucket: cyclicStorage,
                 Key: where+"/data.json",
             }).promise();
-    return JSON.parse(my_data.Body);
+    return JSON.parse(what.Body);
   }
 }
 
