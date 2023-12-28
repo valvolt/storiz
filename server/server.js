@@ -5,8 +5,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 const uuid = require('uuid');
 const fs = require('fs').promises;
-const AWS = require("aws-sdk");
-var s3 = ""
+const { Console } = require('console');
 
 var app = express();
 var fsp = require('fs').promises;
@@ -1414,53 +1413,83 @@ app.get('/unlock/:name/:code', async function (req, res) {
 })
 
 async function initStorage() {
-  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
-  if(cyclicStorage != undefined) {
-    s3 = new AWS.S3()
+  // if we already have persisted stories, reload them from memory
+  needUpdate = false
+  // first: do we have a stories file persisted?
+  fileExists = await checkFileExists('stories')
+  if(fileExists) {
+    // we have a stories file, but is it empty?
+    needUpdate = await isFileEmpty('stories')
+  } else {
+    needUpdate = true
+  }
+  // if needUpdate is true, it means that we have to initialize stories.
+  if(needUpdate) {
+    await persist('stories', []);
+    await loadAllStories()
+  }
+
+  // if we already have persisted players, reload them from memory
+  needUpdate = false
+  // first: do we have a players file persisted?
+  fileExists = await checkFileExists('players')
+  if(fileExists) {
+    // we have a players file, but is it empty?
+    needUpdate = await isFileEmpty('players')
+  } else {
+    needUpdate = true
+  }
+  // if needUpdate is true, it means that we have to initialize players.
+  if(needUpdate) {
+    await persist('players', []);
+  }
+}
+
+// returns a promise which resolves true if file exists:
+async function checkFileExists(where) {
+  filePath = "./persistence/"+where
+  try {
+    await fs.readFile(filePath, 'utf-8');
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+// returns true if the file does not exist or is empty.
+// creates an empty file if the file does not exist
+async function isFileEmpty(where) {
+  filePath = "./persistence/"+where
+  try {
+    const stats = await fs.stat(filePath);
+    return stats.size === 0;
+  } catch (error) {
+    console.error(`Error checking file size: ${error.message}`);
+    return true
   }
 }
 
 // persist JSON objects on the filesystem
 async function persist(where, what) {
-  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
-  if(cyclicStorage == undefined) {
-    // persist on the filesystem
-    filePath = "./persistence/"+where
-    jsonString = JSON.stringify(what, null, 2);
-    try {
-      await fs.writeFile(filePath, jsonString);
-    } catch (error) {
-      console.error(`Error storing content in ${filePath}: ${error.message}`);
-    }
-  } else {
-    // persist using S3 bucket
-    await s3.putObject({
-                Body: JSON.stringify(what),
-                Bucket: cyclicStorage,
-                Key: where+"/data.json",
-            }).promise();
+  // persist on the filesystem
+  filePath = "./persistence/"+where
+  jsonString = JSON.stringify(what, null, 2);
+  try {
+    await fs.writeFile(filePath, jsonString);
+  } catch (error) {
+    console.error(`Error storing content in ${filePath}: ${error.message}`);
   }
 }
 
 // retrieve JSON objects from the filesystem
 async function retrieve(where) {
-  var cyclicStorage = process.env.CYCLIC_BUCKET_NAME;
-  if(cyclicStorage == undefined) {
-    // retrieve from the filesystem
-    filePath = "./persistence/"+where
-    try {
-      const jsonString = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Error reading content from ${filePath}: ${error.message}`);
-    }
-  } else {
-    // retrieve from S3 bucket
-    let what = await s3.getObject({
-                Bucket: cyclicStorage,
-                Key: where+"/data.json",
-            }).promise();
-    return JSON.parse(what.Body);
+  // retrieve from the filesystem
+  filePath = "./persistence/"+where
+  try {
+    const jsonString = await fs.readFile(filePath, 'utf-8');
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error(`Error reading content from ${filePath}: ${error.message}`);
   }
 }
 
@@ -1472,11 +1501,6 @@ var server = app.listen(port, async function () {
   var port = server.address().port
 
   await initStorage();
-  
-  await persist('stories', []);
-  await persist('players', []);
-
-  await loadAllStories()
   
   console.log("Storiz2 server listening at http://%s:%s", host, port)
 })
