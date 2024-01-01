@@ -2,6 +2,7 @@
   "Name": "Tutorial",
   "Description": "How to write your own story.",
   "Credits": "<p>Original story: C&eacute;dric Hebert</p><p>Title:  Calling Out<br/>Author: AERØHEAD<br/>Source: https://www.youtube.com/channel/UCoZbM1a4PKQ6haa2Ap4TSdg<br/>Licence: https://creativecommons.org/licenses/by-sa/3.0/deed.fr<br/>Download (7MB): https://auboutdufil.com/?id=546</p><p>Video: https://www.pexels.com/video/drone-footage-of-the-thick-fog-on-a-mountain-forest-2711145/</p><p>photos https://pixabay.com/fr/users/thuyhabich-6663646/</p>",
+  "AuthorId": "DEFAULT",
   "Tiles": [
     {
       "id": "1",

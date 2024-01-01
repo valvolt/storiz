@@ -42,13 +42,52 @@ video {
 #content {
   padding: 10px;
   position: absolute;
-  top: 0;
+  top: 50px;
   bottom: 0;
-  left:  calc(5%);
+  left:  calc(25%);
   right: 0;
-  width: calc(100% - 10%);
+  width: calc(100% - 30%);
   z-index: -1;
   overflow: scroll;
+}
+
+#path {
+  padding: 10px;
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left:  calc(2%);
+  right: 0;
+  width: calc(20%);
+  z-index: -1;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.square {
+  width: 120px;
+  height: 80px;
+  margin: 5px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: blue;
+}
+
+.new-square {
+  background-color: red;
+  margin-left: 30px;
+}
+
+.valid-square {
+  background-color: green;
+  margin-left: 30px;
+}
+
+.thick-border {
+  border: 5px solid black;
 }
 
 #stuff {
@@ -233,4 +272,34 @@ footer {
 
 .my {
   background-color: darkorchid;
+}
+
+#editBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 10px;
+  z-index: 1;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allow vertical resizing of the textarea */
 }
