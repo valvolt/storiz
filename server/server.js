@@ -9,6 +9,7 @@ const { Console } = require('console');
 
 var app = express();
 var fsp = require('fs').promises;
+const multer = require('multer');
 
 app.use(express.json())
 app.use(cookieParser())
@@ -580,6 +581,39 @@ app.get('/mystory/meta/:name', async function (req, res) {
 
   res.setHeader("Content-Type", "text/html");
   res.send(headersEdit+buildEditBanner(currentStory.Name,"meta")+storyMetaForm+close);
+});
+
+
+// Set up multer storage to define where to store uploaded files
+const storage = multer.diskStorage({
+  destination: async function (req, file, cb) {
+    const folderName = req.params.name;
+    const uploadPath = __dirname + '/public/' + folderName;
+
+    // Check if the folder exists, create it if not
+    try {
+      await fs.access(uploadPath);
+    } catch (err) {
+      await fs.mkdir(uploadPath);
+    }
+
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    // Keep the original filename
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Handle POST request for /mystory/upload/:name
+app.post('/mystory/upload/:name', upload.single('image'), async function (req, res) {
+
+  // TODO: check that user exists etc. etc.
+  // TODO: when story is renamed, rename folder as well (and send an error if the folder / story name already exists)
+
+  res.status(200).json({ message: 'File uploaded successfully' });
 });
 
 
@@ -1474,45 +1508,46 @@ debug = tile;
               text: textInput.value
             };
 
-            // Add image data to formData
-            const image = document.getElementById('imgPreview');
-
-            // Create a new canvas element
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-    
-            // Set canvas dimensions to match the image
-            canvas.width = image.width;
-            canvas.height = image.height;
-    
-            // Draw the image onto the canvas
-            context.drawImage(image, 0, 0);
-    
-            // Get base64 representation of the image
-            const base64src = canvas.toDataURL('image/png');
-
-            formData.picture = base64src;
-
-console.log(base64src);
+            const file = imgInput.files[0];
+            if(file) {
+              formData.picture = "/${currentStory.Name}/"+file.name;
+            }
 
             // Display form data in JSON format in the console
             console.log(JSON.stringify(formData));
-        
-            // Send changes to the server:
-             fetch(window.location.href, {
-               method: 'POST',
-               headers: {
-                 'Content-Type': 'application/json',
-               },
-               body: JSON.stringify(formData),
-             })
-             .then(response => response.json())
-             .then(data => console.log(data))
-             .catch(error => console.error('Error:', error));
-          });
-        });
 
-        
+        // Send changes to the server
+        fetch(window.location.href, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+    
+            // Now, upload the image separately to /upload
+            if (file) {
+              const formDataImage = new FormData();
+              formDataImage.append('image', file);
+    
+              fetch(window.location.href.replace('/tiles/', '/upload/'), {
+                method: 'POST',
+                body: formDataImage,
+              })
+                .then(response => response.json())
+                .then(dataImage => console.log('Image uploaded:', dataImage))
+                .catch(error => console.error('Error uploading image:', error));
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+
+
+
 
 
 
