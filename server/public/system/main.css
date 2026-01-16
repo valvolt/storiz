@@ -223,7 +223,7 @@ ul {
 
 .info {
   position: fixed;
-  z-index: 1;
+  /* z-index: 1; */
   top: 5%;
   left: 5%;
   right: 5%;

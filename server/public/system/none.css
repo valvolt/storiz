@@ -1,5 +1,11 @@
 body {
   background-image: url('/system/blur.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
 }
 
 html, body {
@@ -8,6 +14,7 @@ html, body {
   font-size: 15px;
   line-height: 1.5;
   font-weight: normal;
+  overflow-y: hidden;
 }
 
 #title2 {
