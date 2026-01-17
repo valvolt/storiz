@@ -134,9 +134,9 @@ footer {
 }
 
 .hex-container {
-  float: left;
-  width: 110px; 
-  height: 110px;
+  position: relative;
+  width: 600px; 
+  height: 500px;
 }
 
 .hexagon {
@@ -170,9 +170,9 @@ footer {
 }
 
 .hex7 {
-  position: relative;
-  top: 0px;
-  left: 0px;
+  position: absolute;
+  top: 220px;
+  left: 440px;
 }
 .hex3 {
   position:absolute;
@@ -227,6 +227,46 @@ footer {
 .hex11 {
   position:absolute;
   top: 220px;
+  left: 330px;
+}
+.hex13 {
+  position:absolute;
+  top: 330px;
+  left: 55px;
+}
+.hex14 {
+  position:absolute;
+  top: 330px;
+  left: 165px;
+}
+.hex15 {
+  position:absolute;
+  top: 330px;
+  left: 275px;
+}
+.hex16 {
+  position:absolute;
+  top: 330px;
+  left: 385px;
+}
+.hex17 {
+  position:absolute;
+  top: 440px;
+  left: 0px;
+}
+.hex18 {
+  position:absolute;
+  top: 440px;
+  left: 110px;
+}
+.hex19 {
+  position:absolute;
+  top: 440px;
+  left: 220px;
+}
+.hex20 {
+  position:absolute;
+  top: 440px;
   left: 330px;
 }
 
