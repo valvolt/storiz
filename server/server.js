@@ -152,6 +152,10 @@ app.get('/', async function (req, res) {
       function continueOp() {
         window.location.href = '/resume';
       }
+
+      function createStoryOp() {
+        window.location.href = '/edit';
+      }
     </script>
 
     <div id="logo">
@@ -163,6 +167,9 @@ app.get('/', async function (req, res) {
     </div>
     <div id="continue" class="buttons">
       <button id="continue-button" onclick="continueOp()">Continue</button>
+    </div>
+    <div id="create-story" class="buttons">
+      <button id="create-story-button" onclick="createStoryOp()">Create Story</button>
     </div>
   `
   
