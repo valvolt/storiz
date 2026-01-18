@@ -287,6 +287,54 @@ This implementation plan breaks down the Story Editor feature into discrete codi
   - Test backward compatibility with existing stories
   - Ensure all tests pass, ask the user if questions arise
 
+- [ ] 13. Redesign editor interface to 3-panel layout
+  - [x] 13.1 Restructure HTML layout for 3-panel design
+    - Keep left panel (tile tree) unchanged
+    - Add middle panel for action buttons
+    - Convert right panel to play mode preview
+    - Update CSS for responsive 3-panel layout
+    - _Requirements: Enhanced UX_
+
+  - [x] 13.2 Implement middle panel action buttons
+    - Generate dynamic buttons based on current tile state
+    - "Add Picture" / "Change Picture" buttons
+    - "Add Choice" / "Edit Choice N" / "Remove Choice N" buttons
+    - "Add Map Region" / "Edit Map Region N" / "Remove Map Region N" buttons
+    - Buttons for title, text, video, sound, music, mood, achievement
+    - Flat list in play mode order
+    - _Requirements: Enhanced UX_
+
+  - [x] 13.3 Implement play mode preview in right panel
+    - Render tile exactly as player would see it
+    - Apply proper styling, background, mood CSS
+    - Show functional choices as clickable buttons
+    - Display image maps with all regions revealed
+    - Add play/pause controls for audio (not auto-playing)
+    - Navigate to connected tiles when choices/maps clicked
+    - _Requirements: Enhanced UX_
+
+  - [x] 13.4 Create overlay edit forms for specific features
+    - Show edit form overlay when action button clicked
+    - Form contains only fields for that specific feature
+    - Save button returns to play mode preview
+    - Cancel button discards changes
+    - Maintain current validation and error handling
+    - _Requirements: Enhanced UX_
+
+  - [x] 13.5 Update navigation and state management
+    - Modify tile selection to show play mode by default
+    - Track current editing state (play mode vs editing feature)
+    - Update save functionality to work with new interface
+    - Preserve unsaved changes handling
+    - _Requirements: Enhanced UX_
+
+  - [x] 13.6 Test and refine new interface
+    - Verify all existing functionality works in new layout
+    - Test responsive design on different screen sizes
+    - Ensure smooth transitions between play and edit modes
+    - Validate user experience improvements
+    - _Requirements: Enhanced UX_
+
 ## Notes
 
 - All tasks are required for comprehensive implementation from the start

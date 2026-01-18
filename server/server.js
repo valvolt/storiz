@@ -448,23 +448,81 @@ app.get('/edit/story/:name', async function (req, res) {
         .editor-container {
             display: flex;
             gap: 20px;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+            height: calc(100vh - 80px);
         }
         .tile-tree {
-            width: 300px;
+            width: 250px;
             background: white;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             height: fit-content;
+            max-height: 100%;
+            overflow-y: auto;
         }
-        .content-editor {
+        .action-panel {
+            width: 200px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: fit-content;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+        .content-preview {
             flex: 1;
             background: white;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-y: auto;
+        }
+        .edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+        .action-button {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+        }
+        .action-button:hover {
+            background: #e9ecef;
+        }
+        .action-button.primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .action-button.primary:hover {
+            background: #0056b3;
+        }
+        .action-button.danger {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        .action-button.danger:hover {
+            background: #c82333;
         }
         .top-squares {
             display: flex;
@@ -663,15 +721,35 @@ app.get('/edit/story/:name', async function (req, res) {
             <button class="btn btn-primary add-tile-btn" onclick="addTile()">Add Tile</button>
         </div>
         
-        <div class="content-editor">
+        <div class="action-panel">
+            <h3>Actions</h3>
+            <div id="action-buttons">
+                <!-- Action buttons will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="content-preview">
             <div class="header-actions">
                 <button class="btn btn-success" onclick="saveStory()">Save Story</button>
                 <a href="/edit" class="btn btn-primary">Back to Edit Menu</a>
                 <div class="save-status saved" id="save-status">Saved</div>
             </div>
             
-            <div id="editor-content">
-                <!-- Editor content will be populated by JavaScript -->
+            <div id="preview-content">
+                <!-- Play mode preview will be populated by JavaScript -->
+            </div>
+            
+            <div id="edit-overlay" class="edit-overlay">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 id="edit-title">Edit</h3>
+                    <div>
+                        <button class="btn btn-success" onclick="saveCurrentEdit()">Save</button>
+                        <button class="btn btn-secondary" onclick="cancelCurrentEdit()">Cancel</button>
+                    </div>
+                </div>
+                <div id="edit-form">
+                    <!-- Edit form will be populated by JavaScript -->
+                </div>
             </div>
             
             <!-- Hidden file input for uploads -->
@@ -683,6 +761,8 @@ app.get('/edit/story/:name', async function (req, res) {
         let currentStory = ${JSON.stringify(story)};
         let currentView = 'tile';
         let currentTileId = '1';
+        let currentEditMode = 'preview'; // 'preview' or 'editing'
+        let currentEditFeature = null; // what feature is being edited
         let unsavedChanges = false;
 
         function initEditor() {
@@ -789,29 +869,459 @@ app.get('/edit/story/:name', async function (req, res) {
         function selectView(view) {
             currentView = view;
             currentTileId = null;
+            currentEditMode = 'preview';
+            currentEditFeature = null;
             
             // Update active states
             document.querySelectorAll('.top-square').forEach(sq => sq.classList.remove('active'));
             document.querySelectorAll('.tile-node').forEach(node => node.classList.remove('active'));
             event.target.classList.add('active');
             
+            // Clear action buttons when not on a tile
+            document.getElementById('action-buttons').innerHTML = '';
+            
             if (view === 'metadata') {
-                renderMetadataEditor();
+                renderMetadataPreview();
             } else if (view === 'stuff') {
-                renderStuffEditor();
+                renderStuffPreview();
             } else if (view === 'credits') {
-                renderCreditsEditor();
+                renderCreditsPreview();
             }
         }
 
         function selectTile(tileId) {
             currentView = 'tile';
             currentTileId = tileId;
+            currentEditMode = 'preview';
+            currentEditFeature = null;
             
             // Update active states
             document.querySelectorAll('.top-square').forEach(sq => sq.classList.remove('active'));
             renderTileList(); // Re-render to update active tile
-            renderTileEditor(tileId);
+            renderActionButtons();
+            renderTilePreview();
+        }
+
+        function renderActionButtons() {
+            if (currentView !== 'tile' || !currentTileId) {
+                document.getElementById('action-buttons').innerHTML = '';
+                return;
+            }
+            
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile) return;
+            
+            const actionButtons = document.getElementById('action-buttons');
+            let buttonsHTML = '';
+            
+            // Tile ID button (always first)
+            buttonsHTML += '<button class="action-button" onclick="editFeature(\\'id\\')">Edit Tile ID</button>';
+            
+            // Title button
+            if (tile.title) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'title\\')">Edit Title</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'title\\')">Remove Title</button>';
+            } else {
+                buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'title\\')">Add Title</button>';
+            }
+            
+            // Text button
+            if (tile.text) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'text\\')">Edit Text</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'text\\')">Remove Text</button>';
+            } else {
+                buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'text\\')">Add Text</button>';
+            }
+            
+            // Picture button
+            if (tile.picture) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'picture\\')">Change Picture</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'picture\\')">Remove Picture</button>';
+            } else {
+                buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'picture\\')">Add Picture</button>';
+            }
+            
+            // Video button
+            if (tile.video) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'video\\')">Change Video</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'video\\')">Remove Video</button>';
+            } else {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'video\\')">Add Video</button>';
+            }
+            
+            // Sound button
+            if (tile.sound) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'sound\\')">Change Sound</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'sound\\')">Remove Sound</button>';
+            } else {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'sound\\')">Add Sound</button>';
+            }
+            
+            // Music button
+            if (tile.music) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'music\\')">Change Music</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'music\\')">Remove Music</button>';
+            } else {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'music\\')">Add Music</button>';
+            }
+            
+            // Mood button
+            if (tile.mood) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'mood\\')">Change Mood</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'mood\\')">Remove Mood</button>';
+            } else {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'mood\\')">Add Mood</button>';
+            }
+            
+            // Achievement button
+            if (tile.achievement) {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'achievement\\')">Change Achievement</button>';
+                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'achievement\\')">Remove Achievement</button>';
+            } else {
+                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'achievement\\')">Add Achievement</button>';
+            }
+            
+            // Choice buttons
+            if (tile.choices && tile.choices.length > 0) {
+                tile.choices.forEach((choice, index) => {
+                    buttonsHTML += \`<button class="action-button" onclick="editFeature('choice', \${index})">Edit Choice \${index + 1}</button>\`;
+                    buttonsHTML += \`<button class="action-button danger" onclick="removeChoice(\${index})">Remove Choice \${index + 1}</button>\`;
+                });
+            }
+            buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'choice\\', -1)">Add Choice</button>';
+            
+            // Map region buttons
+            if (tile.map && tile.map.length > 0) {
+                tile.map.forEach((region, index) => {
+                    buttonsHTML += \`<button class="action-button" onclick="editFeature('map', \${index})">Edit Map Region \${index + 1}</button>\`;
+                    buttonsHTML += \`<button class="action-button danger" onclick="removeMapRegion(\${index})">Remove Map Region \${index + 1}</button>\`;
+                });
+            }
+            // Only show "Add Map Region" if there's a picture
+            if (tile.picture) {
+                buttonsHTML += '<button class="action-button primary" onclick="startInteractiveMapCreation()">Add Map Region</button>';
+            }
+            
+            actionButtons.innerHTML = buttonsHTML;
+        }
+
+        function renderTilePreview() {
+            if (currentView !== 'tile' || !currentTileId) {
+                document.getElementById('preview-content').innerHTML = '';
+                return;
+            }
+            
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile) return;
+            
+            const previewContent = document.getElementById('preview-content');
+            
+            // Create a play-mode style preview
+            let previewHTML = '<div style="max-width: 600px; margin: 0 auto;">';
+            
+            // Title
+            if (tile.title) {
+                previewHTML += \`<h2 style="text-align: center; margin-bottom: 20px;">\${tile.title}</h2>\`;
+            }
+            
+            // Picture with image map overlay
+            if (tile.picture) {
+                previewHTML += \`
+                    <div style="position: relative; display: inline-block; margin: 0 auto 20px auto;">
+                        <img src="\${tile.picture}" alt="Tile image" style="width: 40vw; height: auto; border-radius: 4px; display: block;" id="preview-image">
+                        <svg id="preview-map-overlay" style="position: absolute; top: 0; left: 0; pointer-events: none;"></svg>
+                    </div>
+                \`;
+            }
+            
+            // Video
+            if (tile.video) {
+                previewHTML += \`
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <video controls style="max-width: 100%; height: auto; border-radius: 4px;">
+                            <source src="\${tile.video}" type="video/mp4">
+                        </video>
+                    </div>
+                \`;
+            }
+            
+            // Text
+            if (tile.text) {
+                previewHTML += \`<div style="margin-bottom: 20px; line-height: 1.6;">\${tile.text}</div>\`;
+            }
+            
+            // Audio controls
+            if (tile.sound || tile.music) {
+                previewHTML += '<div style="margin-bottom: 20px;">';
+                if (tile.sound) {
+                    previewHTML += \`
+                        <div style="margin-bottom: 10px;">
+                            <strong>Sound:</strong>
+                            <audio controls style="margin-left: 10px;">
+                                <source src="\${tile.sound}" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    \`;
+                }
+                if (tile.music) {
+                    previewHTML += \`
+                        <div>
+                            <strong>Music:</strong>
+                            <audio controls style="margin-left: 10px;">
+                                <source src="\${tile.music}" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    \`;
+                }
+                previewHTML += '</div>';
+            }
+            
+            // Choices
+            if (tile.choices && tile.choices.length > 0) {
+                previewHTML += '<div style="margin-bottom: 20px;">';
+                tile.choices.forEach((choice, index) => {
+                    previewHTML += \`
+                        <button style="display: block; width: 100%; margin-bottom: 10px; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;" 
+                                onclick="navigateToTile('\${choice.to_tile}')">
+                            \${choice.text}
+                        </button>
+                    \`;
+                });
+                previewHTML += '</div>';
+            }
+            
+            previewHTML += '</div>';
+            previewContent.innerHTML = previewHTML;
+            
+            // Initialize image map overlay if needed
+            setTimeout(() => {
+                if (tile.picture && tile.map) {
+                    renderPreviewMapOverlay();
+                }
+            }, 100);
+        }
+
+        function renderPreviewMapOverlay() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile || !tile.map) return;
+            
+            const img = document.getElementById('preview-image');
+            const overlay = document.getElementById('preview-map-overlay');
+            if (!img || !overlay) return;
+            
+            // Wait for image to be fully rendered before setting overlay
+            setTimeout(() => {
+                // Set overlay to exact image dimensions and position
+                overlay.setAttribute('width', img.offsetWidth);
+                overlay.setAttribute('height', img.offsetHeight);
+                
+                // Ensure overlay is positioned exactly over the image
+                overlay.style.width = img.offsetWidth + 'px';
+                overlay.style.height = img.offsetHeight + 'px';
+                overlay.style.left = '0px';
+                overlay.style.top = '0px';
+                
+                // Clear existing regions
+                overlay.innerHTML = '';
+                
+                // Draw each map region (all revealed)
+                tile.map.forEach((region, index) => {
+                    drawPreviewMapRegion(region, index);
+                });
+            }, 50);
+        }
+
+        function drawPreviewMapRegion(region, index) {
+            const overlay = document.getElementById('preview-map-overlay');
+            const img = document.getElementById('preview-image');
+            if (!overlay || !img) return;
+            
+            let element;
+            const coords = region.coords.split(',').map(c => parseInt(c));
+            
+            // Convert natural coordinates to display coordinates (same as play mode adjustCoords)
+            const ratio = img.offsetHeight / img.naturalHeight;
+            const displayCoords = coords.map(coord => coord * ratio);
+            
+            switch(region.shape) {
+                case 'rect':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    element.setAttribute('x', displayCoords[0]);
+                    element.setAttribute('y', displayCoords[1]);
+                    element.setAttribute('width', displayCoords[2] - displayCoords[0]);
+                    element.setAttribute('height', displayCoords[3] - displayCoords[1]);
+                    break;
+                    
+                case 'circle':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    element.setAttribute('cx', displayCoords[0]);
+                    element.setAttribute('cy', displayCoords[1]);
+                    element.setAttribute('r', displayCoords[2]);
+                    break;
+                    
+                case 'poly':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                    const points = [];
+                    for (let i = 0; i < displayCoords.length; i += 2) {
+                        points.push(displayCoords[i] + ',' + displayCoords[i + 1]);
+                    }
+                    element.setAttribute('points', points.join(' '));
+                    break;
+            }
+            
+            if (element) {
+                // Always show as revealed (red highlight)
+                element.setAttribute('fill', 'rgba(255, 0, 0, 0.3)');
+                element.setAttribute('stroke', '#ff0000');
+                element.setAttribute('stroke-width', '2');
+                element.style.cursor = 'pointer';
+                element.onclick = () => navigateToTile(region.to_tile);
+                overlay.appendChild(element);
+            }
+        }
+
+        function navigateToTile(tileId) {
+            if (tileId && tileId !== currentTileId) {
+                selectTile(tileId);
+            }
+        }
+
+        function editFeature(feature, index = null) {
+            currentEditMode = 'editing';
+            currentEditFeature = { feature, index };
+            
+            const overlay = document.getElementById('edit-overlay');
+            const title = document.getElementById('edit-title');
+            const form = document.getElementById('edit-form');
+            
+            // Show overlay
+            overlay.style.display = 'block';
+            
+            // Set title and render form based on feature
+            switch(feature) {
+                case 'id':
+                    title.textContent = 'Edit Tile ID';
+                    renderIdEditForm();
+                    break;
+                case 'title':
+                    title.textContent = 'Edit Title';
+                    renderTitleEditForm();
+                    break;
+                case 'text':
+                    title.textContent = 'Edit Text Content';
+                    renderTextEditForm();
+                    break;
+                case 'picture':
+                    title.textContent = 'Edit Picture';
+                    renderPictureEditForm();
+                    break;
+                case 'video':
+                    title.textContent = 'Edit Video';
+                    renderVideoEditForm();
+                    break;
+                case 'sound':
+                    title.textContent = 'Edit Sound';
+                    renderSoundEditForm();
+                    break;
+                case 'music':
+                    title.textContent = 'Edit Music';
+                    renderMusicEditForm();
+                    break;
+                case 'mood':
+                    title.textContent = 'Edit Mood';
+                    renderMoodEditForm();
+                    break;
+                case 'achievement':
+                    title.textContent = 'Edit Achievement';
+                    renderAchievementEditForm();
+                    break;
+                case 'choice':
+                    title.textContent = index === -1 ? 'Add Choice' : \`Edit Choice \${index + 1}\`;
+                    renderChoiceEditForm(index);
+                    break;
+                case 'map':
+                    title.textContent = index === -1 ? 'Add Map Region' : \`Edit Map Region \${index + 1}\`;
+                    renderMapEditForm(index);
+                    break;
+                case 'metadata':
+                    title.textContent = 'Edit Metadata';
+                    renderMetadataEditForm();
+                    break;
+                case 'stuff':
+                    title.textContent = index === -1 ? 'Add Item' : \`Edit Item \${index + 1}\`;
+                    renderStuffEditForm(index);
+                    break;
+                case 'credits':
+                    title.textContent = 'Edit Credits';
+                    renderCreditsEditForm();
+                    break;
+            }
+        }
+
+        function saveCurrentEdit() {
+            // This will be implemented for each feature type
+            const feature = currentEditFeature.feature;
+            const index = currentEditFeature.index;
+            
+            switch(feature) {
+                case 'id':
+                    saveIdEdit();
+                    break;
+                case 'title':
+                    saveTitleEdit();
+                    break;
+                case 'text':
+                    saveTextEdit();
+                    break;
+                case 'picture':
+                    savePictureEdit();
+                    break;
+                case 'video':
+                    saveVideoEdit();
+                    break;
+                case 'sound':
+                    saveSoundEdit();
+                    break;
+                case 'music':
+                    saveMusicEdit();
+                    break;
+                case 'mood':
+                    saveMoodEdit();
+                    break;
+                case 'achievement':
+                    saveAchievementEdit();
+                    break;
+                case 'choice':
+                    saveChoiceEdit(index);
+                    break;
+                case 'map':
+                    saveMapEdit(index);
+                    break;
+                case 'metadata':
+                    saveMetadataEdit();
+                    break;
+                case 'stuff':
+                    saveStuffEdit(index);
+                    break;
+                case 'credits':
+                    saveCreditsEdit();
+                    break;
+            }
+            
+            // Return to preview mode
+            cancelCurrentEdit();
+            
+            // Refresh displays
+            renderActionButtons();
+            renderTilePreview();
+            renderTileList();
+            markUnsaved();
+        }
+
+        function cancelCurrentEdit() {
+            currentEditMode = 'preview';
+            currentEditFeature = null;
+            document.getElementById('edit-overlay').style.display = 'none';
         }
 
         function renderTileEditor(tileId) {
@@ -914,6 +1424,1235 @@ app.get('/edit/story/:name', async function (req, res) {
                     renderExistingMapRegions();
                 }
             }, 100);
+        }
+
+        // Edit form functions for each feature type
+        function renderIdEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Tile ID:</label>
+                    <input type="text" id="edit-id-input" value="\${tile.id}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <small style="color: #666; margin-top: 5px; display: block;">
+                        Warning: Changing the tile ID will update all references to this tile throughout the story.
+                    </small>
+                </div>
+            \`;
+        }
+
+        function renderTitleEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" id="edit-title-input" value="\${tile.title || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            \`;
+        }
+
+        function renderTextEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Text Content (HTML supported):</label>
+                    <textarea id="edit-text-input" style="width: 100%; min-height: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">\${tile.text || ''}</textarea>
+                </div>
+            \`;
+        }
+
+        function renderPictureEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Picture URL:</label>
+                    <input type="text" id="edit-picture-input" value="\${tile.picture || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('picture', this.value)">
+                    <button class="btn btn-primary" onclick="uploadEditMedia('picture')" style="margin-top: 10px;">Upload Image</button>
+                    <div id="edit-picture-preview" class="media-preview"></div>
+                </div>
+            \`;
+            if (tile.picture) {
+                setTimeout(() => updateEditMediaPreview('picture', tile.picture), 100);
+            }
+        }
+
+        function renderVideoEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Video URL:</label>
+                    <input type="text" id="edit-video-input" value="\${tile.video || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('video', this.value)">
+                    <button class="btn btn-primary" onclick="uploadEditMedia('video')" style="margin-top: 10px;">Upload Video</button>
+                    <div id="edit-video-preview" class="media-preview"></div>
+                </div>
+            \`;
+            if (tile.video) {
+                setTimeout(() => updateEditMediaPreview('video', tile.video), 100);
+            }
+        }
+
+        function renderSoundEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Sound URL:</label>
+                    <input type="text" id="edit-sound-input" value="\${tile.sound || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('sound', this.value)">
+                    <div id="edit-sound-preview" class="media-preview"></div>
+                </div>
+            \`;
+            if (tile.sound) {
+                setTimeout(() => updateEditMediaPreview('sound', tile.sound), 100);
+            }
+        }
+
+        function renderMusicEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Music URL:</label>
+                    <input type="text" id="edit-music-input" value="\${tile.music || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('music', this.value)">
+                    <div id="edit-music-preview" class="media-preview"></div>
+                </div>
+            \`;
+            if (tile.music) {
+                setTimeout(() => updateEditMediaPreview('music', tile.music), 100);
+            }
+        }
+
+        function renderMoodEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Mood:</label>
+                    <select id="edit-mood-input" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">None</option>
+                        <option value="cold" \${tile.mood === 'cold' ? 'selected' : ''}>Cold</option>
+                        <option value="hot" \${tile.mood === 'hot' ? 'selected' : ''}>Hot</option>
+                        <option value="gritty" \${tile.mood === 'gritty' ? 'selected' : ''}>Gritty</option>
+                        <option value="metal" \${tile.mood === 'metal' ? 'selected' : ''}>Metal</option>
+                        <option value="hacker" \${tile.mood === 'hacker' ? 'selected' : ''}>Hacker</option>
+                    </select>
+                </div>
+            \`;
+        }
+
+        function renderAchievementEditForm() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Achievement:</label>
+                    <input type="text" id="edit-achievement-input" value="\${tile.achievement || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            \`;
+        }
+
+        function renderChoiceEditForm(index) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const choice = index >= 0 ? tile.choices[index] : {};
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Choice Text:</label>
+                    <input type="text" id="edit-choice-text" value="\${choice.text || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Target Tile:</label>
+                    <input type="text" id="edit-choice-to-tile" value="\${choice.to_tile || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Requires (comma-separated):</label>
+                    <input type="text" id="edit-choice-requires" value="\${Array.isArray(choice.requires) ? choice.requires.join(', ') : (choice.requires || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Uses (comma-separated):</label>
+                    <input type="text" id="edit-choice-uses" value="\${Array.isArray(choice.uses) ? choice.uses.join(', ') : (choice.uses || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Item (comma-separated):</label>
+                    <input type="text" id="edit-choice-item" value="\${Array.isArray(choice.item) ? choice.item.join(', ') : (choice.item || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Disable:</label>
+                    <select id="edit-choice-disable" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Default (grey)</option>
+                        <option value="grey" \${choice.disable === 'grey' ? 'selected' : ''}>Grey</option>
+                        <option value="invisible" \${choice.disable === 'invisible' ? 'selected' : ''}>Invisible</option>
+                    </select>
+                </div>
+            \`;
+        }
+
+        function renderMapEditForm(index) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const region = index >= 0 ? tile.map[index] : {};
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Shape:</label>
+                    <select id="edit-map-shape" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="rect" \${region.shape === 'rect' ? 'selected' : ''}>Rectangle</option>
+                        <option value="circle" \${region.shape === 'circle' ? 'selected' : ''}>Circle</option>
+                        <option value="poly" \${region.shape === 'poly' ? 'selected' : ''}>Polygon</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Coordinates (comma-separated):</label>
+                    <input type="text" id="edit-map-coords" value="\${region.coords || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <small>Rect: x1,y1,x2,y2 | Circle: x,y,radius | Poly: x1,y1,x2,y2,x3,y3...</small>
+                </div>
+                <div class="form-group">
+                    <label>Target Tile:</label>
+                    <input type="text" id="edit-map-to-tile" value="\${region.to_tile || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Requires (comma-separated):</label>
+                    <input type="text" id="edit-map-requires" value="\${Array.isArray(region.requires) ? region.requires.join(', ') : (region.requires || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Uses (comma-separated):</label>
+                    <input type="text" id="edit-map-uses" value="\${Array.isArray(region.uses) ? region.uses.join(', ') : (region.uses || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Item (comma-separated):</label>
+                    <input type="text" id="edit-map-item" value="\${Array.isArray(region.item) ? region.item.join(', ') : (region.item || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Hint:</label>
+                    <select id="edit-map-hint" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="pointer" \${region.hint === 'pointer' || !region.hint ? 'selected' : ''}>Pointer</option>
+                        <option value="invisible" \${region.hint === 'invisible' ? 'selected' : ''}>Invisible</option>
+                        <option value="reveal" \${region.hint === 'reveal' ? 'selected' : ''}>Reveal</option>
+                    </select>
+                </div>
+            \`;
+        }
+
+        // Save functions for each feature type
+        function saveIdEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const newId = document.getElementById('edit-id-input').value.trim();
+            
+            if (newId && newId !== tile.id) {
+                const oldId = tile.id;
+                tile.id = newId;
+                
+                // Update all references to this tile ID throughout the story
+                updateTileReferences(oldId, newId);
+                
+                // Update currentTileId to the new ID
+                currentTileId = newId;
+            }
+        }
+
+        function saveTitleEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-title-input').value;
+            if (value.trim()) {
+                tile.title = value.trim();
+            } else {
+                delete tile.title;
+            }
+        }
+
+        function saveTextEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-text-input').value;
+            if (value.trim()) {
+                tile.text = value.trim();
+            } else {
+                delete tile.text;
+            }
+        }
+
+        function savePictureEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-picture-input').value;
+            if (value.trim()) {
+                tile.picture = value.trim();
+            } else {
+                delete tile.picture;
+            }
+        }
+
+        function saveVideoEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-video-input').value;
+            if (value.trim()) {
+                tile.video = value.trim();
+            } else {
+                delete tile.video;
+            }
+        }
+
+        function saveSoundEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-sound-input').value;
+            if (value.trim()) {
+                tile.sound = value.trim();
+            } else {
+                delete tile.sound;
+            }
+        }
+
+        function saveMusicEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-music-input').value;
+            if (value.trim()) {
+                tile.music = value.trim();
+            } else {
+                delete tile.music;
+            }
+        }
+
+        function saveMoodEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-mood-input').value;
+            if (value) {
+                tile.mood = value;
+            } else {
+                delete tile.mood;
+            }
+        }
+
+        function saveAchievementEdit() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const value = document.getElementById('edit-achievement-input').value;
+            if (value.trim()) {
+                tile.achievement = value.trim();
+            } else {
+                delete tile.achievement;
+            }
+        }
+
+        function saveChoiceEdit(index) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile.choices) tile.choices = [];
+            
+            const choiceData = {
+                text: document.getElementById('edit-choice-text').value.trim(),
+                to_tile: document.getElementById('edit-choice-to-tile').value.trim()
+            };
+            
+            // Handle array fields
+            const requires = document.getElementById('edit-choice-requires').value.trim();
+            if (requires) {
+                const items = requires.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    choiceData.requires = items[0];
+                } else if (items.length > 1) {
+                    choiceData.requires = items;
+                }
+            }
+            
+            const uses = document.getElementById('edit-choice-uses').value.trim();
+            if (uses) {
+                const items = uses.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    choiceData.uses = items[0];
+                } else if (items.length > 1) {
+                    choiceData.uses = items;
+                }
+            }
+            
+            const item = document.getElementById('edit-choice-item').value.trim();
+            if (item) {
+                const items = item.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    choiceData.item = items[0];
+                } else if (items.length > 1) {
+                    choiceData.item = items;
+                }
+            }
+            
+            const disable = document.getElementById('edit-choice-disable').value;
+            if (disable) {
+                choiceData.disable = disable;
+            }
+            
+            if (index >= 0) {
+                tile.choices[index] = choiceData;
+            } else {
+                tile.choices.push(choiceData);
+            }
+        }
+
+        function saveMapEdit(index) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile.map) tile.map = [];
+            
+            const regionData = {
+                shape: document.getElementById('edit-map-shape').value,
+                coords: document.getElementById('edit-map-coords').value.trim(),
+                to_tile: document.getElementById('edit-map-to-tile').value.trim(),
+                hint: document.getElementById('edit-map-hint').value
+            };
+            
+            // Handle array fields
+            const requires = document.getElementById('edit-map-requires').value.trim();
+            if (requires) {
+                const items = requires.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    regionData.requires = items[0];
+                } else if (items.length > 1) {
+                    regionData.requires = items;
+                }
+            }
+            
+            const uses = document.getElementById('edit-map-uses').value.trim();
+            if (uses) {
+                const items = uses.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    regionData.uses = items[0];
+                } else if (items.length > 1) {
+                    regionData.uses = items;
+                }
+            }
+            
+            const item = document.getElementById('edit-map-item').value.trim();
+            if (item) {
+                const items = item.split(',').map(item => item.trim()).filter(item => item);
+                if (items.length === 1) {
+                    regionData.item = items[0];
+                } else if (items.length > 1) {
+                    regionData.item = items;
+                }
+            }
+            
+            if (index >= 0) {
+                tile.map[index] = regionData;
+            } else {
+                tile.map.push(regionData);
+            }
+        }
+
+        function updateEditMediaPreview(mediaType, url) {
+            const previewDiv = document.getElementById('edit-' + mediaType + '-preview');
+            if (!previewDiv) return;
+            
+            // Clear existing content
+            previewDiv.innerHTML = '';
+            
+            if (!url || url.trim() === '') {
+                return;
+            }
+            
+            switch(mediaType) {
+                case 'picture':
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'Picture preview';
+                    img.style.cssText = 'max-width: 200px; max-height: 150px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px;';
+                    img.onerror = function() { this.style.display = 'none'; };
+                    previewDiv.appendChild(img);
+                    break;
+                    
+                case 'video':
+                    const video = document.createElement('video');
+                    video.controls = true;
+                    video.style.cssText = 'max-width: 200px; max-height: 150px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px;';
+                    const source = document.createElement('source');
+                    source.src = url;
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
+                    previewDiv.appendChild(video);
+                    break;
+                    
+                case 'sound':
+                case 'music':
+                    const audioDiv = document.createElement('div');
+                    audioDiv.style.marginTop = '10px';
+                    const audio = document.createElement('audio');
+                    audio.preload = 'metadata';
+                    const audioSource = document.createElement('source');
+                    audioSource.src = url;
+                    audioSource.type = 'audio/mpeg';
+                    audio.appendChild(audioSource);
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-primary';
+                    button.textContent = '▶ Play';
+                    button.style.marginLeft = '10px';
+                    button.onclick = function() { toggleAudio(audio, this); };
+                    audioDiv.appendChild(audio);
+                    audioDiv.appendChild(button);
+                    previewDiv.appendChild(audioDiv);
+                    break;
+            }
+        }
+
+        function uploadEditMedia(type) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = type === 'picture' ? 'image/*' : type === 'video' ? 'video/*' : 'audio/*';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('storyName', currentStory.Name);
+                
+                fetch('/edit/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error uploading file: ' + data.error);
+                    } else {
+                        // Update the input field
+                        const inputField = document.getElementById('edit-' + type + '-input');
+                        if (inputField) {
+                            inputField.value = data.path;
+                        }
+                        // Update the media preview
+                        updateEditMediaPreview(type, data.path);
+                        alert('File uploaded successfully!');
+                    }
+                })
+                .catch(error => {
+                    alert('Error uploading file: ' + error);
+                });
+            };
+            
+            input.click();
+        }
+
+        function renderMetadataEditForm() {
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Story Name:</label>
+                    <input type="text" id="edit-metadata-name" value="\${currentStory.Name || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="edit-metadata-description" style="width: 100%; min-height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">\${currentStory.Description || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Published:</label>
+                    <select id="edit-metadata-published" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="no" \${currentStory.published === 'no' ? 'selected' : ''}>No</option>
+                        <option value="yes" \${currentStory.published === 'yes' ? 'selected' : ''}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Creator (read-only):</label>
+                    <input type="text" value="\${currentStory.creator || ''}" readonly style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa;">
+                </div>
+            \`;
+        }
+
+        function renderStuffEditForm(index) {
+            const item = index >= 0 ? currentStory.Stuff[index] : {};
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Key (unique identifier):</label>
+                    <input type="text" id="edit-stuff-key" value="\${item.key || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="edit-stuff-name" value="\${item.name || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="edit-stuff-description" style="width: 100%; min-height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">\${item.description || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Unlock Code (optional):</label>
+                    <input type="text" id="edit-stuff-code" value="\${item.code || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            \`;
+        }
+
+        function renderCreditsEditForm() {
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Credits (HTML supported):</label>
+                    <textarea id="edit-credits-content" style="width: 100%; min-height: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">\${currentStory.Credits || ''}</textarea>
+                </div>
+            \`;
+        }
+
+        function saveMetadataEdit() {
+            currentStory.Name = document.getElementById('edit-metadata-name').value.trim() || 'Untitled Story';
+            currentStory.Description = document.getElementById('edit-metadata-description').value.trim();
+            currentStory.published = document.getElementById('edit-metadata-published').value;
+        }
+
+        function saveStuffEdit(index) {
+            if (!currentStory.Stuff) currentStory.Stuff = [];
+            
+            const itemData = {
+                key: document.getElementById('edit-stuff-key').value.trim(),
+                name: document.getElementById('edit-stuff-name').value.trim(),
+                description: document.getElementById('edit-stuff-description').value.trim()
+            };
+            
+            const code = document.getElementById('edit-stuff-code').value.trim();
+            if (code) {
+                itemData.code = code;
+            }
+            
+            if (index >= 0) {
+                currentStory.Stuff[index] = itemData;
+            } else {
+                currentStory.Stuff.push(itemData);
+            }
+        }
+
+        function saveCreditsEdit() {
+            currentStory.Credits = document.getElementById('edit-credits-content').value.trim();
+        }
+
+        function removeMedia(mediaType) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile) return;
+            
+            // Confirm removal
+            if (confirm(\`Are you sure you want to remove the \${mediaType}?\`)) {
+                delete tile[mediaType];
+                
+                // Refresh displays
+                renderActionButtons();
+                renderTilePreview();
+                markUnsaved();
+            }
+        }
+
+        function removeFeature(featureType) {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile) return;
+            
+            // Confirm removal
+            if (confirm(\`Are you sure you want to remove the \${featureType}?\`)) {
+                delete tile[featureType];
+                
+                // Refresh displays
+                renderActionButtons();
+                renderTilePreview();
+                markUnsaved();
+            }
+        }
+
+        // Interactive Map Creation (similar to image-map.net)
+        let mapCreationState = {
+            isActive: false,
+            currentShape: 'rect',
+            points: [],
+            tempElements: []
+        };
+
+        function startInteractiveMapCreation() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile || !tile.picture) return;
+            
+            // Switch to interactive map creation mode
+            mapCreationState.isActive = true;
+            mapCreationState.points = [];
+            mapCreationState.tempElements = [];
+            
+            // Show the interactive map editor overlay
+            const overlay = document.getElementById('edit-overlay');
+            const title = document.getElementById('edit-title');
+            const form = document.getElementById('edit-form');
+            
+            overlay.style.display = 'block';
+            title.textContent = 'Create Map Region';
+            
+            form.innerHTML = \`
+                <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; height: 70vh;">
+                    <!-- Left column: Image and controls -->
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Shape:</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <select id="map-shape-selector" onchange="changeMapShape(this.value)" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+                                    <option value="rect">Rectangle</option>
+                                    <option value="circle">Circle</option>
+                                    <option value="poly">Polygon</option>
+                                </select>
+                                <button type="button" onclick="clearMapCreation()" style="padding: 8px 16px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Clear</button>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: auto;">
+                            <div id="interactive-map-container" style="position: relative; display: inline-block; border: 2px solid #007bff; border-radius: 4px; margin: 0 auto;">
+                                <img id="interactive-map-image" src="\${tile.picture}" style="width: 40vw; height: auto; border-radius: 4px; cursor: crosshair; display: block;" onclick="handleMapClick(event)">
+                                <svg id="interactive-map-overlay" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10;"></svg>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 10px; background: #f8f9fa; border-radius: 4px; border: 1px solid #dee2e6;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">Coordinates:</label>
+                            <div id="map-coordinates-display" style="font-family: monospace; font-size: 12px; color: #6c757d; min-height: 20px;">
+                                Click on the image to start creating the region...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right column: Form fields -->
+                    <div style="display: flex; flex-direction: column; gap: 15px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #007bff;">
+                        <div style="padding: 15px; background: #e3f2fd; border-radius: 4px; border-left: 4px solid #2196f3;">
+                            <p style="margin: 0 0 10px 0; color: #1565c0; font-size: 14px; font-weight: bold;">
+                                Instructions:
+                            </p>
+                            <ul style="margin: 0; padding-left: 20px; color: #1565c0; font-size: 13px;">
+                                <li><strong>Rectangle:</strong> Click two opposite corners</li>
+                                <li><strong>Circle:</strong> Click center, then click edge</li>
+                                <li><strong>Polygon:</strong> Click multiple points, then click "Save"</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #ffc107;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #856404; font-size: 16px;">Target Tile ID:</label>
+                            <input type="text" id="map-target-tile" placeholder="Enter tile ID (e.g., '2', 'boss-fight')" style="width: 100%; padding: 12px; border: 3px solid #007bff; border-radius: 6px; font-size: 16px; background: #fff; box-shadow: 0 2px 4px rgba(0,123,255,0.2);">
+                            <small style="color: #856404; font-size: 12px; margin-top: 8px; display: block; font-weight: bold;">⚠️ REQUIRED: This is the tile the player will go to when they click this region</small>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #495057;">Hint Behavior:</label>
+                            <select id="map-hint-selector" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                                <option value="pointer">Pointer (cursor changes to hand)</option>
+                                <option value="invisible">Invisible (no visual indication)</option>
+                                <option value="reveal">Reveal (always highlighted)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            \`;
+            
+            // Initialize the interactive map
+            setTimeout(() => {
+                initInteractiveMap();
+            }, 100);
+        }
+
+        function initInteractiveMap() {
+            const img = document.getElementById('interactive-map-image');
+            const overlay = document.getElementById('interactive-map-overlay');
+            
+            if (!img || !overlay) return;
+            
+            function updateOverlaySize() {
+                // Wait for image to be fully rendered
+                setTimeout(() => {
+                    const imgRect = img.getBoundingClientRect();
+                    const containerRect = img.parentElement.getBoundingClientRect();
+                    
+                    // Set overlay to exact image dimensions and position
+                    overlay.setAttribute('width', img.offsetWidth);
+                    overlay.setAttribute('height', img.offsetHeight);
+                    
+                    // Ensure overlay is positioned exactly over the image
+                    overlay.style.width = img.offsetWidth + 'px';
+                    overlay.style.height = img.offsetHeight + 'px';
+                    overlay.style.left = '0px';
+                    overlay.style.top = '0px';
+                    
+                    renderExistingMapRegionsInEditor();
+                }, 50);
+            }
+            
+            // Set overlay size when image loads
+            img.onload = updateOverlaySize;
+            
+            // If image is already loaded
+            if (img.complete) {
+                updateOverlaySize();
+            }
+        }
+
+        function renderExistingMapRegionsInEditor() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const overlay = document.getElementById('interactive-map-overlay');
+            
+            if (!tile || !tile.map || !overlay) return;
+            
+            // Clear existing regions (but not temp elements)
+            const existingRegions = overlay.querySelectorAll('.existing-region');
+            existingRegions.forEach(region => region.remove());
+            
+            // Draw existing map regions in reveal mode
+            tile.map.forEach((region, index) => {
+                drawExistingMapRegion(region, index);
+            });
+        }
+
+        function drawExistingMapRegion(region, index) {
+            const overlay = document.getElementById('interactive-map-overlay');
+            const img = document.getElementById('interactive-map-image');
+            if (!overlay || !img) return;
+            
+            let element;
+            const coords = region.coords.split(',').map(c => parseInt(c));
+            
+            // Convert natural coordinates to display coordinates (same as play mode adjustCoords)
+            const ratio = img.offsetHeight / img.naturalHeight;
+            const displayCoords = coords.map(coord => coord * ratio);
+            
+            switch(region.shape) {
+                case 'rect':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    element.setAttribute('x', displayCoords[0]);
+                    element.setAttribute('y', displayCoords[1]);
+                    element.setAttribute('width', displayCoords[2] - displayCoords[0]);
+                    element.setAttribute('height', displayCoords[3] - displayCoords[1]);
+                    break;
+                    
+                case 'circle':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    element.setAttribute('cx', displayCoords[0]);
+                    element.setAttribute('cy', displayCoords[1]);
+                    element.setAttribute('r', displayCoords[2]);
+                    break;
+                    
+                case 'poly':
+                    element = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                    const points = [];
+                    for (let i = 0; i < displayCoords.length; i += 2) {
+                        points.push(displayCoords[i] + ',' + displayCoords[i + 1]);
+                    }
+                    element.setAttribute('points', points.join(' '));
+                    break;
+            }
+            
+            if (element) {
+                element.className = 'existing-region';
+                element.setAttribute('fill', 'rgba(0, 0, 255, 0.2)');
+                element.setAttribute('stroke', '#0000ff');
+                element.setAttribute('stroke-width', '2');
+                element.setAttribute('stroke-dasharray', '5,5');
+                overlay.appendChild(element);
+            }
+        }
+
+        function handleMapClick(event) {
+            if (!mapCreationState.isActive) return;
+            
+            // Get coordinates relative to the image element itself
+            const img = document.getElementById('interactive-map-image');
+            const rect = img.getBoundingClientRect();
+            
+            // Calculate coordinates relative to the displayed image
+            const displayX = Math.round(event.clientX - rect.left);
+            const displayY = Math.round(event.clientY - rect.top);
+            
+            // Ensure coordinates are within image bounds
+            if (displayX < 0 || displayY < 0 || displayX > img.offsetWidth || displayY > img.offsetHeight) {
+                return; // Click outside image bounds
+            }
+            
+            // Convert to natural image coordinates (same as play mode logic)
+            const naturalWidth = img.naturalWidth;
+            const naturalHeight = img.naturalHeight;
+            const displayWidth = img.offsetWidth;
+            const displayHeight = img.offsetHeight;
+            
+            // Calculate the scaling ratio (reverse of play mode adjustCoords)
+            const ratio = naturalHeight / displayHeight;
+            
+            // Store coordinates at natural image size (like play mode origcoords)
+            const naturalX = Math.round(displayX * ratio);
+            const naturalY = Math.round(displayY * ratio);
+            
+            mapCreationState.points.push({x: naturalX, y: naturalY});
+            
+            // Update coordinates display
+            updateCoordinatesDisplay();
+            
+            // Draw temp elements using display coordinates for visual feedback
+            switch(mapCreationState.currentShape) {
+                case 'rect':
+                    if (mapCreationState.points.length === 1) {
+                        drawTempPoint(displayX, displayY);
+                    } else if (mapCreationState.points.length === 2) {
+                        clearTempElements();
+                        drawTempRectangle();
+                    }
+                    break;
+                    
+                case 'circle':
+                    if (mapCreationState.points.length === 1) {
+                        drawTempPoint(displayX, displayY);
+                    } else if (mapCreationState.points.length === 2) {
+                        clearTempElements();
+                        drawTempCircle();
+                    }
+                    break;
+                    
+                case 'poly':
+                    drawTempPoint(displayX, displayY);
+                    if (mapCreationState.points.length > 2) {
+                        drawTempPolygon();
+                    }
+                    break;
+            }
+        }
+
+        function drawTempPoint(x, y) {
+            const overlay = document.getElementById('interactive-map-overlay');
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', 4);
+            circle.setAttribute('fill', '#ff0000');
+            circle.setAttribute('stroke', '#000');
+            circle.setAttribute('stroke-width', 1);
+            circle.className = 'temp-element';
+            overlay.appendChild(circle);
+            mapCreationState.tempElements.push(circle);
+        }
+
+        function drawTempRectangle() {
+            const points = mapCreationState.points;
+            const img = document.getElementById('interactive-map-image');
+            
+            // Convert natural coordinates back to display coordinates for visual feedback
+            const ratio = img.offsetHeight / img.naturalHeight;
+            
+            const x1Display = Math.min(points[0].x * ratio, points[1].x * ratio);
+            const y1Display = Math.min(points[0].y * ratio, points[1].y * ratio);
+            const x2Display = Math.max(points[0].x * ratio, points[1].x * ratio);
+            const y2Display = Math.max(points[0].y * ratio, points[1].y * ratio);
+            
+            const overlay = document.getElementById('interactive-map-overlay');
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', x1Display);
+            rect.setAttribute('y', y1Display);
+            rect.setAttribute('width', x2Display - x1Display);
+            rect.setAttribute('height', y2Display - y1Display);
+            rect.setAttribute('fill', 'rgba(255, 0, 0, 0.3)');
+            rect.setAttribute('stroke', '#ff0000');
+            rect.setAttribute('stroke-width', 2);
+            rect.className = 'temp-element';
+            overlay.appendChild(rect);
+            mapCreationState.tempElements.push(rect);
+        }
+
+        function drawTempCircle() {
+            const points = mapCreationState.points;
+            const img = document.getElementById('interactive-map-image');
+            
+            // Convert natural coordinates back to display coordinates for visual feedback
+            const ratio = img.offsetHeight / img.naturalHeight;
+            
+            const centerXDisplay = points[0].x * ratio;
+            const centerYDisplay = points[0].y * ratio;
+            const radiusDisplay = Math.round(Math.sqrt(
+                Math.pow((points[1].x - points[0].x) * ratio, 2) + Math.pow((points[1].y - points[0].y) * ratio, 2)
+            ));
+            
+            const overlay = document.getElementById('interactive-map-overlay');
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', centerXDisplay);
+            circle.setAttribute('cy', centerYDisplay);
+            circle.setAttribute('r', radiusDisplay);
+            circle.setAttribute('fill', 'rgba(255, 0, 0, 0.3)');
+            circle.setAttribute('stroke', '#ff0000');
+            circle.setAttribute('stroke-width', 2);
+            circle.className = 'temp-element';
+            overlay.appendChild(circle);
+            mapCreationState.tempElements.push(circle);
+        }
+
+        function drawTempPolygon() {
+            const overlay = document.getElementById('interactive-map-overlay');
+            const img = document.getElementById('interactive-map-image');
+            
+            // Remove existing temp polygon
+            const existingPoly = overlay.querySelector('.temp-polygon');
+            if (existingPoly) {
+                existingPoly.remove();
+                mapCreationState.tempElements = mapCreationState.tempElements.filter(el => el !== existingPoly);
+            }
+            
+            // Convert natural coordinates back to display coordinates for visual feedback
+            const ratio = img.offsetHeight / img.naturalHeight;
+            const points = mapCreationState.points.map(p => (p.x * ratio) + ',' + (p.y * ratio)).join(' ');
+            
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', points);
+            polygon.setAttribute('fill', 'rgba(255, 0, 0, 0.3)');
+            polygon.setAttribute('stroke', '#ff0000');
+            polygon.setAttribute('stroke-width', 2);
+            polygon.className = 'temp-element temp-polygon';
+            overlay.appendChild(polygon);
+            mapCreationState.tempElements.push(polygon);
+        }
+
+        function updateCoordinatesDisplay() {
+            const display = document.getElementById('map-coordinates-display');
+            if (!display) return;
+            
+            const points = mapCreationState.points;
+            let coordsText = '';
+            
+            // Add debug info about image dimensions
+            const img = document.getElementById('interactive-map-image');
+            const debugInfo = img ? ' [Natural: ' + img.naturalWidth + 'x' + img.naturalHeight + ', Display: ' + img.offsetWidth + 'x' + img.offsetHeight + ']' : '';
+            
+            switch(mapCreationState.currentShape) {
+                case 'rect':
+                    if (points.length === 1) {
+                        coordsText = 'First corner: ' + points[0].x + ',' + points[0].y + debugInfo;
+                    } else if (points.length === 2) {
+                        const x1 = Math.min(points[0].x, points[1].x);
+                        const y1 = Math.min(points[0].y, points[1].y);
+                        const x2 = Math.max(points[0].x, points[1].x);
+                        const y2 = Math.max(points[0].y, points[1].y);
+                        coordsText = 'Rectangle: ' + x1 + ',' + y1 + ',' + x2 + ',' + y2 + debugInfo;
+                    }
+                    break;
+                    
+                case 'circle':
+                    if (points.length === 1) {
+                        coordsText = 'Center: ' + points[0].x + ',' + points[0].y + debugInfo;
+                    } else if (points.length === 2) {
+                        const radius = Math.round(Math.sqrt(
+                            Math.pow(points[1].x - points[0].x, 2) + Math.pow(points[1].y - points[0].y, 2)
+                        ));
+                        coordsText = 'Circle: ' + points[0].x + ',' + points[0].y + ',' + radius + debugInfo;
+                    }
+                    break;
+                    
+                case 'poly':
+                    coordsText = 'Polygon: ' + points.map(p => p.x + ',' + p.y).join(',') + debugInfo;
+                    if (points.length >= 3) {
+                        coordsText += ' (Click "Save" to finish)';
+                    }
+                    break;
+            }
+            
+            display.textContent = coordsText || ('Click on the image to start creating the region...' + debugInfo);
+        }
+
+        function changeMapShape(newShape) {
+            mapCreationState.currentShape = newShape;
+            clearMapCreation();
+        }
+
+        function clearMapCreation() {
+            mapCreationState.points = [];
+            clearTempElements();
+            updateCoordinatesDisplay();
+        }
+
+        function clearTempElements() {
+            mapCreationState.tempElements.forEach(element => {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            });
+            mapCreationState.tempElements = [];
+        }
+
+        // Override the saveCurrentEdit function to handle interactive map creation
+        function saveCurrentEdit() {
+            if (mapCreationState.isActive) {
+                saveInteractiveMapRegion();
+                return;
+            }
+            
+            // Original saveCurrentEdit logic
+            const feature = currentEditFeature.feature;
+            const index = currentEditFeature.index;
+            
+            switch(feature) {
+                case 'id':
+                    saveIdEdit();
+                    break;
+                case 'title':
+                    saveTitleEdit();
+                    break;
+                case 'text':
+                    saveTextEdit();
+                    break;
+                case 'picture':
+                    savePictureEdit();
+                    break;
+                case 'video':
+                    saveVideoEdit();
+                    break;
+                case 'sound':
+                    saveSoundEdit();
+                    break;
+                case 'music':
+                    saveMusicEdit();
+                    break;
+                case 'mood':
+                    saveMoodEdit();
+                    break;
+                case 'achievement':
+                    saveAchievementEdit();
+                    break;
+                case 'choice':
+                    saveChoiceEdit(index);
+                    break;
+                case 'map':
+                    saveMapEdit(index);
+                    break;
+                case 'metadata':
+                    saveMetadataEdit();
+                    break;
+                case 'stuff':
+                    saveStuffEdit(index);
+                    break;
+                case 'credits':
+                    saveCreditsEdit();
+                    break;
+            }
+            
+            // Return to preview mode
+            cancelCurrentEdit();
+            
+            // Refresh displays
+            renderActionButtons();
+            renderTilePreview();
+            renderTileList();
+            markUnsaved();
+        }
+
+        function saveInteractiveMapRegion() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            const targetTile = document.getElementById('map-target-tile').value.trim();
+            const hint = document.getElementById('map-hint-selector').value;
+            
+            if (!targetTile) {
+                alert('Please enter a target tile ID');
+                return;
+            }
+            
+            let coords = '';
+            const points = mapCreationState.points;
+            
+            switch(mapCreationState.currentShape) {
+                case 'rect':
+                    if (points.length < 2) {
+                        alert('Please click two corners to create a rectangle');
+                        return;
+                    }
+                    const x1 = Math.min(points[0].x, points[1].x);
+                    const y1 = Math.min(points[0].y, points[1].y);
+                    const x2 = Math.max(points[0].x, points[1].x);
+                    const y2 = Math.max(points[0].y, points[1].y);
+                    coords = \`\${x1},\${y1},\${x2},\${y2}\`;
+                    break;
+                    
+                case 'circle':
+                    if (points.length < 2) {
+                        alert('Please click center and edge to create a circle');
+                        return;
+                    }
+                    const radius = Math.round(Math.sqrt(
+                        Math.pow(points[1].x - points[0].x, 2) + Math.pow(points[1].y - points[0].y, 2)
+                    ));
+                    coords = \`\${points[0].x},\${points[0].y},\${radius}\`;
+                    break;
+                    
+                case 'poly':
+                    if (points.length < 3) {
+                        alert('Please click at least 3 points to create a polygon');
+                        return;
+                    }
+                    coords = points.map(p => \`\${p.x},\${p.y}\`).join(',');
+                    break;
+            }
+            
+            // Create the map region
+            if (!tile.map) tile.map = [];
+            tile.map.push({
+                shape: mapCreationState.currentShape,
+                coords: coords,
+                to_tile: targetTile,
+                hint: hint
+            });
+            
+            // Reset map creation state
+            mapCreationState.isActive = false;
+            clearTempElements();
+            
+            // Return to preview mode
+            cancelCurrentEdit();
+            
+            // Refresh displays
+            renderActionButtons();
+            renderTilePreview();
+            renderTileList();
+            markUnsaved();
+        }
+
+        // Test function to verify coordinate consistency between edit and play modes
+        function testCoordinateConsistency() {
+            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
+            if (!tile || !tile.map || tile.map.length === 0) {
+                console.log('No map regions to test');
+                return;
+            }
+            
+            const editImg = document.getElementById('interactive-map-image');
+            const previewImg = document.getElementById('preview-image');
+            
+            if (!editImg || !previewImg) {
+                console.log('Images not found for testing');
+                return;
+            }
+            
+            console.log('=== COORDINATE CONSISTENCY TEST ===');
+            console.log('Edit mode image:', editImg.offsetWidth + 'x' + editImg.offsetHeight, 'Natural:', editImg.naturalWidth + 'x' + editImg.naturalHeight);
+            console.log('Preview mode image:', previewImg.offsetWidth + 'x' + previewImg.offsetHeight, 'Natural:', previewImg.naturalWidth + 'x' + previewImg.naturalHeight);
+            
+            // Test each map region
+            tile.map.forEach((region, index) => {
+                console.log('Region ' + (index + 1) + ' (' + region.shape + '):');
+                console.log('  Stored coords (natural):', region.coords);
+                
+                // Calculate what play mode would display
+                const coords = region.coords.split(',').map(c => parseInt(c));
+                const playModeRatio = 0.4 * window.innerWidth / editImg.naturalWidth; // 40vw / natural width
+                const playModeCoords = coords.map(coord => coord * playModeRatio);
+                console.log('  Play mode coords (40vw):', playModeCoords.join(','));
+                
+                // Calculate what edit mode displays
+                const editModeRatio = editImg.offsetHeight / editImg.naturalHeight;
+                const editModeCoords = coords.map(coord => coord * editModeRatio);
+                console.log('  Edit mode coords (display):', editModeCoords.join(','));
+                
+                // Calculate what preview mode displays
+                const previewModeRatio = previewImg.offsetHeight / previewImg.naturalHeight;
+                const previewModeCoords = coords.map(coord => coord * previewModeRatio);
+                console.log('  Preview mode coords (display):', previewModeCoords.join(','));
+                
+                // Check if ratios match (they should be the same since all use 40vw)
+                const ratiosMatch = Math.abs(editModeRatio - previewModeRatio) < 0.01;
+                console.log('  Ratios match:', ratiosMatch, '(edit:', editModeRatio.toFixed(3), 'preview:', previewModeRatio.toFixed(3), ')');
+            });
+            
+            console.log('=== END TEST ===');
+        }
+        
+        // Add test button to the interface (for debugging)
+        window.testCoordinateConsistency = testCoordinateConsistency;
+        function cancelCurrentEdit() {
+            if (mapCreationState.isActive) {
+                mapCreationState.isActive = false;
+                clearTempElements();
+            }
+            
+            currentEditMode = 'preview';
+            currentEditFeature = null;
+            document.getElementById('edit-overlay').style.display = 'none';
         }
 
         function renderChoices() {
@@ -1023,6 +2762,63 @@ app.get('/edit/story/:name', async function (req, res) {
                 \`;
                 mapList.appendChild(regionDiv);
             });
+        }
+
+        // Preview functions for metadata, stuff, and credits
+        function renderMetadataPreview() {
+            const previewContent = document.getElementById('preview-content');
+            previewContent.innerHTML = \`
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <h2>Story Metadata</h2>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3>\${currentStory.Name || 'Untitled Story'}</h3>
+                        <p><strong>Description:</strong> \${currentStory.Description || 'No description'}</p>
+                        <p><strong>Published:</strong> \${currentStory.published === 'yes' ? 'Yes' : 'No'}</p>
+                        <p><strong>Creator:</strong> \${currentStory.creator || 'Unknown'}</p>
+                        <p><strong>Number of Tiles:</strong> \${currentStory.Tiles ? currentStory.Tiles.length : 0}</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="editFeature('metadata')">Edit Metadata</button>
+                </div>
+            \`;
+        }
+
+        function renderStuffPreview() {
+            const previewContent = document.getElementById('preview-content');
+            let stuffHTML = '<div style="max-width: 600px; margin: 0 auto;"><h2>Story Items</h2>';
+            
+            if (currentStory.Stuff && currentStory.Stuff.length > 0) {
+                stuffHTML += '<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+                currentStory.Stuff.forEach((item, index) => {
+                    stuffHTML += \`
+                        <div style="border-bottom: 1px solid #ddd; padding: 10px 0; margin-bottom: 10px;">
+                            <h4>\${item.name || 'Unnamed Item'}</h4>
+                            <p><strong>Key:</strong> \${item.key || 'No key'}</p>
+                            <p><strong>Description:</strong> \${item.description || 'No description'}</p>
+                            \${item.code ? '<p><strong>Unlock Code:</strong> ' + item.code + '</p>' : ''}
+                            <button class="btn btn-secondary" onclick="editFeature('stuff', \${index})">Edit</button>
+                        </div>
+                    \`;
+                });
+                stuffHTML += '</div>';
+            } else {
+                stuffHTML += '<p>No items defined.</p>';
+            }
+            
+            stuffHTML += '<button class="btn btn-primary" onclick="editFeature(\\'stuff\\', -1)">Add Item</button></div>';
+            previewContent.innerHTML = stuffHTML;
+        }
+
+        function renderCreditsPreview() {
+            const previewContent = document.getElementById('preview-content');
+            previewContent.innerHTML = \`
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <h2>Story Credits</h2>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; min-height: 100px;">
+                        \${currentStory.Credits || '<em>No credits defined</em>'}
+                    </div>
+                    <button class="btn btn-primary" onclick="editFeature('credits')">Edit Credits</button>
+                </div>
+            \`;
         }
 
         function renderMetadataEditor() {
