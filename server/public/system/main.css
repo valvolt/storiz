@@ -299,6 +299,37 @@ ul {
   border-top: 28.87px solid #333333;
 }
 
+/* Blue hexagon for unpublished stories (creator testing) */
+.hexagon-blue {
+  position: relative;
+  width: 100px; 
+  height: 57.74px;
+  background-color: #007bff;
+  color: white;
+  margin: 28.87px 0;
+  font-size: 8px;
+}
+
+.hexagon-blue:before,
+.hexagon-blue:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+}
+
+.hexagon-blue:before {
+  bottom: 100%;
+  border-bottom: 28.87px solid #007bff;
+}
+
+.hexagon-blue:after {
+  top: 100%;
+  width: 0;
+  border-top: 28.87px solid #007bff;
+}
+
 .hex7 {
   position: absolute;
   top: 220px;

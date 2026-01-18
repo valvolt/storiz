@@ -208,6 +208,13 @@ button[type="submit"] {
 })
 
 app.get('/newgame', async function (req, res) {
+  // Check if user already has a SESSION cookie
+  if(req.cookies.SESSION != undefined) {
+    // User already logged in, redirect to stories
+    res.redirect('/stories');
+    return;
+  }
+  
   // create user (autologin)
   userid = uuid.v4();
   var player = {};
@@ -298,15 +305,28 @@ app.get('/stories', async function (req, res) {
     </div>
   `
   
+  // Get continue code from SESSION cookie to check if user is creator
+  var continueCode = "";
+  if(req.cookies.SESSION != undefined) {
+    continueCode = req.cookies.SESSION;
+  }
+  
   var i = 0
   stories = await retrieve('stories');
   players = await retrieve('players');
   for (let story of stories) {
-    // Only show published stories (treat legacy stories without published field as published)
     const isPublished = story.published === 'yes' || !story.published;
-    if (isPublished) {
+    const isCreator = story.creator === continueCode;
+    
+    // Show published stories to everyone, unpublished stories only to creators
+    if (isPublished || isCreator) {
       i = i + 1;
-      list += "<div class=\"hexagon hex"+i+"\"><a href=\"/story/"+story.Name+"\">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+"</p></div>"
+      
+      // Use blue hexagon for unpublished stories (creator testing)
+      const hexagonClass = !isPublished && isCreator ? "hexagon-blue hex" + i : "hexagon hex" + i;
+      const testingLabel = !isPublished && isCreator ? " (Testing)" : "";
+      
+      list += "<div class=\"" + hexagonClass + "\"><a href=\"/story/" + story.Name + "\">" + story.Name + "</a> (" + story.NbTiles + " Tiles)" + testingLabel + "<p>" + story.Description + "</p></div>"
     }
   }
   res.setHeader("Content-Type", "text/html");
@@ -1313,6 +1333,9 @@ app.get('/edit/story/:name', async function (req, res) {
                 case 'stuff':
                     saveStuffEdit(index);
                     break;
+                case 'achievements':
+                    saveAchievementsEdit(index);
+                    break;
                 case 'credits':
                     saveCreditsEdit();
                     break;
@@ -1733,6 +1756,7 @@ app.get('/edit/story/:name', async function (req, res) {
         
         function addChoiceAchievement() {
             const achievements = currentStory.Achievements || [];
+            
             if (achievements.length === 0) {
                 alert('No achievements available. Please create achievements in the Achievements section first.');
                 return;
@@ -1868,6 +1892,75 @@ app.get('/edit/story/:name', async function (req, res) {
             
             return items;
         }
+
+        function addMapAchievement() {
+            const achievements = currentStory.Achievements || [];
+            if (achievements.length === 0) {
+                alert('No achievements available. Please create achievements in the Achievements section first.');
+                return;
+            }
+            
+            const container = document.getElementById('map-achievement-container');
+            const currentAchievements = container.children.length;
+            addMapAchievementRow('', currentAchievements);
+        }
+        
+        function addMapAchievementRow(selectedAchievement, index) {
+            const container = document.getElementById('map-achievement-container');
+            const achievements = currentStory.Achievements || [];
+            
+            const row = document.createElement('div');
+            row.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; gap: 5px;';
+            
+            // Create dropdown
+            const select = document.createElement('select');
+            select.style.cssText = 'flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;';
+            select.id = 'map-achievement-' + index;
+            
+            // Add empty option
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '-- Select Achievement --';
+            select.appendChild(emptyOption);
+            
+            // Add achievements
+            achievements.forEach(achievement => {
+                const option = document.createElement('option');
+                option.value = achievement.key;  // Use key as value
+                option.textContent = achievement.name;  // Display name to user
+                if (achievement.key === selectedAchievement) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Create remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = '×';
+            removeBtn.style.cssText = 'padding: 5px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; font-size: 12px;';
+            removeBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(select);
+            row.appendChild(removeBtn);
+            container.appendChild(row);
+        }
+        
+        function getMapAchievements() {
+            const container = document.getElementById('map-achievement-container');
+            const achievements = [];
+            
+            Array.from(container.children).forEach(row => {
+                const select = row.querySelector('select');
+                if (select && select.value) {
+                    achievements.push(select.value);
+                }
+            });
+            
+            return achievements;
+        }
         
         function renderMapEditForm(index) {
             const tile = currentStory.Tiles.find(t => t.id === currentTileId);
@@ -1902,6 +1995,10 @@ app.get('/edit/story/:name', async function (req, res) {
                 <div class="form-group">
                     <label>Item (comma-separated):</label>
                     <input type="text" id="edit-map-item" value="\${Array.isArray(region.item) ? region.item.join(', ') : (region.item || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Achievement (comma-separated):</label>
+                    <input type="text" id="edit-map-achievement" value="\${Array.isArray(region.achievement) ? region.achievement.join(', ') : (region.achievement || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 </div>
                 <div class="form-group">
                     <label>Hint:</label>
@@ -2088,6 +2185,16 @@ app.get('/edit/story/:name', async function (req, res) {
                     regionData.item = items[0];
                 } else if (items.length > 1) {
                     regionData.item = items;
+                }
+            }
+            
+            const achievement = document.getElementById('edit-map-achievement').value.trim();
+            if (achievement) {
+                const achievements = achievement.split(',').map(ach => ach.trim()).filter(ach => ach);
+                if (achievements.length === 1) {
+                    regionData.achievement = achievements[0];
+                } else if (achievements.length > 1) {
+                    regionData.achievement = achievements;
                 }
             }
             
@@ -2329,6 +2436,9 @@ app.get('/edit/story/:name', async function (req, res) {
                 currentStory.Achievements.push(achievementData);
             }
             
+            // Mark story as unsaved
+            markUnsaved();
+            
             // Immediately refresh achievements view if we're in achievements mode
             if (currentView === 'achievements') {
                 setTimeout(() => renderAchievementsPreview(), 100);
@@ -2474,6 +2584,15 @@ app.get('/edit/story/:name', async function (req, res) {
                             </div>
                             <button type="button" onclick="addMapItem('item')" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 12px;">Add Reward Item</button>
                             <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">Items that will be added to inventory when this region is clicked. Create items in the Stuff section first.</small>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #495057;">Achievement:</label>
+                            <div id="map-achievement-container" style="margin-bottom: 10px;">
+                                <!-- Achievement rewards will be populated by JavaScript -->
+                            </div>
+                            <button type="button" onclick="addMapAchievement()" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 12px;">Add Achievement</button>
+                            <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">Achievements that will be unlocked when this region is clicked. Create achievements in the Achievements section first.</small>
                         </div>
                     </div>
                 </div>
@@ -2855,6 +2974,9 @@ app.get('/edit/story/:name', async function (req, res) {
                 case 'stuff':
                     saveStuffEdit(index);
                     break;
+                case 'achievements':
+                    saveAchievementsEdit(index);
+                    break;
                 case 'credits':
                     saveCreditsEdit();
                     break;
@@ -2940,6 +3062,11 @@ app.get('/edit/story/:name', async function (req, res) {
             const item = getMapItems('item');
             if (item.length > 0) {
                 regionData.item = item.length === 1 ? item[0] : item;
+            }
+            
+            const achievements = getMapAchievements();
+            if (achievements.length > 0) {
+                regionData.achievement = achievements.length === 1 ? achievements[0] : achievements;
             }
             
             tile.map.push(regionData);
@@ -4006,6 +4133,13 @@ app.get('/edit/story/:name', async function (req, res) {
 
         // Initialize the editor
         initEditor();
+        
+        // Debug function to check story state
+        window.debugStory = function() {
+            console.log('Current story:', currentStory);
+            console.log('Achievements:', currentStory.Achievements);
+            console.log('Stuff:', currentStory.Stuff);
+        };
     </script>
 </body>
 </html>
