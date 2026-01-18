@@ -337,21 +337,19 @@ app.get('/edit', async function (req, res) {
   i = i + 1;
   list += "<div class=\"hexagon hex"+i+"\"><a href=\"#\" onclick=\"createNewStory()\">Create New Story</a><p>Start a new interactive story</p></div>";
   
-  // Add existing stories
+  // Add existing stories - only show stories created by current user
   for (let story of stories) {
-    i = i + 1;
-    
     // Check if current user is the creator (handle legacy stories without creator field)
     const isCreator = story.creator === continueCode;
     const isLegacy = !story.creator;
     const canEdit = isCreator || isLegacy;
     
-    const hexClass = canEdit ? "hexagon hex"+i : "hexagon hex"+i+" disabled";
-    const linkHref = canEdit ? "/edit/story/"+(story.filename || story.Name.toLowerCase()) : "#";
-    const linkClass = canEdit ? "" : " class=\"disabled-link\"";
-    const legacyIndicator = isLegacy ? " (Legacy - No Creator)" : "";
-    
-    list += "<div class=\""+hexClass+"\"><a href=\""+linkHref+"\""+linkClass+">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+legacyIndicator+"</p></div>";
+    // Only show stories that the user can edit
+    if (canEdit) {
+      i = i + 1;
+      const legacyIndicator = isLegacy ? " (Legacy - No Creator)" : "";
+      list += "<div class=\"hexagon hex"+i+"\"><a href=\"/edit/story/"+(story.filename || story.Name.toLowerCase())+"\">"+story.Name+"</a> ("+story.NbTiles+" Tiles)<p>"+story.Description+legacyIndicator+"</p></div>";
+    }
   }
   
   // Add JavaScript for create new story functionality
@@ -383,17 +381,6 @@ app.get('/edit', async function (req, res) {
         }
       }
     </script>
-    <style>
-      .hexagon.disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      .disabled-link {
-        color: #666 !important;
-        text-decoration: none !important;
-        cursor: default !important;
-      }
-    </style>
   `;
   
   res.setHeader("Content-Type", "text/html");
@@ -920,7 +907,6 @@ app.get('/edit/story/:name', async function (req, res) {
             // Title button
             if (tile.title) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'title\\')">Edit Title</button>';
-                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'title\\')">Remove Title</button>';
             } else {
                 buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'title\\')">Add Title</button>';
             }
@@ -928,7 +914,6 @@ app.get('/edit/story/:name', async function (req, res) {
             // Text button
             if (tile.text) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'text\\')">Edit Text</button>';
-                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'text\\')">Remove Text</button>';
             } else {
                 buttonsHTML += '<button class="action-button primary" onclick="editFeature(\\'text\\')">Add Text</button>';
             }
@@ -946,7 +931,7 @@ app.get('/edit/story/:name', async function (req, res) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'video\\')">Change Video</button>';
                 buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'video\\')">Remove Video</button>';
             } else {
-                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'video\\')">Add Video</button>';
+                buttonsHTML += '<button class="action-button" onclick="uploadMedia(\\'video\\')">Upload Video</button>';
             }
             
             // Sound button
@@ -954,7 +939,7 @@ app.get('/edit/story/:name', async function (req, res) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'sound\\')">Change Sound</button>';
                 buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'sound\\')">Remove Sound</button>';
             } else {
-                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'sound\\')">Add Sound</button>';
+                buttonsHTML += '<button class="action-button" onclick="uploadMedia(\\'sound\\')">Upload Sound</button>';
             }
             
             // Music button
@@ -1484,9 +1469,8 @@ app.get('/edit/story/:name', async function (req, res) {
             const form = document.getElementById('edit-form');
             form.innerHTML = \`
                 <div class="form-group">
-                    <label>Video URL:</label>
-                    <input type="text" id="edit-video-input" value="\${tile.video || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('video', this.value)">
-                    <button class="btn btn-primary" onclick="uploadEditMedia('video')" style="margin-top: 10px;">Upload Video</button>
+                    <label>Video:</label>
+                    <button class="btn btn-primary" onclick="uploadEditMedia('video')" style="width: 100%; margin-bottom: 10px;">Upload Video</button>
                     <div id="edit-video-preview" class="media-preview"></div>
                 </div>
             \`;
@@ -1500,8 +1484,8 @@ app.get('/edit/story/:name', async function (req, res) {
             const form = document.getElementById('edit-form');
             form.innerHTML = \`
                 <div class="form-group">
-                    <label>Sound URL:</label>
-                    <input type="text" id="edit-sound-input" value="\${tile.sound || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('sound', this.value)">
+                    <label>Sound:</label>
+                    <button class="btn btn-primary" onclick="uploadEditMedia('sound')" style="width: 100%; margin-bottom: 10px;">Upload Sound</button>
                     <div id="edit-sound-preview" class="media-preview"></div>
                 </div>
             \`;
@@ -1558,6 +1542,10 @@ app.get('/edit/story/:name', async function (req, res) {
             const tile = currentStory.Tiles.find(t => t.id === currentTileId);
             const choice = index >= 0 ? tile.choices[index] : {};
             const form = document.getElementById('edit-form');
+            
+            // Get available stuff items from the story
+            const stuffItems = currentStory.Stuff || [];
+            
             form.innerHTML = \`
                 <div class="form-group">
                     <label>Choice Text:</label>
@@ -1568,16 +1556,28 @@ app.get('/edit/story/:name', async function (req, res) {
                     <input type="text" id="edit-choice-to-tile" value="\${choice.to_tile || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 </div>
                 <div class="form-group">
-                    <label>Requires (comma-separated):</label>
-                    <input type="text" id="edit-choice-requires" value="\${Array.isArray(choice.requires) ? choice.requires.join(', ') : (choice.requires || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <label>Requires:</label>
+                    <div id="edit-choice-requires-container">
+                        <!-- Requires items will be populated by JavaScript -->
+                    </div>
+                    <button type="button" onclick="addChoiceItem('requires')" style="margin-top: 5px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px;">Add Required Item</button>
+                    <small style="display: block; margin-top: 5px; color: #666;">Items that must be in inventory for this choice to be available. Create items in the Stuff section first.</small>
                 </div>
                 <div class="form-group">
-                    <label>Uses (comma-separated):</label>
-                    <input type="text" id="edit-choice-uses" value="\${Array.isArray(choice.uses) ? choice.uses.join(', ') : (choice.uses || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <label>Uses:</label>
+                    <div id="edit-choice-uses-container">
+                        <!-- Uses items will be populated by JavaScript -->
+                    </div>
+                    <button type="button" onclick="addChoiceItem('uses')" style="margin-top: 5px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px;">Add Used Item</button>
+                    <small style="display: block; margin-top: 5px; color: #666;">Items that will be consumed when this choice is selected. Create items in the Stuff section first.</small>
                 </div>
                 <div class="form-group">
-                    <label>Item (comma-separated):</label>
-                    <input type="text" id="edit-choice-item" value="\${Array.isArray(choice.item) ? choice.item.join(', ') : (choice.item || '')}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <label>Item:</label>
+                    <div id="edit-choice-item-container">
+                        <!-- Item rewards will be populated by JavaScript -->
+                    </div>
+                    <button type="button" onclick="addChoiceItem('item')" style="margin-top: 5px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px;">Add Reward Item</button>
+                    <small style="display: block; margin-top: 5px; color: #666;">Items that will be added to inventory when this choice is selected. Create items in the Stuff section first.</small>
                 </div>
                 <div class="form-group">
                     <label>Disable:</label>
@@ -1588,8 +1588,167 @@ app.get('/edit/story/:name', async function (req, res) {
                     </select>
                 </div>
             \`;
+            
+            // Populate the item containers
+            setTimeout(() => {
+                populateChoiceItems('requires', choice.requires || []);
+                populateChoiceItems('uses', choice.uses || []);
+                populateChoiceItems('item', choice.item || []);
+            }, 100);
         }
 
+        function populateChoiceItems(type, items) {
+            const container = document.getElementById('edit-choice-' + type + '-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Ensure items is an array
+            const itemArray = Array.isArray(items) ? items : (items ? [items] : []);
+            
+            itemArray.forEach((item, index) => {
+                addChoiceItemRow(type, item, index);
+            });
+        }
+        
+        function addChoiceItem(type) {
+            const stuffItems = currentStory.Stuff || [];
+            if (stuffItems.length === 0) {
+                alert('No items available. Please create items in the Stuff section first.');
+                return;
+            }
+            
+            const container = document.getElementById('edit-choice-' + type + '-container');
+            const currentItems = container.children.length;
+            addChoiceItemRow(type, '', currentItems);
+        }
+        
+        function addChoiceItemRow(type, selectedItem, index) {
+            const container = document.getElementById('edit-choice-' + type + '-container');
+            const stuffItems = currentStory.Stuff || [];
+            
+            const row = document.createElement('div');
+            row.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; gap: 10px;';
+            
+            // Create dropdown
+            const select = document.createElement('select');
+            select.style.cssText = 'flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 3px;';
+            select.id = 'edit-choice-' + type + '-' + index;
+            
+            // Add empty option
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '-- Select Item --';
+            select.appendChild(emptyOption);
+            
+            // Add stuff items
+            stuffItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.key;  // Use key as value
+                option.textContent = item.name;  // Display name to user
+                if (item.key === selectedItem) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Create remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            removeBtn.style.cssText = 'padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px;';
+            removeBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(select);
+            row.appendChild(removeBtn);
+            container.appendChild(row);
+        }
+        
+        function getChoiceItems(type) {
+            const container = document.getElementById('edit-choice-' + type + '-container');
+            const items = [];
+            
+            Array.from(container.children).forEach(row => {
+                const select = row.querySelector('select');
+                if (select && select.value) {
+                    items.push(select.value);
+                }
+            });
+            
+            return items;
+        }
+        
+        function addMapItem(type) {
+            const stuffItems = currentStory.Stuff || [];
+            if (stuffItems.length === 0) {
+                alert('No items available. Please create items in the Stuff section first.');
+                return;
+            }
+            
+            const container = document.getElementById('map-' + type + '-container');
+            const currentItems = container.children.length;
+            addMapItemRow(type, '', currentItems);
+        }
+        
+        function addMapItemRow(type, selectedItem, index) {
+            const container = document.getElementById('map-' + type + '-container');
+            const stuffItems = currentStory.Stuff || [];
+            
+            const row = document.createElement('div');
+            row.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; gap: 5px;';
+            
+            // Create dropdown
+            const select = document.createElement('select');
+            select.style.cssText = 'flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;';
+            select.id = 'map-' + type + '-' + index;
+            
+            // Add empty option
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '-- Select Item --';
+            select.appendChild(emptyOption);
+            
+            // Add stuff items
+            stuffItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.key;  // Use key as value
+                option.textContent = item.name;  // Display name to user
+                if (item.key === selectedItem) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Create remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = '×';
+            removeBtn.style.cssText = 'padding: 5px 8px; background: #dc3545; color: white; border: none; border-radius: 3px; font-size: 12px;';
+            removeBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(select);
+            row.appendChild(removeBtn);
+            container.appendChild(row);
+        }
+        
+        function getMapItems(type) {
+            const container = document.getElementById('map-' + type + '-container');
+            const items = [];
+            
+            Array.from(container.children).forEach(row => {
+                const select = row.querySelector('select');
+                if (select && select.value) {
+                    items.push(select.value);
+                }
+            });
+            
+            return items;
+        }
+        
         function renderMapEditForm(index) {
             const tile = currentStory.Tiles.find(t => t.id === currentTileId);
             const region = index >= 0 ? tile.map[index] : {};
@@ -1741,35 +1900,20 @@ app.get('/edit/story/:name', async function (req, res) {
                 to_tile: document.getElementById('edit-choice-to-tile').value.trim()
             };
             
-            // Handle array fields
-            const requires = document.getElementById('edit-choice-requires').value.trim();
-            if (requires) {
-                const items = requires.split(',').map(item => item.trim()).filter(item => item);
-                if (items.length === 1) {
-                    choiceData.requires = items[0];
-                } else if (items.length > 1) {
-                    choiceData.requires = items;
-                }
+            // Handle dropdown-based array fields
+            const requires = getChoiceItems('requires');
+            if (requires.length > 0) {
+                choiceData.requires = requires.length === 1 ? requires[0] : requires;
             }
             
-            const uses = document.getElementById('edit-choice-uses').value.trim();
-            if (uses) {
-                const items = uses.split(',').map(item => item.trim()).filter(item => item);
-                if (items.length === 1) {
-                    choiceData.uses = items[0];
-                } else if (items.length > 1) {
-                    choiceData.uses = items;
-                }
+            const uses = getChoiceItems('uses');
+            if (uses.length > 0) {
+                choiceData.uses = uses.length === 1 ? uses[0] : uses;
             }
             
-            const item = document.getElementById('edit-choice-item').value.trim();
-            if (item) {
-                const items = item.split(',').map(item => item.trim()).filter(item => item);
-                if (items.length === 1) {
-                    choiceData.item = items[0];
-                } else if (items.length > 1) {
-                    choiceData.item = items;
-                }
+            const item = getChoiceItems('item');
+            if (item.length > 0) {
+                choiceData.item = item.length === 1 ? item[0] : item;
             }
             
             const disable = document.getElementById('edit-choice-disable').value;
@@ -2128,6 +2272,33 @@ app.get('/edit/story/:name', async function (req, res) {
                                 <option value="invisible">Invisible (no visual indication)</option>
                                 <option value="reveal">Reveal (always highlighted)</option>
                             </select>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #495057;">Requires:</label>
+                            <div id="map-requires-container" style="margin-bottom: 10px;">
+                                <!-- Requires items will be populated by JavaScript -->
+                            </div>
+                            <button type="button" onclick="addMapItem('requires')" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 12px;">Add Required Item</button>
+                            <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">Items that must be in inventory for this region to be clickable. Create items in the Stuff section first.</small>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #495057;">Uses:</label>
+                            <div id="map-uses-container" style="margin-bottom: 10px;">
+                                <!-- Uses items will be populated by JavaScript -->
+                            </div>
+                            <button type="button" onclick="addMapItem('uses')" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 12px;">Add Used Item</button>
+                            <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">Items that will be consumed when this region is clicked. Create items in the Stuff section first.</small>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #495057;">Item:</label>
+                            <div id="map-item-container" style="margin-bottom: 10px;">
+                                <!-- Item rewards will be populated by JavaScript -->
+                            </div>
+                            <button type="button" onclick="addMapItem('item')" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 12px;">Add Reward Item</button>
+                            <small style="display: block; margin-top: 5px; color: #666; font-size: 11px;">Items that will be added to inventory when this region is clicked. Create items in the Stuff section first.</small>
                         </div>
                     </div>
                 </div>
@@ -2572,12 +2743,31 @@ app.get('/edit/story/:name', async function (req, res) {
             
             // Create the map region
             if (!tile.map) tile.map = [];
-            tile.map.push({
+            
+            const regionData = {
                 shape: mapCreationState.currentShape,
                 coords: coords,
                 to_tile: targetTile,
                 hint: hint
-            });
+            };
+            
+            // Handle dropdown-based array fields
+            const requires = getMapItems('requires');
+            if (requires.length > 0) {
+                regionData.requires = requires.length === 1 ? requires[0] : requires;
+            }
+            
+            const uses = getMapItems('uses');
+            if (uses.length > 0) {
+                regionData.uses = uses.length === 1 ? uses[0] : uses;
+            }
+            
+            const item = getMapItems('item');
+            if (item.length > 0) {
+                regionData.item = item.length === 1 ? item[0] : item;
+            }
+            
+            tile.map.push(regionData);
             
             // Reset map creation state
             mapCreationState.isActive = false;
@@ -2999,7 +3189,8 @@ app.get('/edit/story/:name', async function (req, res) {
             if (!tile || !tile.choices) return;
             
             tile.choices.splice(index, 1);
-            renderChoices();
+            renderActionButtons(); // Update action buttons to reflect removal
+            renderTilePreview(); // Update preview to show changes
             renderTileList(); // Update tile list to show removed connections
             markUnsaved();
         }
@@ -3026,8 +3217,8 @@ app.get('/edit/story/:name', async function (req, res) {
             if (!tile || !tile.map) return;
             
             tile.map.splice(index, 1);
-            renderImageMap();
-            renderExistingMapRegions(); // Re-render visual regions
+            renderActionButtons(); // Update action buttons to reflect removal
+            renderTilePreview(); // Update preview to show changes
             renderTileList(); // Update tile list to show removed connections
             markUnsaved();
         }
