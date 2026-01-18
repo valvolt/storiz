@@ -40,6 +40,36 @@ const privateDir = './server/private/';
 var stories = []
 var players = []
 
+// Helper function to validate user session and prevent forged cookies
+async function validateUserSession(req, res) {
+  // Get continue code from SESSION cookie
+  var continueCode = "";
+  if(req.cookies.SESSION != undefined) {
+    continueCode = req.cookies.SESSION;
+  } else {
+    res.status(401).json({"error":"please log in"});
+    return null;
+  }
+
+  // Load players and check if user exists
+  const players = await retrieve('players');
+  var currentPlayer = undefined;
+  for (let player of players) {
+    if(player.username == continueCode) {
+      currentPlayer = player;
+      break;
+    }
+  }
+  
+  if (currentPlayer == undefined) {
+    console.log("Forged SESSION cookie - "+req.cookies.SESSION);
+    res.status(403).json({"error":"unknown user"});
+    return null;
+  }
+  
+  return continueCode;
+}
+
 // Configure multer for file uploads
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -349,9 +379,20 @@ app.get('/edit', async function (req, res) {
   if(req.cookies.SESSION != undefined) {
     continueCode = req.cookies.SESSION;
   } else {
-    // If no user is logged-in, redirect to login
-    res.redirect('/resume');
-    return;
+    // If no user is logged-in, create a new user (like /newgame)
+    const userid = uuid.v4();
+    var player = {};
+    player.username = userid;
+    player.screenname = "Anonymous";
+    player.stories = [];
+    
+    players = await retrieve('players');
+    players.push(player);
+    await persist('players', players);
+    
+    // Set SESSION cookie for the new user
+    res.cookie('SESSION', userid, { httpOnly: true });
+    continueCode = userid;
   }
 
   var i = 0;
@@ -4160,15 +4201,9 @@ app.get('/edit/story/:name', async function (req, res) {
 
 // Create new story
 app.post('/edit/story/new', async function (req, res) {
-  // Get continue code from SESSION cookie
-  var continueCode = "";
-  if(req.cookies.SESSION != undefined) {
-    continueCode = req.cookies.SESSION;
-  } else {
-    // If no user is logged-in, return error
-    res.status(401).json({"error":"please log in"});
-    return;
-  }
+  // Validate user session and prevent forged cookies
+  const continueCode = await validateUserSession(req, res);
+  if (!continueCode) return; // validateUserSession already sent error response
 
   try {
     const storyName = req.body.name;
@@ -4224,15 +4259,9 @@ app.post('/edit/story/new', async function (req, res) {
 
 // Save story
 app.post('/edit/story/:name', async function (req, res) {
-  // Get continue code from SESSION cookie
-  var continueCode = "";
-  if(req.cookies.SESSION != undefined) {
-    continueCode = req.cookies.SESSION;
-  } else {
-    // If no user is logged-in, return error
-    res.status(401).json({"error":"please log in"});
-    return;
-  }
+  // Validate user session and prevent forged cookies
+  const continueCode = await validateUserSession(req, res);
+  if (!continueCode) return; // validateUserSession already sent error response
 
   try {
     const story = req.body.story;
@@ -4342,15 +4371,9 @@ function validateStory(story) {
 
 // Media upload endpoint
 app.post('/edit/upload', upload.single('file'), async function (req, res) {
-  // Get continue code from SESSION cookie
-  var continueCode = "";
-  if(req.cookies.SESSION != undefined) {
-    continueCode = req.cookies.SESSION;
-  } else {
-    // If no user is logged-in, return error
-    res.status(401).json({"error":"please log in"});
-    return;
-  }
+  // Validate user session and prevent forged cookies
+  const continueCode = await validateUserSession(req, res);
+  if (!continueCode) return; // validateUserSession already sent error response
 
   try {
     if (!req.file) {
