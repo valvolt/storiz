@@ -47,7 +47,11 @@ const upload = multer({
     fileSize: 50 * 1024 * 1024 // 50MB limit
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm', 'audio/mp3', 'audio/wav'];
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+      'video/mp4', 'video/webm', 'video/avi', 'video/mov',
+      'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/mpeg', 'audio/mp4', 'audio/aac'
+    ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -700,6 +704,7 @@ app.get('/edit/story/:name', async function (req, res) {
             <div class="top-squares">
                 <div class="top-square" onclick="selectView('metadata')">Meta</div>
                 <div class="top-square" onclick="selectView('stuff')">Stuff</div>
+                <div class="top-square" onclick="selectView('achievements')">Achieve</div>
                 <div class="top-square" onclick="selectView('credits')">Credits</div>
             </div>
             <div id="tile-list">
@@ -854,6 +859,11 @@ app.get('/edit/story/:name', async function (req, res) {
         }
 
         function selectView(view) {
+            // Auto-cancel any current edit
+            if (currentEditMode === 'editing') {
+                cancelCurrentEdit();
+            }
+            
             currentView = view;
             currentTileId = null;
             currentEditMode = 'preview';
@@ -871,12 +881,19 @@ app.get('/edit/story/:name', async function (req, res) {
                 renderMetadataPreview();
             } else if (view === 'stuff') {
                 renderStuffPreview();
+            } else if (view === 'achievements') {
+                renderAchievementsPreview();
             } else if (view === 'credits') {
                 renderCreditsPreview();
             }
         }
 
         function selectTile(tileId) {
+            // Auto-cancel any current edit
+            if (currentEditMode === 'editing') {
+                cancelCurrentEdit();
+            }
+            
             currentView = 'tile';
             currentTileId = tileId;
             currentEditMode = 'preview';
@@ -947,7 +964,7 @@ app.get('/edit/story/:name', async function (req, res) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'music\\')">Change Music</button>';
                 buttonsHTML += '<button class="action-button danger" onclick="removeMedia(\\'music\\')">Remove Music</button>';
             } else {
-                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'music\\')">Add Music</button>';
+                buttonsHTML += '<button class="action-button" onclick="uploadMedia(\\'music\\')">Upload Music</button>';
             }
             
             // Mood button
@@ -958,13 +975,8 @@ app.get('/edit/story/:name', async function (req, res) {
                 buttonsHTML += '<button class="action-button" onclick="editFeature(\\'mood\\')">Add Mood</button>';
             }
             
-            // Achievement button
-            if (tile.achievement) {
-                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'achievement\\')">Change Achievement</button>';
-                buttonsHTML += '<button class="action-button danger" onclick="removeFeature(\\'achievement\\')">Remove Achievement</button>';
-            } else {
-                buttonsHTML += '<button class="action-button" onclick="editFeature(\\'achievement\\')">Add Achievement</button>';
-            }
+            // Achievement button - now managed at story level, not tile level
+            // Remove this section as achievements are now managed in the Meta section
             
             // Choice buttons
             if (tile.choices && tile.choices.length > 0) {
@@ -1007,6 +1019,19 @@ app.get('/edit/story/:name', async function (req, res) {
             // Title
             if (tile.title) {
                 previewHTML += \`<h2 style="text-align: center; margin-bottom: 20px;">\${tile.title}</h2>\`;
+            }
+            
+            // Mood indicator
+            if (tile.mood) {
+                const moodColors = {
+                    'cold': '#87CEEB',
+                    'hot': '#FF6B6B', 
+                    'gritty': '#8B4513',
+                    'metal': '#C0C0C0',
+                    'hacker': '#00FF00'
+                };
+                const moodColor = moodColors[tile.mood] || '#666';
+                previewHTML += \`<div style="text-align: center; margin-bottom: 15px; padding: 8px; background: \${moodColor}; color: white; border-radius: 4px; font-weight: bold; text-transform: uppercase;">Mood: \${tile.mood}</div>\`;
             }
             
             // Picture with image map overlay
@@ -1216,10 +1241,6 @@ app.get('/edit/story/:name', async function (req, res) {
                     title.textContent = 'Edit Mood';
                     renderMoodEditForm();
                     break;
-                case 'achievement':
-                    title.textContent = 'Edit Achievement';
-                    renderAchievementEditForm();
-                    break;
                 case 'choice':
                     title.textContent = index === -1 ? 'Add Choice' : \`Edit Choice \${index + 1}\`;
                     renderChoiceEditForm(index);
@@ -1235,6 +1256,10 @@ app.get('/edit/story/:name', async function (req, res) {
                 case 'stuff':
                     title.textContent = index === -1 ? 'Add Item' : \`Edit Item \${index + 1}\`;
                     renderStuffEditForm(index);
+                    break;
+                case 'achievements':
+                    title.textContent = index === -1 ? 'Add Achievement' : \`Edit Achievement \${index + 1}\`;
+                    renderAchievementsEditForm(index);
                     break;
                 case 'credits':
                     title.textContent = 'Edit Credits';
@@ -1499,8 +1524,8 @@ app.get('/edit/story/:name', async function (req, res) {
             const form = document.getElementById('edit-form');
             form.innerHTML = \`
                 <div class="form-group">
-                    <label>Music URL:</label>
-                    <input type="text" id="edit-music-input" value="\${tile.music || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" onchange="updateEditMediaPreview('music', this.value)">
+                    <label>Music:</label>
+                    <button class="btn btn-primary" onclick="uploadEditMedia('music')" style="width: 100%; margin-bottom: 10px;">Upload Music</button>
                     <div id="edit-music-preview" class="media-preview"></div>
                 </div>
             \`;
@@ -1527,13 +1552,16 @@ app.get('/edit/story/:name', async function (req, res) {
             \`;
         }
 
+        // Temporary function to handle old achievement edit form - will be removed when we update to new system
         function renderAchievementEditForm() {
-            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
             const form = document.getElementById('edit-form');
             form.innerHTML = \`
-                <div class="form-group">
-                    <label>Achievement:</label>
-                    <input type="text" id="edit-achievement-input" value="\${tile.achievement || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="padding: 20px; text-align: center; color: #666;">
+                    <h3>Achievement System Updated</h3>
+                    <p>Achievements are now managed at the story level.</p>
+                    <p>Please use the "Achieve" tab in the left panel to manage achievements,<br>
+                    and add them to choices using the achievement dropdown in choice editing.</p>
+                    <button class="btn btn-primary" onclick="selectView('achievements')" style="margin-top: 15px;">Go to Achievements</button>
                 </div>
             \`;
         }
@@ -1580,6 +1608,14 @@ app.get('/edit/story/:name', async function (req, res) {
                     <small style="display: block; margin-top: 5px; color: #666;">Items that will be added to inventory when this choice is selected. Create items in the Stuff section first.</small>
                 </div>
                 <div class="form-group">
+                    <label>Achievement:</label>
+                    <div id="edit-choice-achievement-container">
+                        <!-- Achievement rewards will be populated by JavaScript -->
+                    </div>
+                    <button type="button" onclick="addChoiceAchievement()" style="margin-top: 5px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px;">Add Achievement</button>
+                    <small style="display: block; margin-top: 5px; color: #666;">Achievements that will be unlocked when this choice is selected. Create achievements in the Achievements section first.</small>
+                </div>
+                <div class="form-group">
                     <label>Disable:</label>
                     <select id="edit-choice-disable" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                         <option value="">Default (grey)</option>
@@ -1594,6 +1630,7 @@ app.get('/edit/story/:name', async function (req, res) {
                 populateChoiceItems('requires', choice.requires || []);
                 populateChoiceItems('uses', choice.uses || []);
                 populateChoiceItems('item', choice.item || []);
+                populateChoiceAchievements(choice.achievement || []);
             }, 100);
         }
 
@@ -1678,6 +1715,89 @@ app.get('/edit/story/:name', async function (req, res) {
             });
             
             return items;
+        }
+
+        function populateChoiceAchievements(achievements) {
+            const container = document.getElementById('edit-choice-achievement-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Ensure achievements is an array
+            const achievementArray = Array.isArray(achievements) ? achievements : (achievements ? [achievements] : []);
+            
+            achievementArray.forEach((achievement, index) => {
+                addChoiceAchievementRow(achievement, index);
+            });
+        }
+        
+        function addChoiceAchievement() {
+            const achievements = currentStory.Achievements || [];
+            if (achievements.length === 0) {
+                alert('No achievements available. Please create achievements in the Achievements section first.');
+                return;
+            }
+            
+            const container = document.getElementById('edit-choice-achievement-container');
+            const currentAchievements = container.children.length;
+            addChoiceAchievementRow('', currentAchievements);
+        }
+        
+        function addChoiceAchievementRow(selectedAchievement, index) {
+            const container = document.getElementById('edit-choice-achievement-container');
+            const achievements = currentStory.Achievements || [];
+            
+            const row = document.createElement('div');
+            row.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; gap: 10px;';
+            
+            // Create dropdown
+            const select = document.createElement('select');
+            select.style.cssText = 'flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 3px;';
+            select.id = 'edit-choice-achievement-' + index;
+            
+            // Add empty option
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '-- Select Achievement --';
+            select.appendChild(emptyOption);
+            
+            // Add achievements
+            achievements.forEach(achievement => {
+                const option = document.createElement('option');
+                option.value = achievement.key;  // Use key as value
+                option.textContent = achievement.name;  // Display name to user
+                if (achievement.key === selectedAchievement) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Create remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            removeBtn.style.cssText = 'padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px;';
+            removeBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(select);
+            row.appendChild(removeBtn);
+            container.appendChild(row);
+        }
+        
+        function getChoiceAchievements() {
+            const container = document.getElementById('edit-choice-achievement-container');
+            const achievements = [];
+            
+            Array.from(container.children).forEach(row => {
+                const select = row.querySelector('select');
+                if (select && select.value) {
+                    achievements.push(select.value);
+                }
+            });
+            
+            return achievements;
         }
         
         function addMapItem(type) {
@@ -1881,16 +2001,6 @@ app.get('/edit/story/:name', async function (req, res) {
             }
         }
 
-        function saveAchievementEdit() {
-            const tile = currentStory.Tiles.find(t => t.id === currentTileId);
-            const value = document.getElementById('edit-achievement-input').value;
-            if (value.trim()) {
-                tile.achievement = value.trim();
-            } else {
-                delete tile.achievement;
-            }
-        }
-
         function saveChoiceEdit(index) {
             const tile = currentStory.Tiles.find(t => t.id === currentTileId);
             if (!tile.choices) tile.choices = [];
@@ -1916,6 +2026,11 @@ app.get('/edit/story/:name', async function (req, res) {
                 choiceData.item = item.length === 1 ? item[0] : item;
             }
             
+            const achievements = getChoiceAchievements();
+            if (achievements.length > 0) {
+                choiceData.achievement = achievements.length === 1 ? achievements[0] : achievements;
+            }
+            
             const disable = document.getElementById('edit-choice-disable').value;
             if (disable) {
                 choiceData.disable = disable;
@@ -1926,6 +2041,12 @@ app.get('/edit/story/:name', async function (req, res) {
             } else {
                 tile.choices.push(choiceData);
             }
+        }
+
+        // Temporary function to handle old achievement case - will be removed when we update to new system
+        function saveAchievementEdit() {
+            // This is the old tile-level achievement system - no longer used
+            // Achievements are now managed at story level in the Achievements section
         }
 
         function saveMapEdit(index) {
@@ -2129,6 +2250,33 @@ app.get('/edit/story/:name', async function (req, res) {
             \`;
         }
 
+        function renderAchievementsEditForm(index) {
+            const achievement = index >= 0 ? currentStory.Achievements[index] : {};
+            const form = document.getElementById('edit-form');
+            form.innerHTML = \`
+                <div class="form-group">
+                    <label>Key (unique identifier):</label>
+                    <input type="text" id="edit-achievement-key" value="\${achievement.key || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="edit-achievement-name" value="\${achievement.name || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="edit-achievement-description" style="width: 100%; min-height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">\${achievement.description || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Trophy:</label>
+                    <select id="edit-achievement-trophy" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="bronze" \${achievement.trophy === 'bronze' ? 'selected' : ''}>Bronze</option>
+                        <option value="silver" \${achievement.trophy === 'silver' ? 'selected' : ''}>Silver</option>
+                        <option value="gold" \${achievement.trophy === 'gold' ? 'selected' : ''}>Gold</option>
+                    </select>
+                </div>
+            \`;
+        }
+
         function saveMetadataEdit() {
             currentStory.Name = document.getElementById('edit-metadata-name').value.trim() || 'Untitled Story';
             currentStory.Description = document.getElementById('edit-metadata-description').value.trim();
@@ -2154,10 +2302,37 @@ app.get('/edit/story/:name', async function (req, res) {
             } else {
                 currentStory.Stuff.push(itemData);
             }
+            
+            // Immediately refresh stuff view if we're in stuff mode
+            if (currentView === 'stuff') {
+                setTimeout(() => renderStuffPreview(), 100);
+            }
         }
 
         function saveCreditsEdit() {
             currentStory.Credits = document.getElementById('edit-credits-content').value.trim();
+        }
+
+        function saveAchievementsEdit(index) {
+            if (!currentStory.Achievements) currentStory.Achievements = [];
+            
+            const achievementData = {
+                key: document.getElementById('edit-achievement-key').value.trim(),
+                name: document.getElementById('edit-achievement-name').value.trim(),
+                description: document.getElementById('edit-achievement-description').value.trim(),
+                trophy: document.getElementById('edit-achievement-trophy').value
+            };
+            
+            if (index >= 0) {
+                currentStory.Achievements[index] = achievementData;
+            } else {
+                currentStory.Achievements.push(achievementData);
+            }
+            
+            // Immediately refresh achievements view if we're in achievements mode
+            if (currentView === 'achievements') {
+                setTimeout(() => renderAchievementsPreview(), 100);
+            }
         }
 
         function removeMedia(mediaType) {
@@ -3011,6 +3186,42 @@ app.get('/edit/story/:name', async function (req, res) {
             \`;
         }
 
+        function renderAchievementsPreview() {
+            const previewContent = document.getElementById('preview-content');
+            let achievementsHTML = '<div style="max-width: 600px; margin: 0 auto;"><h2>Story Achievements</h2>';
+            
+            if (currentStory.Achievements && currentStory.Achievements.length > 0) {
+                achievementsHTML += '<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+                currentStory.Achievements.forEach((achievement, index) => {
+                    const trophyColors = {
+                        'bronze': '#CD7F32',
+                        'silver': '#C0C0C0', 
+                        'gold': '#FFD700'
+                    };
+                    const trophyColor = trophyColors[achievement.trophy] || '#666';
+                    achievementsHTML += \`
+                        <div style="border-bottom: 1px solid #ddd; padding: 10px 0; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 40px; height: 40px; background: \${trophyColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">
+                                \${achievement.trophy ? achievement.trophy.toUpperCase().substring(0,3) : 'ACH'}
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 5px 0;">\${achievement.name || 'Unnamed Achievement'}</h4>
+                                <p style="margin: 0; color: #666;"><strong>Key:</strong> \${achievement.key || 'No key'}</p>
+                                <p style="margin: 5px 0 0 0; color: #666;">\${achievement.description || 'No description'}</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="editFeature('achievements', \${index})">Edit</button>
+                        </div>
+                    \`;
+                });
+                achievementsHTML += '</div>';
+            } else {
+                achievementsHTML += '<p>No achievements defined.</p>';
+            }
+            
+            achievementsHTML += '<button class="btn btn-primary" onclick="editFeature(\\'achievements\\', -1)">Add Achievement</button></div>';
+            previewContent.innerHTML = achievementsHTML;
+        }
+
         function renderMetadataEditor() {
             const content = document.getElementById('editor-content');
             content.innerHTML = \`
@@ -3777,7 +3988,7 @@ app.get('/edit/story/:name', async function (req, res) {
                     alert('Error saving story: ' + data.error);
                 } else {
                     markSaved();
-                    alert('Story saved successfully!');
+                    // Story saved successfully (no popup)
                 }
             })
             .catch(error => {
