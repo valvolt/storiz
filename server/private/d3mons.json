@@ -14,7 +14,10 @@
         {
           "text": "I flee! Anywhere but here. We'll ask questions later.",
           "to_tile": "2",
-          "item": ["indemne", "fatigue"]
+          "item": [
+            "indemne",
+            "fatigue"
+          ]
         },
         {
           "text": "I stay here and get ready. This dude will receive his beating.",
@@ -124,15 +127,26 @@
           "requires": "jen",
           "disable": "invisible",
           "item": "no-friends",
-          "uses": ["friends","zan","qotd","irc"]
+          "uses": [
+            "friends",
+            "zan",
+            "qotd",
+            "irc"
+          ]
         },
         {
           "text": "Confront Zan again",
           "to_tile": "23",
           "requires": "zan",
           "disable": "invisible",
-          "item": ["no-qotd","no-irc"],
-          "uses": ["qotd","irc"]
+          "item": [
+            "no-qotd",
+            "no-irc"
+          ],
+          "uses": [
+            "qotd",
+            "irc"
+          ]
         }
       ]
     },
@@ -182,7 +196,10 @@
           "to_tile": "12",
           "requires": "ibrain",
           "disable": "invisible",
-          "item": ["no-friends","jen"]
+          "item": [
+            "no-friends",
+            "jen"
+          ]
         },
         {
           "text": "Who are you? What does all this mean ?!",
@@ -204,7 +221,8 @@
           "to_tile": "14",
           "requires": "ibrain",
           "disable": "invisible"
-        },        {
+        },
+        {
           "text": "Who are you? What does all this mean ?!",
           "to_tile": "13",
           "requires": "nobrain",
@@ -315,8 +333,8 @@
         {
           "text": "Ok I'll take care of this.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -336,8 +354,8 @@
         {
           "text": "Ok I'll take care of this.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -355,8 +373,8 @@
         {
           "text": "Ok I'll take care of this.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -402,7 +420,11 @@
         {
           "text": "I use nmap",
           "to_tile": "25",
-          "item":["no-qotd","no-irc","no-help"]
+          "item": [
+            "no-qotd",
+            "no-irc",
+            "no-help"
+          ]
         }
       ]
     },
@@ -434,25 +456,37 @@
         {
           "text": "Connection to Telnet",
           "to_tile": "27",
-          "requires": ["no-qotd","no-irc"],
+          "requires": [
+            "no-qotd",
+            "no-irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connection to Telnet",
           "to_tile": "27",
-          "requires": ["qotd","no-irc"],
+          "requires": [
+            "qotd",
+            "no-irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connection to Telnet",
           "to_tile": "27",
-          "requires": ["no-qotd","irc"],
+          "requires": [
+            "no-qotd",
+            "irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connection to Telnet",
           "to_tile": "29",
-          "requires": ["qotd","irc"],
+          "requires": [
+            "qotd",
+            "irc"
+          ],
           "disable": "invisible"
         },
         {
@@ -526,8 +560,14 @@
         {
           "text": "I'll try something else",
           "to_tile": "25",
-          "uses": ["no-irc","no-help"],
-          "item": ["irc","help"]
+          "uses": [
+            "no-irc",
+            "no-help"
+          ],
+          "item": [
+            "irc",
+            "help"
+          ]
         }
       ]
     },
@@ -574,19 +614,28 @@
         {
           "text": "Did it work??",
           "to_tile": "35",
-          "requires": ["no-help","no-friends"],
+          "requires": [
+            "no-help",
+            "no-friends"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Did it work??",
           "to_tile": "35",
-          "requires": ["no-help","friends"],
+          "requires": [
+            "no-help",
+            "friends"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Did it work??",
           "to_tile": "36",
-          "requires": ["help","friends"],
+          "requires": [
+            "help",
+            "friends"
+          ],
           "disable": "invisible"
         }
       ]
@@ -659,7 +708,7 @@
       "picture": "/d3mons/chernobyl-3711309_1280.jpg",
       "achievement": "goldenending"
     }
- ],
+  ],
   "Stuff": [
     {
       "key": "fatigue",
@@ -706,5 +755,7 @@
       "name": "Who's Jen?",
       "description": "You know Jen is hiding something..."
     }
-  ]
+  ],
+  "creator": "adminadminadmin",
+  "published": "yes"
 }

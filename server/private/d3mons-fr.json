@@ -1,5 +1,5 @@
 {
-  "Name": "D3mons",
+  "Name": "D3mons (Français)",
   "Description": "Courte histoire de hacker post-apo.",
   "Credits": "<p>Histoire originale: <b>Cédric Hebert</b></p><br/><br/>Cette histoire utilise les superbes images et musiques libres suivantes, allez y jeter un oeil !<br/><p>Images: <a href=\"https://pixabay.com/fr/users/wendelin_jacober-10086047/\">Wendelin_Jacober</a></p>Musiques:</p><p>Auteur: <a href=\"https://kaiengel.bandcamp.com\">Kai Engel</a><br />Track: <b> Run</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=494\">Télécharger gratuitement Kai Engel -  Run</a></p><p>Auteur: <a href=\"https://soundcloud.com/ghostrifter-official\">Ghostrifter</a><br />Track: <b> Midnight Stroll</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by-sa/3.0/deed.fr\">https://creativecommons.org/licenses/by-sa/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=522\">Télécharger gratuitement Ghostrifter -  Midnight Stroll</a></p><p>Auteur: <a href=\"https://creo.bandcamp.com\">Creo</a><br />Track: <b> Showdown</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=500\">Télécharger gratuitement Creo -  Showdown</a></p><p>Auteur: <a href=\"https://ottohalmen.bandcamp.com/album/ottos-creative-commons-tracks\">Otto Halmen</a><br />Track: <b> Airship Thunderchild</b><br />Licence: <a href=\"https://creativecommons.org/licenses/by/3.0/deed.fr\">https://creativecommons.org/licenses/by/3.0/deed.fr</a><br />Source: <a href=\"https://www.auboutdufil.com/index.php?id=482\">Télécharger gratuitement Otto Halmen -  Airship Thunderchild</a></p><p>Sons: https://lasonotheque.org/detail-0303-grincement-de-portail-en-metal-1.html</p>",
   "Tiles": [
@@ -14,7 +14,10 @@
         {
           "text": "Je fuis ! N'importe où sera mieux qu'ici. On posera des questions plus tard.",
           "to_tile": "2",
-          "item": ["indemne", "fatigue"]
+          "item": [
+            "indemne",
+            "fatigue"
+          ]
         },
         {
           "text": "Je reste sur place et je bande mes muscles. Je vais le massacrer.",
@@ -124,15 +127,26 @@
           "requires": "jen",
           "disable": "invisible",
           "item": "no-friends",
-          "uses": ["friends","zan","qotd","irc"]
+          "uses": [
+            "friends",
+            "zan",
+            "qotd",
+            "irc"
+          ]
         },
         {
           "text": "Recommencer face à Zan",
           "to_tile": "23",
           "requires": "zan",
           "disable": "invisible",
-          "item": ["no-qotd","no-irc"],
-          "uses": ["qotd","irc"]
+          "item": [
+            "no-qotd",
+            "no-irc"
+          ],
+          "uses": [
+            "qotd",
+            "irc"
+          ]
         }
       ]
     },
@@ -182,7 +196,10 @@
           "to_tile": "12",
           "requires": "ibrain",
           "disable": "invisible",
-          "item": ["no-friends","jen"]
+          "item": [
+            "no-friends",
+            "jen"
+          ]
         },
         {
           "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
@@ -204,7 +221,8 @@
           "to_tile": "14",
           "requires": "ibrain",
           "disable": "invisible"
-        },        {
+        },
+        {
           "text": "Qui êtes-vous ? Qu'est-ce que tout cela veut dire ?!",
           "to_tile": "13",
           "requires": "nobrain",
@@ -315,8 +333,8 @@
         {
           "text": "Ok je vais m'en occuper.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -336,8 +354,8 @@
         {
           "text": "Ok je vais m'en occuper.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -355,8 +373,8 @@
         {
           "text": "Ok je vais m'en occuper.",
           "to_tile": "21",
-          "uses":"blessure",
-          "item":"panse"
+          "uses": "blessure",
+          "item": "panse"
         }
       ]
     },
@@ -402,7 +420,11 @@
         {
           "text": "J'utilise nmap",
           "to_tile": "25",
-          "item":["no-qotd","no-irc","no-help"]
+          "item": [
+            "no-qotd",
+            "no-irc",
+            "no-help"
+          ]
         }
       ]
     },
@@ -434,25 +456,37 @@
         {
           "text": "Connexion to Telnet",
           "to_tile": "27",
-          "requires": ["no-qotd","no-irc"],
+          "requires": [
+            "no-qotd",
+            "no-irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connexion to Telnet",
           "to_tile": "27",
-          "requires": ["qotd","no-irc"],
+          "requires": [
+            "qotd",
+            "no-irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connexion to Telnet",
           "to_tile": "27",
-          "requires": ["no-qotd","irc"],
+          "requires": [
+            "no-qotd",
+            "irc"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Connexion to Telnet",
           "to_tile": "29",
-          "requires": ["qotd","irc"],
+          "requires": [
+            "qotd",
+            "irc"
+          ],
           "disable": "invisible"
         },
         {
@@ -526,8 +560,14 @@
         {
           "text": "Je tente autre chose",
           "to_tile": "25",
-          "uses": ["no-irc","no-help"],
-          "item": ["irc","help"]
+          "uses": [
+            "no-irc",
+            "no-help"
+          ],
+          "item": [
+            "irc",
+            "help"
+          ]
         }
       ]
     },
@@ -574,19 +614,28 @@
         {
           "text": "Ca a marché ??",
           "to_tile": "35",
-          "requires": ["no-help","no-friends"],
+          "requires": [
+            "no-help",
+            "no-friends"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Ca a marché ??",
           "to_tile": "35",
-          "requires": ["no-help","friends"],
+          "requires": [
+            "no-help",
+            "friends"
+          ],
           "disable": "invisible"
         },
         {
           "text": "Ca a marché ??",
           "to_tile": "36",
-          "requires": ["help","friends"],
+          "requires": [
+            "help",
+            "friends"
+          ],
           "disable": "invisible"
         }
       ]
@@ -659,7 +708,7 @@
       "picture": "/d3mons/chernobyl-3711309_1280.jpg",
       "achievement": "goldenending"
     }
- ],
+  ],
   "Stuff": [
     {
       "key": "fatigue",
@@ -706,5 +755,7 @@
       "name": "Qui est Jen?",
       "description": "Jen vous cache quelque-chose, vous le savez..."
     }
-  ]
+  ],
+  "creator": "adminadminadmin",
+  "published": "yes"
 }
