@@ -1,9 +1,6 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. This v2 version has been rebuilt from the ground up, in javascript.
 
-## Test it on Cyclic (slow, but working)
-https://valvolt-storiz.cyclic.app
-
 ## User interface
 You are first greeted with a 'New Game' / 'Continue' screen. By clicking 'New Game' a new user is created for you.
 
@@ -54,27 +51,22 @@ docker run -d -p 8000:8000 valvolt2/storiz:2.1
 ```
 Then on your browser, visit `http://localhost:8000`
 
-### On Cyclic (free hosting)
-  - Fork this repo
-  - Visit cyclic.sh and follow the steps
-    - If you visit via https://app.cyclic.sh/#/join/valvolt we'll both get +1 app and 10 Credits
+## Create your own stories (experimental)
+You can add your own stories. For that, on the home page, click 'Create Story'. Hopefully the UI is understandable. Please open issues to report bugs (I know there are a few).
 
-## Create your own stories
+## Create your own stories (classic way)
 You can add your own stories. For that, you will need to create and store your own .json file into the `server/private/` folder, and store your media files in a subdirectory of `server/public/`.
 
 The built-in story 'Tutorial' will give you a full walkthrough of how to create your story.
 
 ## Limitations / on the TODO list
-I still plan someday to create a story editor. In the meantime, you'll have to flex your json editing skills !
-
-Another idea is to add a new 'hint' mode for image maps, putting an actual image instead of just a red highlight in 'reveal' mode.
-
-It it still possible to brute-force public resources. If that's a problem for you, rename your media with non-guessable names.
+It it possible to brute-force public resources. If that's a problem for you, rename your media with non-guessable names.
 
 ## Special Thanks
 Special thanks to Anne 'Shinari' Radunski for her enthusiasm and support with the UX. Some of her work has been integrated to this v2 version.
 
-Thanks as well to Henrik Plate for his support and suggestions.
+Thanks to Henrik Plate for his support and suggestions.
+
+Thanks to Jasser for his PRs.
 
 And thanks to You for playing :-)
-
