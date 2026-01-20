@@ -69,7 +69,7 @@
     {
       "id": "4",
       "title": "J'aurais dû m'en douter...",
-      "text": "Arrivé à une distance de un mètre, l'individu s'arrête un instant, comme s'il cherchait à mieux vous observer. Vous en profitez pour lui lancer un \"Salut, comment va?\"<br>L'instant d'après, il se jette sur vous.",
+      "text": "Arrivé à une distance de un mètre, l'individu s'arrête un instant, comme s'il cherchait à mieux vous observer. Vous en profitez pour lui lancer un \"Salut, comment va?\"\nL'instant d'après, il se jette sur vous.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3696230_1280.jpg",
       "choices": [
@@ -116,7 +116,7 @@
     {
       "id": "7",
       "title": "Game over",
-      "text": "Vous vous réveillez attaché à une chaise. Ce n'était donc pas un rêve, vous êtes bel et bien prisonnier de ce qui ressemble à une ville fantôme...<br>L'individu se tourne vers vous, il a dans les mains une sorte de couronne de métal reliée via des fils électriques à ce qui ressemble à une batterie de voiture. Votre sang se glace alors qu'il pose le cerclet sur votre tête. Puis tout devient noir.",
+      "text": "Vous vous réveillez attaché à une chaise. Ce n'était donc pas un rêve, vous êtes bel et bien prisonnier de ce qui ressemble à une ville fantôme...\nL'individu se tourne vers vous, il a dans les mains une sorte de couronne de métal reliée via des fils électriques à ce qui ressemble à une batterie de voiture. Votre sang se glace alors qu'il pose le cerclet sur votre tête. Puis tout devient noir.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/atom-3669812_1280.jpg",
       "achievement": "badending",
@@ -187,7 +187,7 @@
     {
       "id": "10",
       "title": "Ami ou ennemi ?",
-      "text": "Une silhouette se détache du mur du fond. D'abord floue, elle devient semi-opaque, puis se stabilise. Vous avez devant vous une personne recouverte des pieds à la tête d'un vêtement ample et noir à capuche et recouvert d'une cape. Instinctivement, vous faites un pas en arrière, protégeant votre poignet.<br>- Cette blessure a l'air véridique, dit la silhouette d'une voix de jeune femme. Je vais te laisser le bénéfice du doute et prétendre croire que tu n'as pas fait semblant de ne pas me voir.",
+      "text": "Une silhouette se détache du mur du fond. D'abord floue, elle devient semi-opaque, puis se stabilise. Vous avez devant vous une personne recouverte des pieds à la tête d'un vêtement ample et noir à capuche et recouvert d'une cape. Instinctivement, vous faites un pas en arrière, protégeant votre poignet.\n- Cette blessure a l'air véridique, dit la silhouette d'une voix de jeune femme. Je vais te laisser le bénéfice du doute et prétendre croire que tu n'as pas fait semblant de ne pas me voir.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3711298_1280.jpg",
       "choices": [
@@ -212,7 +212,7 @@
     {
       "id": "11",
       "title": "Ami ou ennemi ?",
-      "text": "Une voix de jeune femme semble sortir d'un des murs.<br>- Je ne te fais pas confiance, d3mon. Je ne sais pas comment est-ce que tu es parvenu à entrer mais tu n'iras pas plus loin.",
+      "text": "Une voix de jeune femme semble sortir d'un des murs.\n- Je ne te fais pas confiance, d3mon. Je ne sais pas comment est-ce que tu es parvenu à entrer mais tu n'iras pas plus loin.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3711298_1280.jpg",
       "choices": [
@@ -233,7 +233,7 @@
     {
       "id": "12",
       "title": "Exposition",
-      "text": "- Je m'appelle Jen. Je suis ta seule chance de survie.<br>- Ma seule...<br>- Tais-toi. Nous n'avons pas beaucoup de temps. Bien. Allons droit au but. J'ai zappé ton i-brain. C'est pour cela que tu n'as plus accès au réseau, que tu es parvenu à entrer dans ce bâtiment, que tu ne m'as pas trouvée sous mon camouflage optique... et que tu es conscient de tes actes.<br>Il y a environ trois ans, un virus s'est propagé dans tous les i-brain de la planète et a permis au Puppetmaster de prendre le contrôle d'environ soixante pourcent de tous les humains de cette planète, y compris la totalité des chefs d'état et des personnes influentes. Les quarante pourcent restant étaient ceux trop pauvres pour se payer un i-brain, ainsi que quelques réfractaires au progrès - dont je fais partie.",
+      "text": "- Je m'appelle Jen. Je suis ta seule chance de survie.\n- Ma seule...\n- Tais-toi. Nous n'avons pas beaucoup de temps. Bien. Allons droit au but. J'ai zappé ton i-brain. C'est pour cela que tu n'as plus accès au réseau, que tu es parvenu à entrer dans ce bâtiment, que tu ne m'as pas trouvée sous mon camouflage optique... et que tu es conscient de tes actes.\nIl y a environ trois ans, un virus s'est propagé dans tous les i-brain de la planète et a permis au Puppetmaster de prendre le contrôle d'environ soixante pourcent de tous les humains de cette planète, y compris la totalité des chefs d'état et des personnes influentes. Les quarante pourcent restant étaient ceux trop pauvres pour se payer un i-brain, ainsi que quelques réfractaires au progrès - dont je fais partie.",
       "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
       "picture": "/d3mons/chernobyl-3696229_1280.jpg",
       "choices": [
@@ -246,21 +246,21 @@
     {
       "id": "13",
       "title": "En tous cas, pas une amie...",
-      "text": "- Tu m'as tout l'air d'avoir vraiment tout oublié... Bon, laisse tomber, t'expliquer serait une perte de temps. Désolée de t'avoir réveillé, j'ai pensé que tu pourrais faire un bon hack3r mais à l'évidence je me suis trompée.<br>La silhouette redevient floue avant de disparaître.<br>- Eh, partez pas ! J'ai besoin de réponses !<br><br>Mais seul le silence vous répond. Jen ne reviendra pas. Les jours s'égrennent douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
+      "text": "- Tu m'as tout l'air d'avoir vraiment tout oublié... Bon, laisse tomber, t'expliquer serait une perte de temps. Désolée de t'avoir réveillé, j'ai pensé que tu pourrais faire un bon hack3r mais à l'évidence je me suis trompée.\nLa silhouette redevient floue avant de disparaître.\n- Eh, partez pas ! J'ai besoin de réponses !\n\nMais seul le silence vous répond. Jen ne reviendra pas. Les jours s'égrennent douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3711291_1280.jpg"
     },
     {
       "id": "14",
       "title": "En tous cas, pas une amie...",
-      "text": "La femme ne répond rien. Elle active un mécanisme qui la rend à nouveau peu à peu invisible. Le mot d3mon vous semble familier...<br>Tu me prends pour un psyk3r qui aurait mal tourné, n'est-ce pas ! Mais mon i-brain ne fonctionne plus ; tu veux quoi, de l'argent ? Si tu me ramènes chez moi je te donnerai tout ce que j'ai...<br><br>Votre voix se fera tour à tour suppliante, menacante, compatissante... mais il faut vous rendre à l'évidence: vous êtes de nouveau seul. Les jours finiront pas s'égrenner douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
+      "text": "La femme ne répond rien. Elle active un mécanisme qui la rend à nouveau peu à peu invisible. Le mot d3mon vous semble familier...\nTu me prends pour un psyk3r qui aurait mal tourné, n'est-ce pas ! Mais mon i-brain ne fonctionne plus ; tu veux quoi, de l'argent ? Si tu me ramènes chez moi je te donnerai tout ce que j'ai...\n\nVotre voix se fera tour à tour suppliante, menacante, compatissante... mais il faut vous rendre à l'évidence: vous êtes de nouveau seul. Les jours finiront pas s'égrenner douloureusement. La faim et la soif vous feront presque regretter de ne pas vous être fait assassiner par le poursuivant au masque à gaz...",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3711291_1280.jpg"
     },
     {
       "id": "15",
       "title": "Exposition",
-      "text": "- Quelle idée de relier les cerveaux directement à Internet ! Les gens n'apprennent jamais, reprend Jen. Le Puppetmaster a gardé ton contrôle durant environ trois ans. Regarde ce qu'il a fait du monde avec son armée de d3mons...<br>- Mais je ne suis plus un d3mon, n'est-ce pas?<br>- Ouais. Grâce à moi.<br>Jen sort de sous ses draperies une sorte d'antenne en forme de tromblon.<br>- Ce truc peut envoyer des ondes électriques à moyenne distance, parfois ca fait griller un i-brain. Je m'en suis servie tout à l'heure, et te voilà.",
+      "text": "- Quelle idée de relier les cerveaux directement à Internet ! Les gens n'apprennent jamais, reprend Jen. Le Puppetmaster a gardé ton contrôle durant environ trois ans. Regarde ce qu'il a fait du monde avec son armée de d3mons...\n- Mais je ne suis plus un d3mon, n'est-ce pas?\n- Ouais. Grâce à moi.\nJen sort de sous ses draperies une sorte d'antenne en forme de tromblon.\n- Ce truc peut envoyer des ondes électriques à moyenne distance, parfois ca fait griller un i-brain. Je m'en suis servie tout à l'heure, et te voilà.",
       "music": "/d3mons/Ghostrifter_-_Midnight_Stroll.mp3",
       "picture": "/d3mons/chernobyl-3696229_1280.jpg",
       "choices": [
@@ -316,7 +316,7 @@
     {
       "id": "18",
       "title": "Psyk3r. D3mon. Hack3r.",
-      "text": "- La vraie question c'est: qu'est-ce que tu peux faire, toi ! ... Écoute-moi bien. Je peux libérer un ou deux pauvres types qui passent dans le rayon d'action de mon appareil, mais ce n'est pas comme ca qu'on va changer la face du monde. Mais toi, tu peux remonter jusqu'au Puppetmaster. En devenant un hack3r.<br><br>Devant votre regard interdit, Jen reprend:<br>- Tu n'as plus accès au réseau mais tu peux te connecter en point à point. Chaque d3mon expose son propre point d'accès.<br>Tout en parlant, elle a sorti un vieux smartphone de sous ses frusques et a commencé à pianoter. Vous réalisez alors qu'elle est en train de téléverser un programme pirate vers votre i-brain.<br>- Et pour exploiter ces points d'accès, tu vas te servir de ceci. C'est un programme de reconnaissance.<br>- Et ce truc fait de moi un hack3r, dites-vous d'un air dubitatif.<br>- Tu as hacké le cerveau de plus de personnes que tu ne peux le croire, quand tu étais un d3mon. J'espère que ton corps retrouvera certains automatismes. De toutes facons on n'a pas le choix. Maintenant sors d'ici, retrouve ton agresseur et débranche-le. Pour cela, utilise nmap et trouve un moyen de le désactiver.",
+      "text": "- La vraie question c'est: qu'est-ce que tu peux faire, toi ! ... Écoute-moi bien. Je peux libérer un ou deux pauvres types qui passent dans le rayon d'action de mon appareil, mais ce n'est pas comme ca qu'on va changer la face du monde. Mais toi, tu peux remonter jusqu'au Puppetmaster. En devenant un hack3r.\n\nDevant votre regard interdit, Jen reprend:\n- Tu n'as plus accès au réseau mais tu peux te connecter en point à point. Chaque d3mon expose son propre point d'accès.\nTout en parlant, elle a sorti un vieux smartphone de sous ses frusques et a commencé à pianoter. Vous réalisez alors qu'elle est en train de téléverser un programme pirate vers votre i-brain.\n- Et pour exploiter ces points d'accès, tu vas te servir de ceci. C'est un programme de reconnaissance.\n- Et ce truc fait de moi un hack3r, dites-vous d'un air dubitatif.\n- Tu as hacké le cerveau de plus de personnes que tu ne peux le croire, quand tu étais un d3mon. J'espère que ton corps retrouvera certains automatismes. De toutes facons on n'a pas le choix. Maintenant sors d'ici, retrouve ton agresseur et débranche-le. Pour cela, utilise nmap et trouve un moyen de le désactiver.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/chernobyl-3711298_1280.jpg",
       "choices": [
@@ -381,7 +381,7 @@
     {
       "id": "21",
       "title": "En route",
-      "text": "- Le type au masque à gaz était à côté de la grande roue, je vais m'y rendre.<br>Contre toute attente, Jen s'approche de vous. Elle sort un bandage de sous son manteau. Vous sentez une réelle émotion dans sa voix lorsqu'elle panse votre poignet.<br>- Mon conseil, c'est de désactiver les d3mons dès que tu en as l'opportunité. N'essaie pas de fouiller dans leur tête, ok?<br>- Ao. C'est mon nom. À plus tard, Jen.",
+      "text": "- Le type au masque à gaz était à côté de la grande roue, je vais m'y rendre.\nContre toute attente, Jen s'approche de vous. Elle sort un bandage de sous son manteau. Vous sentez une réelle émotion dans sa voix lorsqu'elle panse votre poignet.\n- Mon conseil, c'est de désactiver les d3mons dès que tu en as l'opportunité. N'essaie pas de fouiller dans leur tête, ok?\n- Ao. C'est mon nom. À plus tard, Jen.",
       "music": "/d3mons/KaiEngel-TheRun-02Run.mp3",
       "picture": "/d3mons/atom-3669815_1280.jpg",
       "choices": [
@@ -431,7 +431,7 @@
     {
       "id": "24",
       "title": "J'aurais dû m'en douter...",
-      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain.<br>L'instant d'après, il se jette sur vous.",
+      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain.\nL'instant d'après, il se jette sur vous.",
       "music": "/d3mons/Creo-Showdown.mp3",
       "picture": "/d3mons/chernobyl-3711290_1280.jpg",
       "choices": [
@@ -445,7 +445,7 @@
       "id": "25",
       "title": "nmap",
       "mood": "hacker",
-      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain. Mais vous êtes plus rapide. En un instant, une quantité d'information vous parvient.<br><br>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST<br>Nmap scan report for zan (192.168.9.105)<br>Host is up (0.00012s latency).<br>Not shown: 997 closed ports<br>PORT     STATE SERVICE<br>17/tcp  open  QOTD<br>23/tcp  open  telnet<br>194/tcp  open  internet relay chat<br><br>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br><br>Pas le droit à l'erreur...",
+      "text": "Comme lors de votre première rencontre, le d3mon s'arrête un instant. Vous comprenez qu'il tente de se connecter à votre i-brain. Mais vous êtes plus rapide. En un instant, une quantité d'information vous parvient.\n\nStarting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST\nNmap scan report for zan (192.168.9.105)\nHost is up (0.00012s latency).\nNot shown: 997 closed ports\nPORT     STATE SERVICE\n17/tcp  open  QOTD\n23/tcp  open  telnet\n194/tcp  open  internet relay chat\n\nNmap done: 1 IP address (1 host up) scanned in 0.06 seconds\n\nPas le droit à l'erreur...",
       "music": "/d3mons/Creo-Showdown.mp3",
       "picture": "/d3mons/chernobyl-3711290_1280.jpg",
       "choices": [

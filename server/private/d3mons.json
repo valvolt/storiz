@@ -431,7 +431,7 @@
     {
       "id": "24",
       "title": "Should've see this coming...",
-      "text": "Like during your first fight, the d3mon stops for a second. You understand that he is trying to connect to your i-brain.<br>The next second, he jumps at you.",
+      "text": "Like during your first fight, the d3mon stops for a second. You understand that he is trying to connect to your i-brain.\nThe next second, he jumps at you.",
       "music": "/d3mons/Creo-Showdown.mp3",
       "picture": "/d3mons/chernobyl-3711290_1280.jpg",
       "choices": [
@@ -445,7 +445,7 @@
       "id": "25",
       "title": "nmap",
       "mood": "hacker",
-      "text": "As during your first encounter, the d3mon stops for a second. You understand that he tries to connect to your i-brain. But you're faster. In an instant, a mass of information flows to you.<br/><br/>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST<br>Nmap scan report for zan (192.168.9.105)<br/>Host is up (0.00012s latency).<br/>Not shown: 997 closed ports<br/>PORT     STATE SERVICE<br/>17/tcp  open  QOTD<br/>23/tcp  open  telnet<br/>194/tcp  open  internet relay chat<br/><br/>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br/><br/>No room for mistakes...",
+      "text": "As during your first encounter, the d3mon stops for a second. You understand that he tries to connect to your i-brain. But you're faster. In an instant, a mass of information flows to you.<br/><br/>Starting Nmap 7.60 ( https://nmap.org ) at 2019-08-12 23:19 CEST\nNmap scan report for zan (192.168.9.105)<br/>Host is up (0.00012s latency).<br/>Not shown: 997 closed ports<br/>PORT     STATE SERVICE<br/>17/tcp  open  QOTD<br/>23/tcp  open  telnet<br/>194/tcp  open  internet relay chat<br/><br/>Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds<br/><br/>No room for mistakes...",
       "music": "/d3mons/Creo-Showdown.mp3",
       "picture": "/d3mons/chernobyl-3711290_1280.jpg",
       "choices": [

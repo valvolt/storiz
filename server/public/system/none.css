@@ -57,3 +57,104 @@ a:active {
   text-decoration: underline;
 }
 
+img {
+  width: 25vw;
+  height: auto;
+  max-height: 900px;
+}
+
+video {
+  width: 45%;
+  height: auto;
+  max-height: 900px;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  /* Pushes items to the edges */
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 15px 40px;
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* Ensures it stays above the list */
+}
+
+
+.header-logo {
+  width: 1.5vw;
+}
+
+
+.header-title {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Aligns username and button to the right */
+  gap: 15px;
+}
+
+.username {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+}
+
+.username strong {
+  color: #ffffff;
+}
+
+.btn-logout {
+  background-color: #e74c3c;
+  /* Soft Red */
+  border-radius: 8px;
+  width: 120px;
+  height: 32px;
+  font-size: 16px;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+
+
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+  .button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .btn-header_container {
+    padding: 10px 20px;
+    background-color: #333333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 45px !important;
+    width: auto !important;
+  }
+
+  .btn-header_container:hover {
+    background-color: #525252 !important;
+  }
+

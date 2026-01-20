@@ -10,11 +10,16 @@ body {
 
 img {
   width: 40vw;
-  height: auto
+  height: auto;
+  max-height: 900px;
 }
+
 video {
-  width: 100%
+  width: 45%;
+  height: auto;
+  max-height: 900px;
 }
+
 #picture,
 #video {
   display: none;
@@ -48,6 +53,7 @@ video {
   width: calc(100% - 10%);
   /* z-index: -1; */
   overflow: scroll;
+  overflow-x: hidden;
 }
 
 #stuff {
@@ -137,6 +143,7 @@ footer {
   position: relative;
   width: 600px; 
   height: 500px;
+  margin-top: 50px;
 }
 
 .hexagon {
