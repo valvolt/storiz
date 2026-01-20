@@ -93,6 +93,7 @@ const upload = multer({
 const homepage1 = `
   <html>
     <head>
+      <title>Storiz</title>
       <meta charset="utf-8">
       <meta name="description" content="A dynamic story game with branching paths and multiple choices">
       <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -100,7 +101,49 @@ const homepage1 = `
       <link rel="stylesheet" href="/system/none.css">
     </head>
   <body>
-    <h1 id="title2">Storiz</h1>`
+
+    <header id="title2" class="main-header">
+      <a id="homepage-link" href="/"><img class="header-logo" src="/system/logo-white.svg"></a>
+      <h1 class="header-title">Storiz</h1>
+      <div></div>
+    </header>
+    `
+
+const homepage1Profile = `
+  <html>
+    <head>
+      <title>Storiz</title>
+      <meta charset="utf-8">
+      <meta name="description" content="A dynamic story game with branching paths and multiple choices">
+      <link rel="icon" type="image/x-icon" href="/favicon.ico">
+      <link rel="stylesheet" href="/system/global.css">
+      <link rel="stylesheet" href="/system/none.css">
+    </head>
+  <body>
+
+    <header id="title2" class="main-header">
+      <a href="/stories"><img class="header-logo" src="/system/logo-white.svg"></a>
+      <h1 class="header-title" style="margin-left: 200px;">Storiz</h1>
+      <div class="header-user">
+        <span class="username">Connected as: <a href="/myprofile"><span id = "profile-username"></span></a></span>
+        <button class="btn btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <!--<div class="button-container">
+      <button class="btn-header_container" onclick="window.location.replace('/')">
+        <span style="display:flex; align-items:center; gap:5px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+          </svg>
+          Home
+        </span>
+      </button>
+    </div>-->
+    <div>
+    <div>
+    `
+
 const homepage2 = "</body></html>"
 
 // Main page
@@ -137,6 +180,7 @@ app.get('/', async function (req, res) {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 50px;
       }
 
       #logo img {
@@ -168,9 +212,6 @@ app.get('/', async function (req, res) {
     <div id="continue" class="buttons">
       <button id="continue-button" onclick="continueOp()">Continue</button>
     </div>
-    <div id="create-story" class="buttons">
-      <button id="create-story-button" onclick="createStoryOp()">Create Story</button>
-    </div>
   `
   
   res.setHeader("Content-Type", "text/html");
@@ -187,16 +228,11 @@ body {
   padding: 0;
 }
 
-#title2 {
-  margin: 16px 0;
-}
-
-div {
+#form-div {
   max-width: 500px;
   margin: 0 auto;
   text-align: center;
   font-size: 18px;
-  margin-bottom: 16px;
 }
 
 form {
@@ -236,13 +272,28 @@ button[type="submit"] {
       }
     
     </style>
-    
-    <div>Welcome back. Please enter your code:<form method='POST' action='/resume'><input name='username'/><button type='submit'>Submit</button></form></div>`
+          <div class="button-container">
+      <button class="btn-header_container" onclick="window.location.replace('/')">
+        <span style="display:flex; align-items:center; gap:5px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+          </svg>
+          Home
+        </span>
+      </button>
+    </div>
+    <div id="form-div">Welcome back. Please enter your code:<form method='POST' action='/resume'><input name='username'/><button type='submit'>Submit</button></form></div>`
 
   res.setHeader("Content-Type", "text/html");
   res.send(homepage1+resumeForm+homepage2);
 
 })
+
+//logout out user delete Session cookie
+app.post('/logout', (req, res) => {
+  res.clearCookie('SESSION');
+  res.sendStatus(200);
+});
 
 app.get('/newgame', async function (req, res) {
   // Check if user already has a SESSION cookie
@@ -333,14 +384,64 @@ app.post('/rename', async function (req, res) {
 
 // Returns the list of available stories
 app.get('/stories', async function (req, res) {
-  var list = "";
+
+    players = await retrieve('players');
+    let username = "";
+    let currentPlayer = undefined
+    if (req.cookies.SESSION && players) {
+        username = req.cookies.SESSION;
+        for (let player of players) {
+            if (player.username == username) {
+                currentPlayer = player;
+            }
+        }
+    }
+   
+    var list = "";
 
   const pagelist1 = `
+    <div class="button-container">
+        <button class="btn-header_container" onclick="window.location.replace('/edit')">
+            <span style="display:flex; align-items:center; gap:5px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.04.64.09.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.08-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path>
+                </svg>
+                Edit Stories
+            </span>
+        </button>
+    </div>
   <div class="hex-container">
   `
-  const pagelist2 = `
+  let pagelist2 = `
     </div>
   `
+  if(currentPlayer){
+    pagelist2 += `
+    <script>
+    let ele = document.getElementById('profile-username');
+    const strong = document.createElement('strong');
+    strong.innerHTML= "`+currentPlayer.screenname+`";
+    ele.appendChild(strong);
+
+      async function logout() {
+        try {
+          const response = await fetch('/logout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            window.location.href = '/'; 
+          }
+        } catch (error) {
+          console.error('Logout failed:', error);
+        }
+      }
+    </script>
+  `
+  }
   
   // Get continue code from SESSION cookie to check if user is creator
   var continueCode = "";
@@ -350,7 +451,6 @@ app.get('/stories', async function (req, res) {
   
   var i = 0
   stories = await retrieve('stories');
-  players = await retrieve('players');
   for (let story of stories) {
     const isPublished = story.published === 'yes' || !story.published;
     const isCreator = story.creator === continueCode;
@@ -366,8 +466,9 @@ app.get('/stories', async function (req, res) {
       list += "<div class=\"" + hexagonClass + "\"><a href=\"/story/" + story.Name + "\">" + story.Name + "</a> (" + story.NbTiles + " Tiles)" + testingLabel + "<p>" + story.Description + "</p></div>"
     }
   }
+
   res.setHeader("Content-Type", "text/html");
-  res.send(homepage1+pagelist1+list+pagelist2+homepage2);
+  res.send(homepage1Profile+pagelist1+list+pagelist2+homepage2);
 })
 
 // Edit menu - shows all stories with edit access indicators
@@ -375,6 +476,16 @@ app.get('/edit', async function (req, res) {
   var list = "";
 
   const pagelist1 = `
+      <div class="button-container">
+      <button class="btn-header_container" onclick="window.location.replace('/stories')">
+        <span style="display:flex; align-items:center; gap:5px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+          </svg>
+          Home
+        </span>
+      </button>
+    </div>
   <div class="hex-container">
   `
   const pagelist2 = `
@@ -4507,6 +4618,25 @@ app.get('/story/:name', async function (req, res) {
         <h1 id="title"></h1>
       </header>
       <div id="content" class="banner">
+        <div class="button-container">
+          <button class="btn-header_container" onclick="processTile('1'); window.location.replace('/stories');">
+            <span style="display:flex; align-items:center; gap:5px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+              </svg>
+              Exit
+            </span>
+          </button>
+
+          <button class="btn-header_container" onclick="processTile('1');">
+            <span style="display:flex; align-items:center; gap:5px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path>
+              </svg>
+              Restart
+            </span>
+          </button>
+        </div>
         <main>
           <div id="title2"></div>
           <div id="picture">
@@ -5084,7 +5214,7 @@ app.get('/myprofile', async function (req, res) {
 
 const profilepage1 = `
      <style>
-       img {
+       trophy-img {
          height: 50px;
          width: auto;
        }
@@ -5093,7 +5223,41 @@ const profilepage1 = `
        th {
          text-align: center;
        }
+         #profilecontent{
+        margin-top:35px
+       }
+
+      input {
+        width: 275px;
+        height: 32px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        padding: 8px;
+      }
+        button {
+        width: 120px;
+        height: 32px;
+        font-size: 16px;
+        background-color: #333333;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+      }
      </style>
+    <div class="button-container">
+      <button class="btn-header_container" onclick="window.location.replace('/stories')">
+        <span style="display:flex; align-items:center; gap:5px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+          </svg>
+          Home
+        </span>
+      </button>
+    </div>
     <div id="myprofile" class="banner creditroll">
       <div id="profilecontent">
         My Continue code: <input type="text" id="usercode" value="`+req.cookies.SESSION+`" readonly>
@@ -5103,7 +5267,6 @@ var screenname = ""
 var achievements = ""
 
 const profilepage2 = `</div>
-      <div id="profile2"><a href="/stories">Main menu</a></div>
     </div>
 `
   // Get player
@@ -5145,6 +5308,39 @@ const profilepage2 = `</div>
       };
       xhr.send('screenname=' + encodeURIComponent(newname));
     }
+
+    function copyToClipboard(elementId) {
+      // Get the text field
+      var textField = document.getElementById(elementId);
+
+      // Select the text field's content
+      textField.select();
+
+      // Copy the selected text to the clipboard
+      document.execCommand('copy');
+    }
+
+    async function logout() {
+      try {
+        const response = await fetch('/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          window.location.href = '/'; 
+        }
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    }
+
+    let ele = document.getElementById('profile-username');
+    const strong = document.createElement('strong');
+    strong.innerHTML= "`+currentPlayer.screenname+`";
+    ele.appendChild(strong);
     </script>
     <div>
       My screen name: <input type="text" id="screenname" value="`+currentPlayer.screenname+`" >
@@ -5164,7 +5360,7 @@ const profilepage2 = `</div>
             let achievements = stories[i].Achievements;
             for (let j = 0; j < achievements.length; j++) {
               if (achievements[j].key === achievementKey) {
-                achievementTable = achievementTable + "<tr><td><img src=\"/system/"+achievements[j].trophy+".png\" title=\""+achievements[j].trophy+"\"></td><td>"+achievements[j].name+"</td><td>"+achievements[j].description+"</td></tr>";
+                achievementTable = achievementTable + "<tr><td><img class='trophy-img' src=\"/system/"+achievements[j].trophy+".png\" title=\""+achievements[j].trophy+"\"></td><td>"+achievements[j].name+"</td><td>"+achievements[j].description+"</td></tr>";
               }
             }
           }
@@ -5175,7 +5371,7 @@ const profilepage2 = `</div>
   });
 
   res.setHeader("Content-Type", "text/html");
-  res.send(homepage1+profilepage1+screenname+achievements+profilepage2+homepage2);
+  res.send(homepage1Profile+profilepage1+screenname+achievements+profilepage2+homepage2);
 
 })
 
@@ -5794,6 +5990,7 @@ async function loadStory(filename) {
     story.NbTiles = story.Tiles.length;
     // store the filename (without .json extension) for URL generation
     story.filename = filename.replace('.json', '');
+    parseStory(story);
     stories.push(story)
   }
 }
@@ -5811,5 +6008,19 @@ async function updateStoryInCache(filename) {
     story.filename = filename.replace('.json', '');
     stories.push(story)
     await persist('stories', stories);
+  }
+}
+
+//change the \n to <br>
+function parseStory(story) {
+  if (story.Tiles) {
+    story.Tiles.forEach(tile => {
+      tile.text = (tile.text).replaceAll('\n', '<br>');
+      if (tile.choices) {
+        tile.choices.forEach(choice => {
+          choice.text = (choice.text).replaceAll('\n', '<br>');
+        });
+      }
+    });
   }
 }
