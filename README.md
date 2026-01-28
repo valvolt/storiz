@@ -47,12 +47,12 @@ Then on your browser, visit `http://localhost:8000`
 
 ### From dockerhub
 ```
-docker run -d -p 8000:8000 valvolt2/storiz:2.1
+docker run -d -p 8000:8000 valvolt2/storiz:2.2
 ```
 Then on your browser, visit `http://localhost:8000`
 
 ## Create your own stories (experimental)
-You can add your own stories. For that, on the home page, click 'Create Story'. Hopefully the UI is understandable. Please open issues to report bugs (I know there are a few).
+You can add your own stories. For that, on the home page, click 'New Game', 'Edit Stories', 'Create New Story'. Hopefully the UI is understandable. Please open issues to report bugs (I know there are a few).
 
 ## Create your own stories (classic way)
 You can add your own stories. For that, you will need to create and store your own .json file into the `server/private/` folder, and store your media files in a subdirectory of `server/public/`.
