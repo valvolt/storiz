@@ -1,6 +1,12 @@
 # storiz
 A simple engine for creating HTML5 choice-based games. Think super-simple Visual Novel. This v2 version has been rebuilt from the ground up, in javascript.
 
+## Test it live
+You cannot create stories on this server, but you can play with what I created there. If you have a good story, let me know, I might put it online :)
+
+http://46.225.219.90:8000/
+
+
 ## User interface
 You are first greeted with a 'New Game' / 'Continue' screen. By clicking 'New Game' a new user is created for you.
 
