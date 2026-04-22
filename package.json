@@ -30,7 +30,7 @@
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "multer": "^2.1.1",
-    "uuid": "^9.0.1"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "fast-check": "^4.5.3",
