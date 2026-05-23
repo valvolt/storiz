@@ -28,7 +28,7 @@
   "homepage": "https://github.com/valvolt/storiz#readme",
   "dependencies": {
     "cookie-parser": "^1.4.7",
-    "express": "^4.22.1",
+    "express": "^4.22.2",
     "multer": "^2.1.1",
     "uuid": "^9.0.1"
   },
